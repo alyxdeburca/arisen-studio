@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 23:57:48 UTC",
+  "generated_at_utc": "2026-11-21 23:59:32 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1406,6 +1406,15 @@
   ],
   "recent_events": [
     {
+      "summary": "Launched Tracks D-G to fill all 7 parallel worker slots (T1+TD csproj/smoke wiring, SelfCheck, Localization, Parity Audit)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 23:58:00 UTC",
+      "changes": [
+        "Track D (BUILD-REQUEST-34): registering 18 T1 tool files + 4 TransferDialog files in csproj (172 Compile items) and 15 Program.cs FormFactories entries",
+        "Tracks E/F/G: deterministic Tests/SelfCheck/ runner, Localization/ .resx audit & helper, and read-only parity ledger proofread running alongside Tracks A/B/C"
+      ]
+    },
+    {
       "summary": "Dispatched 3 parallel feature/wiring tracks (Adapters, Shell/Dialog Controller, Helpers/M7) and queued T1+TD wiring",
       "source": "coordinator",
       "timestamp_utc": "2026-11-21 23:57:00 UTC",
@@ -1577,15 +1586,6 @@
       "changes": [
         "Confirmed 0 non-positive Size controls remain in GameModDialog (935x0 became 935x1)",
         "Hidden tab subtrees in CustomModDialog and GameSaveDialog stopped throwing"
-      ]
-    },
-    {
-      "summary": "Round 4 minimum size fix across 6 detail dialogs (9 lines)",
-      "source": "coordinator",
-      "timestamp_utc": "2026-11-21 18:36:00 UTC",
-      "changes": [
-        "Added MinimumSize(1,1) on path lists, separators, and files list",
-        "Full 19-form regression check: 12 PASS, 7 FAIL (0 regressions)"
       ]
     }
   ]

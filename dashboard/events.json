@@ -190,5 +190,14 @@
       "Launched Services/Adapters/ (real DataSources + FtpService/Transfer operations), Forms/Shell/Wiring/ (DialogLauncher + ShellController), and Extensions/New/+Services/M7/",
       "Preparing BUILD-REQUEST-34 (18 T1 tool files + 4 TransferDialog files + Program.cs smoke factories) plus self-check, l10n, and parity audits"
     ]
+  },
+  {
+    "summary": "Launched Tracks D-G to fill all 7 parallel worker slots (T1+TD csproj/smoke wiring, SelfCheck, Localization, Parity Audit)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 23:58:00 UTC",
+    "changes": [
+      "Track D (BUILD-REQUEST-34): registering 18 T1 tool files + 4 TransferDialog files in csproj (172 Compile items) and 15 Program.cs FormFactories entries",
+      "Tracks E/F/G: deterministic Tests/SelfCheck/ runner, Localization/ .resx audit & helper, and read-only parity ledger proofread running alongside Tracks A/B/C"
+    ]
   }
 ]
