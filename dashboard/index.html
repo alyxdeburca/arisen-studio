@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="60">
+  <title>Arisen Studio Linux/Mono Migration Dashboard</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --surface-alt: #f0f2f6;
+      --border: #d8dee6;
+      --text: #161b22;
+      --muted: #57606a;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --accent-files: #8250df;
+      --ok: #1a7f37;
+      --ok-bg: #dafbe1;
+      --warn: #9a6700;
+      --warn-bg: #fff8c5;
+      --fail: #cf222e;
+      --fail-bg: #ffebe9;
+      --neutral-bg: #eaeef2;
+      --bar-track: #e1e6ed;
+      --radius: 10px;
+      --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --surface-alt: #1f2630;
+        --border: #30363d;
+        --text: #e6edf3;
+        --muted: #9198a1;
+        --accent: #58a6ff;
+        --accent-soft: #132c47;
+        --accent-files: #a371f7;
+        --ok: #3fb950;
+        --ok-bg: #132e1e;
+        --warn: #d29922;
+        --warn-bg: #2e2208;
+        --fail: #f85149;
+        --fail-bg: #3b1719;
+        --neutral-bg: #262c36;
+        --bar-track: #262c36;
+      }
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px 12px 32px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .notice-banner {
+      background: var(--warn-bg);
+      border: 2px solid var(--warn);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--text);
+    }
+
+    .notice-banner strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--warn);
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    p {
+      margin: 0 0 8px;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px 16px;
+      margin-bottom: 8px;
+    }
+
+    .hero-pct-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .hero-pct {
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .hero-pct-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hero-bar-row {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-bar-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bar-track);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width 0.2s ease;
+    }
+
+    .bar-fill.done {
+      background: var(--ok);
+    }
+
+    .bar-fill.files {
+      background: var(--accent-files);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.4;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .badge-done, .badge-pass {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .badge-proposed, .badge-unknown {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .badge-planned {
+      background: var(--neutral-bg);
+      color: var(--muted);
+    }
+
+    .badge-fail {
+      background: var(--fail-bg);
+      color: var(--fail);
+    }
+
+    .badge-computed {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .badge-manual {
+      background: var(--surface-alt);
+      color: var(--muted);
+      border-color: var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .dim-card {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .dim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .dim-pct {
+      font-size: 18px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .milestone-list, .gate-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .milestone-item, .gate-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--surface-alt);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .item-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .item-title {
+      font-weight: 600;
+      min-width: 0;
+      flex: 1 1 220px;
+      overflow-wrap: anywhere;
+    }
+
+    .item-pct {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .sublist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .subpill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 12px;
+      min-width: 0;
+    }
+
+    details {
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: var(--surface-alt);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .file-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .file-list {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 4px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px 8px 24px;
+      }
+      .card {
+        padding: 12px;
+      }
+      .hero-pct {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" id="app">
+    <noscript>
+      <section class="card">
+        <h1>JavaScript Required</h1>
+        <p>Enable JavaScript to render the dashboard data stored inside this file.</p>
+      </section>
+    </noscript>
+  </main>
+
+  <script id="dashboard-data" type="application/json">{
+  "active_threads": {
+    "count": null,
+    "as_of": null,
+    "stale": false
+  },
+  "project": "Arisen Studio (Linux / Mono Migration)",
+  "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
+  "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
+  "generated_at_utc": "2026-11-21 19:39:59 UTC",
+  "measurements": {
+    "overall": {
+      "id": "overall",
+      "label": "Overall Codebase (A + B + C)",
+      "numerator": 6863,
+      "denominator": 63901,
+      "percent": 10.7,
+      "percent_str": "10.7%",
+      "files_ported": 60,
+      "files_total": 162,
+      "files_percent": 37.0,
+      "files_percent_str": "37.0%",
+      "formula": "(A_ported + B_ported + C_ported) / (A_total + B_total + C_total); Properties/*.cs excluded"
+    },
+    "dimensions": [
+      {
+        "id": "A",
+        "label": "Dimension A — UI-free code",
+        "numerator": 3657,
+        "denominator": 4323,
+        "percent": 84.5,
+        "percent_str": "84.5%",
+        "files_ported": 38,
+        "files_total": 42,
+        "formula": "(linked + locally copied and compiled) UI-free lines / all 42 UI-free lines"
+      },
+      {
+        "id": "B",
+        "label": "Dimension B — UI-coupled code-behind & logic",
+        "numerator": 867,
+        "denominator": 26073,
+        "percent": 3.3,
+        "percent_str": "3.3%",
+        "files_ported": 11,
+        "files_total": 66,
+        "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
+      },
+      {
+        "id": "C",
+        "label": "Dimension C — Layout designers",
+        "numerator": 2339,
+        "denominator": 33505,
+        "percent": 6.9,
+        "percent_str": "6.9%",
+        "files_ported": 11,
+        "files_total": 54,
+        "formula": "ported layout designer lines (port_map) / all 54 layout designer lines"
+      }
+    ],
+    "excluded_properties": {
+      "file_count": 3,
+      "total_lines": 1885,
+      "files": [
+        {
+          "path": "Properties/AssemblyInfo.cs",
+          "lines": 37
+        },
+        {
+          "path": "Properties/Resources.Designer.cs",
+          "lines": 1822
+        },
+        {
+          "path": "Properties/Settings.Designer.cs",
+          "lines": 26
+        }
+      ]
+    },
+    "linked_ui_free_files": [
+      {
+        "path": "Constants/Urls.cs",
+        "lines": 250
+      },
+      {
+        "path": "Database/AppsData.cs",
+        "lines": 116
+      },
+      {
+        "path": "Database/CategoriesData.cs",
+        "lines": 69
+      },
+      {
+        "path": "Database/Client/DatabaseClient.cs",
+        "lines": 793
+      },
+      {
+        "path": "Database/GameCheatsData.cs",
+        "lines": 49
+      },
+      {
+        "path": "Database/GamePatchesData.cs",
+        "lines": 70
+      },
+      {
+        "path": "Database/GameSavesData.cs",
+        "lines": 62
+      },
+      {
+        "path": "Database/GamesDataPS3.cs",
+        "lines": 70
+      },
+      {
+        "path": "Database/ModsData.cs",
+        "lines": 233
+      },
+      {
+        "path": "Database/PackagesData.cs",
+        "lines": 38
+      },
+      {
+        "path": "Database/TrainersData.cs",
+        "lines": 128
+      },
+      {
+        "path": "Enums/Enums.cs",
+        "lines": 124
+      },
+      {
+        "path": "Extensions/DataExtensions.cs",
+        "lines": 104
+      },
+      {
+        "path": "Extensions/DateTimeExtensions.cs",
+        "lines": 12
+      },
+      {
+        "path": "Extensions/GraphicExtensions.cs",
+        "lines": 33
+      },
+      {
+        "path": "Extensions/IoExtensions.cs",
+        "lines": 68
+      },
+      {
+        "path": "Extensions/PS4/PS4Extensions.cs",
+        "lines": 6
+      },
+      {
+        "path": "Extensions/SimpleCache.cs",
+        "lines": 101
+      },
+      {
+        "path": "Extensions/StringExtensions.cs",
+        "lines": 300
+      },
+      {
+        "path": "Extensions/UsbExtensions.cs",
+        "lines": 26
+      },
+      {
+        "path": "Io/Archives.cs",
+        "lines": 27
+      },
+      {
+        "path": "Io/UserFolders.cs",
+        "lines": 37
+      },
+      {
+        "path": "Models/Configuration/BackupFilesData.cs",
+        "lines": 153
+      },
+      {
+        "path": "Models/Dashboard/AnnouncementsData.cs",
+        "lines": 25
+      },
+      {
+        "path": "Models/Dashboard/FavoriteGamesData.cs",
+        "lines": 32
+      },
+      {
+        "path": "Models/Dashboard/FavoriteModsData.cs",
+        "lines": 36
+      },
+      {
+        "path": "Models/Database/AppItemData.cs",
+        "lines": 143
+      },
+      {
+        "path": "Models/Database/AppItemFile.cs",
+        "lines": 31
+      },
+      {
+        "path": "Models/Database/DownloadFiles.cs",
+        "lines": 54
+      },
+      {
+        "path": "Models/Database/GamePatchItemData.cs",
+        "lines": 73
+      },
+      {
+        "path": "Models/Database/PackageItemData.cs",
+        "lines": 53
+      },
+      {
+        "path": "Models/Database/StatsData.cs",
+        "lines": 18
+      },
+      {
+        "path": "Models/Database/TrainerGameItem.cs",
+        "lines": 94
+      },
+      {
+        "path": "Models/Game Data/PS3/GameItemData.cs",
+        "lines": 15
+      },
+      {
+        "path": "Models/Game Data/PS3/GameUpdates.cs",
+        "lines": 48
+      },
+      {
+        "path": "Models/Game Data/XBOX360/GameItemData.cs",
+        "lines": 11
+      },
+      {
+        "path": "Models/Game Data/XBOX360/GameTitleIds.cs",
+        "lines": 43
+      },
+      {
+        "path": "Models/Release Data/GitHubReleaseData.cs",
+        "lines": 112
+      }
+    ],
+    "unlinked_ui_free_files": [
+      {
+        "path": "Extensions/ImageExtensions.cs",
+        "lines": 82
+      },
+      {
+        "path": "Extensions/ImgurUploader.cs",
+        "lines": 43
+      },
+      {
+        "path": "Extensions/PS3/WebManExtensions.cs",
+        "lines": 527
+      },
+      {
+        "path": "Helpers/DataManager.cs",
+        "lines": 14
+      }
+    ],
+    "port_map_summary": {
+      "total_entries": 30,
+      "active_count": 22,
+      "entries": [
+        {
+          "old": "Forms/Dialogs/ReportIssueDialog.Designer.cs",
+          "new": "Forms/Dialogs/ReportIssueDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/ReportIssueDialog.cs",
+          "new": "Forms/Dialogs/ReportIssueDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/PackagesFaqDialog.Designer.cs",
+          "new": "Forms/Dialogs/PackagesFaqDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/PackagesFaqDialog.cs",
+          "new": "Forms/Dialogs/PackagesFaqDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/EditLoginDialog.Designer.cs",
+          "new": "Forms/Dialogs/EditLoginDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/EditLoginDialog.cs",
+          "new": "Forms/Dialogs/EditLoginDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/DataViewDialog.Designer.cs",
+          "new": "Forms/Dialogs/DataViewDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/DataViewDialog.cs",
+          "new": "Forms/Dialogs/DataViewDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/RequestModsDialog.Designer.cs",
+          "new": "Forms/Dialogs/RequestModsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/RequestModsDialog.cs",
+          "new": "Forms/Dialogs/RequestModsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/SortOptionsDialog.Designer.cs",
+          "new": "Forms/Dialogs/SortOptionsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/SortOptionsDialog.cs",
+          "new": "Forms/Dialogs/SortOptionsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/BackupFileDialog.Designer.cs",
+          "new": "Forms/Dialogs/BackupFileDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/BackupFileDialog.cs",
+          "new": "Forms/Dialogs/BackupFileDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/ListViewDialog.Designer.cs",
+          "new": "Forms/Dialogs/ListViewDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/ListViewDialog.cs",
+          "new": "Forms/Dialogs/ListViewDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/EasterEgg.Designer.cs",
+          "new": "Forms/Dialogs/EasterEgg.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/EasterEgg.cs",
+          "new": "Forms/Dialogs/EasterEgg.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Database/AppsData.cs",
+          "new": "Database/AppsData.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Database/ModsData.cs",
+          "new": "Database/ModsData.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Extensions/DataExtensions.cs",
+          "new": "Extensions/DataExtensions.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Extensions/IoExtensions.cs",
+          "new": "Extensions/IoExtensions.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Io/UserFolders.cs",
+          "new": "Io/UserFolders.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Models/Configuration/BackupFilesData.cs",
+          "new": "Models/Configuration/BackupFilesData.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Models/Database/AppItemData.cs",
+          "new": "Models/Database/AppItemData.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Models/Database/TrainerGameItem.cs",
+          "new": "Models/Database/TrainerGameItem.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Forms/Dialogs/Details/PackageDialog.Designer.cs",
+          "new": "Forms/Dialogs/Details/PackageDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/Details/PackageDialog.cs",
+          "new": "Forms/Dialogs/Details/PackageDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/Details/GameTrainersDialog.Designer.cs",
+          "new": "Forms/Dialogs/Details/GameTrainersDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/Details/GameTrainersDialog.cs",
+          "new": "Forms/Dialogs/Details/GameTrainersDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        }
+      ]
+    }
+  },
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Survey and container build recipe",
+      "status": "done",
+      "approved": true,
+      "approval_note": "Completed baseline",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "The Windows exe builds in the mono:6.12 container with 0 errors.",
+      "progress_source": "manual",
+      "percent": 100.0,
+      "percent_str": "100.0%"
+    },
+    {
+      "id": "M1",
+      "title": "Stock-WinForms shell, 24 linked UI-free files, container build, bundled Linux ELF, automated smoke check",
+      "status": "done",
+      "approved": true,
+      "approval_note": "Completed baseline",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "BUILD-OK from the container build, CHECK-PASS from the Xvfb smoke check (six markers, exit 0), and the ELF passes the same check.",
+      "progress_source": "manual",
+      "percent": 100.0,
+      "percent_str": "100.0%"
+    },
+    {
+      "id": "M1b",
+      "title": "Design-option trials and decision",
+      "status": "done",
+      "approved": true,
+      "approval_note": "Completed baseline",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "Decision: hand redesign on a shared control layer.",
+      "progress_source": "manual",
+      "percent": 100.0,
+      "percent_str": "100.0%"
+    },
+    {
+      "id": "M2",
+      "title": "Shared bar layer plus ReportIssueDialog (first slice)",
+      "status": "done",
+      "approved": false,
+      "approval_note": "Awaiting owner approval",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF on the build machine from this code; the ELF passes the shell check (six markers) and the form check (SHOWN, ICON-OK, ACTION-OPEN-OK, ACTION-COPY-OK, CAPTURE-OK, EXIT-OK) under a private 24-bit Xvfb display. Known issues: the Open-in-browser icon renders as a missing-glyph box (its source SVG is a DevExpress icon-font glyph); never viewed on a real display; the real browser and clipboard were never exercised (smoke mode injects recorders). Owner approval is not recorded here. Update 2026-11-21: ten forms now pass an ELF form check (ReportIssueDialog, PackagesFaqDialog, EditLoginDialog, DataViewDialog, RequestModsDialog, SortOptionsDialog, BackupFileDialog, ListViewDialog, EasterEgg) plus the shell; the nine detail dialogs written afterwards are not counted because they collapse to 1 pixel of client height. Update after BUILD-REQUEST-2: PackageDialog (686x385) and GameTrainersDialog (766x585) now pass with measured, non-sliver captures (GameTrainersDialog shows a large blank rectangle); seven other detail dialogs still fail to capture.",
+      "progress_source": "manual",
+      "percent": 100.0,
+      "percent_str": "100.0%"
+    },
+    {
+      "id": "M3",
+      "title": "Remaining shared layer: tiles (62 uses), StatItem (46), SvgImageBox (29), navigation and tab pages (39)",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "manual",
+      "manual_percent": 0,
+      "evidence": "Shared control replacements needed across forms: tiles (62 uses), StatItem (46), SvgImageBox (29), navigation and tab pages (39).",
+      "progress_source": "manual",
+      "percent": 0.0,
+      "percent_str": "0.0%"
+    },
+    {
+      "id": "M4",
+      "title": "Convert the other layout designers",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "measured_c_other",
+      "evidence": "Measured from Dimension C excluding Forms/Windows/MainWindow.Designer.cs and Forms/Dialogs/ReportIssueDialog.Designer.cs (no double counting with M2 or M5).",
+      "progress_source": "computed",
+      "percent": 12.1,
+      "percent_str": "12.1%",
+      "measurement": {
+        "numerator": 2129,
+        "denominator": 17467,
+        "percent": 12.1,
+        "percent_str": "12.1%",
+        "files_ported": 10,
+        "files_total": 52,
+        "formula": "ported lines in Dimension C excluding MainWindow & ReportIssueDialog / 17,467 lines"
+      }
+    },
+    {
+      "id": "M5",
+      "title": "MainWindow redesign",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "measured_c_mainwindow",
+      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone.",
+      "progress_source": "computed",
+      "percent": 0.0,
+      "percent_str": "0.0%",
+      "measurement": {
+        "numerator": 0,
+        "denominator": 15828,
+        "percent": 0.0,
+        "percent_str": "0.0%",
+        "files_ported": 0,
+        "files_total": 1,
+        "layout_share_percent_str": "47.2%",
+        "formula": "ported lines in Forms/Windows/MainWindow.Designer.cs / 15,828 lines"
+      }
+    },
+    {
+      "id": "M6",
+      "title": "Code-behind and logic port",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "measured_b",
+      "evidence": "Measured from Dimension B across all UI-coupled code-behind and logic files.",
+      "progress_source": "computed",
+      "percent": 3.3,
+      "percent_str": "3.3%",
+      "measurement": {
+        "numerator": 867,
+        "denominator": 26073,
+        "percent": 3.3,
+        "percent_str": "3.3%",
+        "files_ported": 11,
+        "files_total": 66,
+        "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
+      }
+    },
+    {
+      "id": "M7",
+      "title": "Windows-only modules",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "manual",
+      "manual_percent": 0,
+      "evidence": "0 of 5 resolved; each Windows-only dependency needs an owner decision.",
+      "modules": [
+        {
+          "name": "XDevkit",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "JRPC",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "WebView2",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "AdsJumbo",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "AutoUpdater",
+          "resolved": false,
+          "note": "Needs owner decision"
+        }
+      ],
+      "progress_source": "manual",
+      "percent": 0.0,
+      "percent_str": "0.0%",
+      "resolved_count": 0,
+      "total_count": 5
+    },
+    {
+      "id": "M8",
+      "title": "Packaging",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "manual",
+      "manual_percent": 0,
+      "evidence": "Checklist of known packaging facts (stays 0.0% while planned and unapproved).",
+      "checklist": [
+        {
+          "label": "ELF built",
+          "state": "yes",
+          "detail": "Bundled Linux ELF is built."
+        },
+        {
+          "label": "Runs with Mono installed",
+          "state": "yes",
+          "detail": "Verified against the Xvfb smoke check."
+        },
+        {
+          "label": "Runs on a machine without Mono",
+          "state": "no",
+          "detail": "NO — the ELF loads Mono's two native helper libraries libMonoPosixHelper and libmono-native, plus libgdiplus, from the installed system."
+        },
+        {
+          "label": "Installer or AppImage",
+          "state": "no",
+          "detail": "No installer or AppImage built yet."
+        }
+      ],
+      "progress_source": "manual",
+      "percent": 0.0,
+      "percent_str": "0.0%"
+    }
+  ],
+  "extensibility_gates": [
+    {
+      "id": "shared_control_layer",
+      "label": "Shared control layer exists in the new project",
+      "status": "pass",
+      "value": "YES (ActionStrip, IconBox, PageTabs, tiles, stat/tool/profile items, DetailLayout)",
+      "source": "manual",
+      "detail": "Twelve shared controls compile in the container build. ActionStrip is used by dialogs that pass an ELF form check. The DetailLayout-based detail dialogs currently collapse to a client height of 1 pixel (measured 2026-11-21) and are NOT verified; none of the controls is behaviour-tested."
+    },
+    {
+      "id": "no_windows_paths_or_fonts",
+      "label": "No hard-coded Windows paths or fonts in the new project's own .cs files",
+      "status": "fail",
+      "value": "NO",
+      "source": "computed",
+      "detail": "Found 18 issue(s): Controls/ChangeLogItem.cs:18 string literal backslash path; Controls/NewsItem.cs:16 string literal backslash path; Controls/NewsItem.cs:17 string literal backslash path; Forms/Dialogs/Details/GameModDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewXboxDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/ResourceDialog.cs:30 verbatim string backslash path; Models/Configuration/SettingsData.cs:56 verbatim string backslash path; Models/Configuration/SettingsData.cs:82 verbatim string backslash path; Models/Configuration/SettingsData.cs:84 verbatim string backslash path; Models/Configuration/SettingsData.cs:104 verbatim string backslash path; Models/Database/GameSaveItemData.cs:66 verbatim string backslash path; Models/Database/GameSaveItemData.cs:75 verbatim string backslash path; Models/Database/ModItemData.cs:149 verbatim string backslash path; Models/Database/ModItemData.cs:158 verbatim string backslash path; Models/Database/TrainerGameItem.cs:36 verbatim string backslash path; Models/Database/TrainerGameItem.cs:45 verbatim string backslash path; Program.cs:45 string literal backslash path"
+    },
+    {
+      "id": "layout_uses_containers",
+      "label": "Layout uses containers, not copied pixel coordinates",
+      "status": "pass",
+      "value": "YES (measured on 32 files)",
+      "source": "manual",
+      "detail": "Forms/ and Controls/ in the Mono project: 0 hard-coded position or bounds assignments, 273 container or dock uses, no Segoe UI or DevExpress outside comments. Measured by text search, not by looking at every form."
+    },
+    {
+      "id": "automated_smoke_check",
+      "label": "Automated smoke check exists",
+      "status": "pass",
+      "value": "YES",
+      "source": "computed",
+      "detail": "../scripts/check-cross.sh: exists; ../scripts/check-elf.sh: exists."
+    },
+    {
+      "id": "self_contained_elf",
+      "label": "Self-contained ELF without installed Mono",
+      "status": "unknown",
+      "value": "PARTIAL (shell only)",
+      "source": "manual",
+      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, the shell runs --smoke in a clean debian:bookworm-slim container with no Mono installed. It still needs system libx11, libgdiplus, fontconfig and libgssapi_krb5. The forms have not been run in the clean container yet."
+    }
+  ],
+  "recent_events": []
+}</script>
+  <script>
+    (function () {
+      "use strict";
+
+      function el(tag, className, text) {
+        var node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined && text !== null) node.textContent = String(text);
+        return node;
+      }
+
+      function fmtNum(n) {
+        return Number(n).toLocaleString("en-US");
+      }
+
+      function badge(text, cls) {
+        return el("span", "badge " + cls, text);
+      }
+
+      function progressBar(percent, isDone, extraClass) {
+        var track = el("div", "bar-track");
+        var cls = "bar-fill" + (isDone ? " done" : (extraClass ? " " + extraClass : ""));
+        var fill = el("div", cls);
+        var clamped = Math.max(0, Math.min(100, Number(percent) || 0));
+        fill.style.width = clamped + "%";
+        track.appendChild(fill);
+        return track;
+      }
+
+      function sourceBadge(source) {
+        return source === "computed"
+          ? badge("Computed", "badge-computed")
+          : badge("Manual", "badge-manual");
+      }
+
+      function statusBadge(status) {
+        if (status === "done") return badge("done", "badge-done");
+        if (status === "proposed") return badge("proposed", "badge-proposed");
+        return badge(status || "planned", "badge-planned");
+      }
+
+      function gateBadge(status, value) {
+        if (status === "pass") return badge("PASS (" + value + ")", "badge-pass");
+        if (status === "fail") return badge("FAIL (" + value + ")", "badge-fail");
+        return badge("UNKNOWN (" + value + ")", "badge-unknown");
+      }
+
+      var dataEl = document.getElementById("dashboard-data");
+      var app = document.getElementById("app");
+      if (!dataEl || !app) return;
+
+      var data = JSON.parse(dataEl.textContent);
+      app.textContent = "";
+
+      // 1. Header + Definition
+      var headerCard = el("section", "card");
+      var at = data.active_threads || {};
+      var atText;
+      if (typeof at.count === "number") {
+        atText = "Active threads: " + at.count + " (as of " + at.as_of + (at.stale ? ", STALE: counter not updating" : "") + ")";
+      } else {
+        atText = "Active threads: - (no count available)";
+      }
+      var atEl = el("p", at.stale ? "muted" : null, atText);
+      atEl.style.fontWeight = "700";
+      atEl.style.fontSize = "1.1em";
+      headerCard.appendChild(atEl);
+      headerCard.appendChild(el("h1", null, data.project));
+      headerCard.appendChild(
+        el("p", "muted", "Target: Windows DevExpress WinForms rewritten for Linux on Mono using only stock System.Windows.Forms (no DevExpress).")
+      );
+      var defP = el("p", null);
+      var defStrong = el("strong", null, "Full completion definition: ");
+      defP.appendChild(defStrong);
+      defP.appendChild(document.createTextNode(data.completion_definition));
+      headerCard.appendChild(defP);
+      var meta = el("div", "meta-row");
+      meta.appendChild(el("span", null, "Generated (UTC): " + data.generated_at_utc));
+      meta.appendChild(el("span", null, "Percentages: 1 decimal place, floor-truncated (never rounded up)"));
+      headerCard.appendChild(meta);
+      app.appendChild(headerCard);
+
+      // 2. Proposal disclaimer banner
+      var notice = el("section", "notice-banner");
+      notice.setAttribute("role", "alert");
+      notice.appendChild(el("strong", null, "Unapproved Proposal Notice"));
+      notice.appendChild(el("p", null, data.proposal_notice));
+      app.appendChild(notice);
+
+      // 3. Overall Codebase Progress Hero
+      var ov = data.measurements.overall;
+      var heroCard = el("section", "card");
+      var heroTop = el("div", "hero-top");
+      var heroLeft = el("div", "badge-row");
+      heroLeft.appendChild(el("h2", null, "Overall Codebase Progress"));
+      heroLeft.appendChild(sourceBadge("computed"));
+      heroTop.appendChild(heroLeft);
+      var heroPctWrap = el("div", "hero-pct-wrap");
+      var heroPctText = ov.files_percent_str ? ov.percent_str + " / " + ov.files_percent_str : ov.percent_str;
+      heroPctWrap.appendChild(el("div", "hero-pct", heroPctText));
+      if (ov.files_percent_str) {
+        heroPctWrap.appendChild(el("div", "hero-pct-sub", "LOC / Files"));
+      }
+      heroTop.appendChild(heroPctWrap);
+      heroCard.appendChild(heroTop);
+      var heroBars = el("div", "hero-bars");
+      var locRow = el("div", "hero-bar-row");
+      locRow.appendChild(el("span", "hero-bar-label", "LOC"));
+      locRow.appendChild(progressBar(ov.percent, ov.percent >= 100));
+      heroBars.appendChild(locRow);
+      var filesPct = typeof ov.files_percent === "number" ? ov.files_percent : (ov.files_total > 0 ? (ov.files_ported * 100) / ov.files_total : 0);
+      var filesRow = el("div", "hero-bar-row");
+      filesRow.appendChild(el("span", "hero-bar-label", "Files"));
+      filesRow.appendChild(progressBar(filesPct, filesPct >= 100, "files"));
+      heroBars.appendChild(filesRow);
+      heroCard.appendChild(heroBars);
+      var heroDetails = el("div", "meta-row");
+      heroDetails.appendChild(el("span", null, "Lines (LOC): " + fmtNum(ov.numerator) + " / " + fmtNum(ov.denominator) + " (" + ov.percent_str + ")"));
+      heroDetails.appendChild(el("span", null, "Files: " + fmtNum(ov.files_ported) + " / " + fmtNum(ov.files_total) + (ov.files_percent_str ? " (" + ov.files_percent_str + ")" : "")));
+      heroDetails.appendChild(el("span", "mono", "Formula: " + ov.formula));
+      heroCard.appendChild(heroDetails);
+      app.appendChild(heroCard);
+
+      // 4. Measured Codebase Progress (Dimensions A, B, C, Overall + Excluded Properties)
+      var dimSection = el("section", "card");
+      var dimHead = el("div", "hero-top");
+      var dimTitleRow = el("div", "badge-row");
+      dimTitleRow.appendChild(el("h2", null, "Measured Codebase Dimensions"));
+      dimTitleRow.appendChild(sourceBadge("computed"));
+      dimHead.appendChild(dimTitleRow);
+      dimHead.appendChild(el("span", "muted", "Line count = newline characters (wc -l)"));
+      dimSection.appendChild(dimHead);
+
+      var dimGrid = el("div", "grid");
+      var dims = data.measurements.dimensions;
+      dims.forEach(function (d) {
+        var box = el("div", "dim-card");
+        var dh = el("div", "dim-header");
+        dh.appendChild(el("strong", null, d.label));
+        dh.appendChild(el("span", "dim-pct", d.percent_str));
+        box.appendChild(dh);
+        box.appendChild(progressBar(d.percent, d.percent >= 100));
+        box.appendChild(el("div", "muted", "Lines: " + fmtNum(d.numerator) + " / " + fmtNum(d.denominator)));
+        box.appendChild(el("div", "muted", "Files: " + fmtNum(d.files_ported) + " / " + fmtNum(d.files_total)));
+        box.appendChild(el("div", "mono muted", d.formula));
+        dimGrid.appendChild(box);
+      });
+      dimSection.appendChild(dimGrid);
+
+      // Visible formula & numerator/denominator summary table
+      var tableWrap = el("div", "table-wrap");
+      var tbl = el("table");
+      var thead = el("thead");
+      var hr = el("tr");
+      ["Category / Dimension", "Files", "Ported / Linked Lines", "Total Lines", "%", "Formula"].forEach(function (h, i) {
+        var th = el("th", i >= 1 && i <= 4 ? "num" : null, h);
+        hr.appendChild(th);
+      });
+      thead.appendChild(hr);
+      tbl.appendChild(thead);
+
+      var tbody = el("tbody");
+      dims.concat([ov]).forEach(function (row) {
+        var tr = el("tr");
+        tr.appendChild(el("td", null, row.label));
+        tr.appendChild(el("td", "num", fmtNum(row.files_ported) + " / " + fmtNum(row.files_total)));
+        tr.appendChild(el("td", "num", fmtNum(row.numerator)));
+        tr.appendChild(el("td", "num", fmtNum(row.denominator)));
+        tr.appendChild(el("td", "num", row.percent_str));
+        tr.appendChild(el("td", "mono", row.formula));
+        tbody.appendChild(tr);
+      });
+
+      var excl = data.measurements.excluded_properties;
+      var exclTr = el("tr");
+      exclTr.appendChild(el("td", null, "Excluded: Properties/*.cs (generated/metadata)"));
+      exclTr.appendChild(el("td", "num", fmtNum(excl.file_count) + " (excluded)"));
+      exclTr.appendChild(el("td", "num", "—"));
+      exclTr.appendChild(el("td", "num", fmtNum(excl.total_lines)));
+      exclTr.appendChild(el("td", "num", "excluded"));
+      exclTr.appendChild(el("td", "mono", "Excluded from every denominator"));
+      tbody.appendChild(exclTr);
+
+      tbl.appendChild(tbody);
+      tableWrap.appendChild(tbl);
+      dimSection.appendChild(tableWrap);
+
+      var portNote = el("p", "muted", "port_map entries active: " + fmtNum(data.measurements.port_map_summary.active_count) + " (of " + fmtNum(data.measurements.port_map_summary.total_entries) + " entries). Dimensions B and C count only explicit {old, new} relative-path entries whose new file exists; basename matching is never used.");
+      portNote.style.marginTop = "10px";
+      dimSection.appendChild(portNote);
+
+      // Collapsible file breakdown
+      var details = el("details");
+      details.appendChild(el("summary", null, "Inspect file lists: " + fmtNum(data.measurements.linked_ui_free_files.length) + " linked UI-free, " + fmtNum(data.measurements.unlinked_ui_free_files.length) + " unlinked UI-free, " + fmtNum(excl.files.length) + " excluded Properties/*.cs"));
+      var cols = el("div", "file-columns");
+
+      function makeList(title, items) {
+        var wrap = el("div");
+        wrap.appendChild(el("strong", null, title));
+        var ul = el("ul", "file-list");
+        items.forEach(function (it) {
+          ul.appendChild(el("li", null, it.path + " (" + fmtNum(it.lines) + " lines)"));
+        });
+        wrap.appendChild(ul);
+        return wrap;
+      }
+
+      cols.appendChild(makeList("Linked UI-free files (" + fmtNum(data.measurements.linked_ui_free_files.length) + ")", data.measurements.linked_ui_free_files));
+      cols.appendChild(makeList("Remaining UI-free files (" + fmtNum(data.measurements.unlinked_ui_free_files.length) + ")", data.measurements.unlinked_ui_free_files));
+      cols.appendChild(makeList("Excluded Properties/*.cs (" + fmtNum(excl.files.length) + ")", excl.files));
+      details.appendChild(cols);
+      dimSection.appendChild(details);
+      app.appendChild(dimSection);
+
+      // 5. Milestones
+      var msCard = el("section", "card");
+      msCard.appendChild(el("h2", null, "Milestones (M0 – M8)"));
+      msCard.appendChild(el("p", "muted", "M0–M1b are approved and done (100.0%). M2–M8 are unapproved proposals: M4 (other layouts), M5 (MainWindow alone), and M6 (code-behind) are measured from the repo without double counting; planned/proposed unmeasured milestones stay at 0.0%."));
+      var msList = el("div", "milestone-list");
+      msList.style.marginTop = "10px";
+
+      data.milestones.forEach(function (m) {
+        var item = el("div", "milestone-item");
+        var top = el("div", "item-top");
+
+        var left = el("div", "item-title");
+        left.appendChild(document.createTextNode(m.id + " — " + m.title));
+        top.appendChild(left);
+
+        var right = el("div", "badge-row");
+        right.appendChild(statusBadge(m.status));
+        if (!m.approved && m.approval_note) {
+          right.appendChild(badge(m.approval_note, m.status === "proposed" ? "badge-proposed" : "badge-planned"));
+        }
+        right.appendChild(sourceBadge(m.progress_source));
+        right.appendChild(el("span", "item-pct", m.percent_str));
+        top.appendChild(right);
+        item.appendChild(top);
+
+        item.appendChild(progressBar(m.percent, m.status === "done" || m.percent >= 100));
+
+        if (m.measurement) {
+          var mMeta = el("div", "meta-row");
+          mMeta.appendChild(el("span", null, "Lines: " + fmtNum(m.measurement.numerator) + " / " + fmtNum(m.measurement.denominator)));
+          if (m.measurement.files_total !== undefined) {
+            mMeta.appendChild(el("span", null, "Files: " + fmtNum(m.measurement.files_ported) + " / " + fmtNum(m.measurement.files_total)));
+          }
+          if (m.measurement.layout_share_percent_str) {
+            mMeta.appendChild(el("span", null, "Share of all layout lines: " + m.measurement.layout_share_percent_str));
+          }
+          mMeta.appendChild(el("span", "mono", "Formula: " + m.measurement.formula));
+          item.appendChild(mMeta);
+        }
+
+        if (m.modules && m.modules.length) {
+          var modSummary = el("div", "muted", "Resolved: " + fmtNum(m.resolved_count) + " of " + fmtNum(m.total_count));
+          item.appendChild(modSummary);
+          var modGrid = el("div", "sublist");
+          m.modules.forEach(function (mod) {
+            var pill = el("div", "subpill");
+            pill.appendChild(el("span", null, mod.name));
+            pill.appendChild(badge(mod.resolved ? "resolved" : mod.note, mod.resolved ? "badge-done" : "badge-planned"));
+            modGrid.appendChild(pill);
+          });
+          item.appendChild(modGrid);
+        }
+
+        if (m.checklist && m.checklist.length) {
+          var chkGrid = el("div", "sublist");
+          m.checklist.forEach(function (c) {
+            var pill = el("div", "subpill");
+            pill.appendChild(el("span", null, c.label));
+            var cls = c.state === "yes" ? "badge-pass" : (c.state === "no" ? "badge-fail" : "badge-unknown");
+            pill.appendChild(badge(c.state.toUpperCase(), cls));
+            pill.title = c.detail || "";
+            chkGrid.appendChild(pill);
+          });
+          item.appendChild(chkGrid);
+        }
+
+        item.appendChild(el("p", "muted", "Evidence: " + m.evidence));
+        msList.appendChild(item);
+      });
+
+      msCard.appendChild(msList);
+      app.appendChild(msCard);
+
+      // 6. Extensibility Gates
+      var gateCard = el("section", "card");
+      gateCard.appendChild(el("h2", null, "Extensibility Gates (Separate Pass/Fail Checks — Not Included in %)"));
+      gateCard.appendChild(el("p", "muted", "These gates track architectural readiness and packaging constraints separately from codebase line percentages."));
+      var gateList = el("div", "gate-list");
+      gateList.style.marginTop = "10px";
+
+      data.extensibility_gates.forEach(function (g) {
+        var gi = el("div", "gate-item");
+        var top = el("div", "item-top");
+        top.appendChild(el("div", "item-title", g.label));
+        var badges = el("div", "badge-row");
+        badges.appendChild(sourceBadge(g.source));
+        badges.appendChild(gateBadge(g.status, g.value));
+        top.appendChild(badges);
+        gi.appendChild(top);
+        gi.appendChild(el("p", "muted", g.detail));
+        gateList.appendChild(gi);
+      });
+
+      gateCard.appendChild(gateList);
+      app.appendChild(gateCard);
+
+      if (data.recent_events && data.recent_events.length > 0) {
+        var evCard = el("section", "card");
+        evCard.appendChild(el("h2", null, "Recent Work-Completed Notifications"));
+        var evList = el("div", "gate-list");
+        data.recent_events.forEach(function (ev) {
+          var row = el("div", "gate-item");
+          var top = el("div", "item-top");
+          top.appendChild(el("div", "item-title", ev.summary || "Work completed"));
+          var br = el("div", "badge-row");
+          br.appendChild(badge(ev.source || "main-thread", "badge-manual"));
+          br.appendChild(el("span", "muted mono", ev.timestamp_utc || ""));
+          top.appendChild(br);
+          row.appendChild(top);
+          if (ev.changes && ev.changes.length) {
+            row.appendChild(el("div", "muted mono", "Changes: " + ev.changes.join("; ")));
+          }
+          evList.appendChild(row);
+        });
+        evCard.appendChild(evList);
+        app.appendChild(evCard);
+      }
+
+      var footer = el("footer", null, "Generated by measure.py from milestones.json and the local repo checkout. Do not hand-edit index.html.");
+      app.appendChild(footer);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+{
+  "project": "Arisen Studio (Linux / Mono Migration)",
+  "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
+  "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
+  "port_map": [
+    {
+      "old": "Forms/Dialogs/ReportIssueDialog.Designer.cs",
+      "new": "Forms/Dialogs/ReportIssueDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/ReportIssueDialog.cs",
+      "new": "Forms/Dialogs/ReportIssueDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/PackagesFaqDialog.Designer.cs",
+      "new": "Forms/Dialogs/PackagesFaqDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/PackagesFaqDialog.cs",
+      "new": "Forms/Dialogs/PackagesFaqDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/EditLoginDialog.Designer.cs",
+      "new": "Forms/Dialogs/EditLoginDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/EditLoginDialog.cs",
+      "new": "Forms/Dialogs/EditLoginDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/DataViewDialog.Designer.cs",
+      "new": "Forms/Dialogs/DataViewDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/DataViewDialog.cs",
+      "new": "Forms/Dialogs/DataViewDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/RequestModsDialog.Designer.cs",
+      "new": "Forms/Dialogs/RequestModsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/RequestModsDialog.cs",
+      "new": "Forms/Dialogs/RequestModsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/SortOptionsDialog.Designer.cs",
+      "new": "Forms/Dialogs/SortOptionsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/SortOptionsDialog.cs",
+      "new": "Forms/Dialogs/SortOptionsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/BackupFileDialog.Designer.cs",
+      "new": "Forms/Dialogs/BackupFileDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/BackupFileDialog.cs",
+      "new": "Forms/Dialogs/BackupFileDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/ListViewDialog.Designer.cs",
+      "new": "Forms/Dialogs/ListViewDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/ListViewDialog.cs",
+      "new": "Forms/Dialogs/ListViewDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/EasterEgg.Designer.cs",
+      "new": "Forms/Dialogs/EasterEgg.cs"
+    },
+    {
+      "old": "Forms/Dialogs/EasterEgg.cs",
+      "new": "Forms/Dialogs/EasterEgg.cs"
+    },
+    {
+      "old": "Database/AppsData.cs",
+      "new": "Database/AppsData.cs"
+    },
+    {
+      "old": "Database/ModsData.cs",
+      "new": "Database/ModsData.cs"
+    },
+    {
+      "old": "Extensions/DataExtensions.cs",
+      "new": "Extensions/DataExtensions.cs"
+    },
+    {
+      "old": "Extensions/IoExtensions.cs",
+      "new": "Extensions/IoExtensions.cs"
+    },
+    {
+      "old": "Io/UserFolders.cs",
+      "new": "Io/UserFolders.cs"
+    },
+    {
+      "old": "Models/Configuration/BackupFilesData.cs",
+      "new": "Models/Configuration/BackupFilesData.cs"
+    },
+    {
+      "old": "Models/Database/AppItemData.cs",
+      "new": "Models/Database/AppItemData.cs"
+    },
+    {
+      "old": "Models/Database/TrainerGameItem.cs",
+      "new": "Models/Database/TrainerGameItem.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/PackageDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/PackageDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/PackageDialog.cs",
+      "new": "Forms/Dialogs/Details/PackageDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameTrainersDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/GameTrainersDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameTrainersDialog.cs",
+      "new": "Forms/Dialogs/Details/GameTrainersDialog.cs"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Survey and container build recipe",
+      "status": "done",
+      "approved": true,
+      "approval_note": "Completed baseline",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "The Windows exe builds in the mono:6.12 container with 0 errors."
+    },
+    {
+      "id": "M1",
+      "title": "Stock-WinForms shell, 24 linked UI-free files, container build, bundled Linux ELF, automated smoke check",
+      "status": "done",
+      "approved": true,
+      "approval_note": "Completed baseline",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "BUILD-OK from the container build, CHECK-PASS from the Xvfb smoke check (six markers, exit 0), and the ELF passes the same check."
+    },
+    {
+      "id": "M1b",
+      "title": "Design-option trials and decision",
+      "status": "done",
+      "approved": true,
+      "approval_note": "Completed baseline",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "Decision: hand redesign on a shared control layer."
+    },
+    {
+      "id": "M2",
+      "title": "Shared bar layer plus ReportIssueDialog (first slice)",
+      "status": "done",
+      "approved": false,
+      "approval_note": "Awaiting owner approval",
+      "progress_mode": "manual",
+      "manual_percent": 100,
+      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF on the build machine from this code; the ELF passes the shell check (six markers) and the form check (SHOWN, ICON-OK, ACTION-OPEN-OK, ACTION-COPY-OK, CAPTURE-OK, EXIT-OK) under a private 24-bit Xvfb display. Known issues: the Open-in-browser icon renders as a missing-glyph box (its source SVG is a DevExpress icon-font glyph); never viewed on a real display; the real browser and clipboard were never exercised (smoke mode injects recorders). Owner approval is not recorded here. Update 2026-11-21: ten forms now pass an ELF form check (ReportIssueDialog, PackagesFaqDialog, EditLoginDialog, DataViewDialog, RequestModsDialog, SortOptionsDialog, BackupFileDialog, ListViewDialog, EasterEgg) plus the shell; the nine detail dialogs written afterwards are not counted because they collapse to 1 pixel of client height. Update after BUILD-REQUEST-2: PackageDialog (686x385) and GameTrainersDialog (766x585) now pass with measured, non-sliver captures (GameTrainersDialog shows a large blank rectangle); seven other detail dialogs still fail to capture."
+    },
+    {
+      "id": "M3",
+      "title": "Remaining shared layer: tiles (62 uses), StatItem (46), SvgImageBox (29), navigation and tab pages (39)",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "manual",
+      "manual_percent": 0,
+      "evidence": "Shared control replacements needed across forms: tiles (62 uses), StatItem (46), SvgImageBox (29), navigation and tab pages (39)."
+    },
+    {
+      "id": "M4",
+      "title": "Convert the other layout designers",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "measured_c_other",
+      "evidence": "Measured from Dimension C excluding Forms/Windows/MainWindow.Designer.cs and Forms/Dialogs/ReportIssueDialog.Designer.cs (no double counting with M2 or M5)."
+    },
+    {
+      "id": "M5",
+      "title": "MainWindow redesign",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "measured_c_mainwindow",
+      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone."
+    },
+    {
+      "id": "M6",
+      "title": "Code-behind and logic port",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "measured_b",
+      "evidence": "Measured from Dimension B across all UI-coupled code-behind and logic files."
+    },
+    {
+      "id": "M7",
+      "title": "Windows-only modules",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "manual",
+      "manual_percent": 0,
+      "evidence": "0 of 5 resolved; each Windows-only dependency needs an owner decision.",
+      "modules": [
+        {
+          "name": "XDevkit",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "JRPC",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "WebView2",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "AdsJumbo",
+          "resolved": false,
+          "note": "Needs owner decision"
+        },
+        {
+          "name": "AutoUpdater",
+          "resolved": false,
+          "note": "Needs owner decision"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "title": "Packaging",
+      "status": "planned",
+      "approved": false,
+      "approval_note": "Not approved",
+      "progress_mode": "manual",
+      "manual_percent": 0,
+      "evidence": "Checklist of known packaging facts (stays 0.0% while planned and unapproved).",
+      "checklist": [
+        {
+          "label": "ELF built",
+          "state": "yes",
+          "detail": "Bundled Linux ELF is built."
+        },
+        {
+          "label": "Runs with Mono installed",
+          "state": "yes",
+          "detail": "Verified against the Xvfb smoke check."
+        },
+        {
+          "label": "Runs on a machine without Mono",
+          "state": "no",
+          "detail": "NO \u2014 the ELF loads Mono's two native helper libraries libMonoPosixHelper and libmono-native, plus libgdiplus, from the installed system."
+        },
+        {
+          "label": "Installer or AppImage",
+          "state": "no",
+          "detail": "No installer or AppImage built yet."
+        }
+      ]
+    }
+  ],
+  "manual_gates": {
+    "shared_control_layer": {
+      "label": "Shared control layer exists in the new project",
+      "status": "pass",
+      "value": "YES (ActionStrip, IconBox, PageTabs, tiles, stat/tool/profile items, DetailLayout)",
+      "detail": "Twelve shared controls compile in the container build. ActionStrip is used by dialogs that pass an ELF form check. The DetailLayout-based detail dialogs currently collapse to a client height of 1 pixel (measured 2026-11-21) and are NOT verified; none of the controls is behaviour-tested."
+    },
+    "layout_uses_containers": {
+      "label": "Layout uses containers, not copied pixel coordinates",
+      "status": "pass",
+      "value": "YES (measured on 32 files)",
+      "detail": "Forms/ and Controls/ in the Mono project: 0 hard-coded position or bounds assignments, 273 container or dock uses, no Segoe UI or DevExpress outside comments. Measured by text search, not by looking at every form."
+    },
+    "self_contained_elf": {
+      "label": "Self-contained ELF without installed Mono",
+      "status": "unknown",
+      "value": "PARTIAL (shell only)",
+      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, the shell runs --smoke in a clean debian:bookworm-slim container with no Mono installed. It still needs system libx11, libgdiplus, fontconfig and libgssapi_krb5. The forms have not been run in the clean container yet."
+    }
+  }
+}
