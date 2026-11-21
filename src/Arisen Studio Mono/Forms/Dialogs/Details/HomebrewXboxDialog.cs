@@ -704,7 +704,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
             int width = Math.Min(h * 50, (int)(work.Width * 0.9));
             ClientSize = new Size(width, ClientSize.Height);
 
-            int height = Math.Min(_layout.PreferredSize.Height, (int)(work.Height * 0.9));
+            int height = Math.Min(Math.Max(_layout.PreferredSize.Height, h * 32), (int)(work.Height * 0.9));
             ClientSize = new Size(width, height);
         }
 

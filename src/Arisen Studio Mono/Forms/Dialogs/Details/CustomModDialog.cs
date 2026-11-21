@@ -369,7 +369,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
             // The tab area gets a fixed share of the height. The layout's preferred height already includes the
             // tab control's small preferred size, so this overestimates by about one tab strip.
             int tabAreaHeight = h * 21;
-            int height = Math.Min(_layout.PreferredSize.Height + tabAreaHeight, (int)(work.Height * 0.9));
+            int height = Math.Min(Math.Max(_layout.PreferredSize.Height + tabAreaHeight, h * 32), (int)(work.Height * 0.9));
             ClientSize = new Size(width, height);
         }
 
