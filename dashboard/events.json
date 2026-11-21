@@ -70,5 +70,15 @@
       "All 6 children in both 955x148 and 955x149 rows drew via Control.Size",
       "Both rowdraw targets threw InvalidParameter at stage=draw; ListBox child 4 ClientSize=931x-3"
     ]
+  },
+  {
+    "summary": "Parallel A finished writing 3 dialogs; BUILD-REQUEST-8 started",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 19:55:00 UTC",
+    "changes": [
+      "Wrote ConnectionsDialog.cs, NewProfileDialog.cs, and NewCustomDialog.cs (code-only, not yet wired/compiled)",
+      "All 6 parallel dialogs (A + B2) now written; awaiting combined csproj wiring + 8 console artwork EmbeddedResources",
+      "BUILD-REQUEST-8 (ListBox ClientSize perturbation) launched"
+    ]
   }
 ]
