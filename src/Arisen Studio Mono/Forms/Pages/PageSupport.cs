@@ -182,6 +182,9 @@ namespace ArisenStudio.Forms.Pages
     /// profile (FTP for PS3 and PS4, the devkit for Xbox). All members are called on the UI thread; the async ones
     /// may work on other threads. Exceptions are caught by the page and shown in its console status line.
     /// Download and upload must overwrite what is already there (the old code deleted the target first).
+    /// Paths: the folder passed to ListAsync and the consoleFolder passed to UploadAsync end with
+    /// <see cref="PathSeparator"/>; the item paths passed to Download, Delete, Rename, Exists and CreateFolder do not
+    /// (a folder's path has no trailing separator). RenameAsync takes the new name only, not a path.
     /// </summary>
     public interface IConsoleFileService
     {

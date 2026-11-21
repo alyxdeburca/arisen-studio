@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using ArisenStudio.Controls;
+using ArisenStudio.Forms.Dashboard;
 using ArisenStudio.Forms.Dialogs;
 
 namespace ArisenStudio.Shell
@@ -21,6 +22,7 @@ namespace ArisenStudio.Shell
         private readonly NavListPanel _nav;
         private readonly PageHost _pages;
         private readonly ActionStrip _actions;
+        private readonly DashboardPage _dashboard;
         private readonly StatusStrip _status;
         private readonly MenuStrip _menu;
         private readonly ToolStripStatusLabel _statusText;
@@ -44,7 +46,8 @@ namespace ArisenStudio.Shell
 
             _status = new StatusStrip();
             ToolStripStatusLabel headerStatus = new ToolStripStatusLabel("Status:") { Name = "StatusLabelHeaderStatus" };
-            _statusText = new ToolStripStatusLabel("Status") { Name = "StatusLabelStatus", Spring = true, TextAlign = ContentAlignment.MiddleLeft };
+            // "Idling..." is the old app's idle text (STATUS_IDLING in en_US); "Status" was only the designer default.
+            _statusText = new ToolStripStatusLabel("Idling...") { Name = "StatusLabelStatus", Spring = true, TextAlign = ContentAlignment.MiddleLeft };
             _connectionText = new ToolStripStatusLabel("Not Connected") { Name = "StatusLabelHeaderIsConnected" };
             _currentGameHeader = new ToolStripStatusLabel("Current Game:") { Name = "StatusLabelHeaderCurrentGame", Visible = false };
             _currentGame = new ToolStripStatusLabel("n/a") { Name = "StatusLabelCurrentGame", Visible = false };
@@ -91,6 +94,12 @@ namespace ArisenStudio.Shell
             AddNavLeaf(GroupLibrary, ShellPageKeys.GameCheats, "Game Cheats");
             _pages.RegisterPage(ShellPageKeys.About, new PlaceholderPage("About"));
 
+            // The real dashboard replaces the placeholder registered above under the same key (S2). It reads from the
+            // empty stub data source until the shell supplies a real one (set _dashboard.DataSource, then ReloadAll).
+            _dashboard = new DashboardPage();
+            _dashboard.StatusMessage += (s, e) => SetStatusText(e.Message);
+            _pages.RegisterPage(ShellPageKeys.Dashboard, _dashboard);
+
             Load += (s, e) =>
             {
                 if (_split.Width >= 500)
@@ -98,6 +107,7 @@ namespace ArisenStudio.Shell
                     _split.SplitterDistance = 240;
                     _split.Panel1MinSize = 180;
                 }
+                _dashboard.ReloadAll();
                 ShowPage(ShellPageKeys.Dashboard);
             };
 

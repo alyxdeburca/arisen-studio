@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.3" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Forms\Dashboard\AnnouncementItem.cs" />
     <Compile Include="Forms\Dashboard\DashboardPage.cs" />
     <Compile Include="Extensions\ImageExtensions.cs" />
+    <Compile Include="Extensions\WebManExtensions.cs" />
     <Compile Include="Forms\Dialogs\ConnectionsDialog.cs" />
     <Compile Include="Forms\Dialogs\NewProfileDialog.cs" />
     <Compile Include="Forms\Dialogs\NewCustomDialog.cs" />

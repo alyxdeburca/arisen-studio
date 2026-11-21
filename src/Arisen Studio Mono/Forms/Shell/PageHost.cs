@@ -13,6 +13,22 @@ namespace ArisenStudio.Shell
         private readonly Dictionary<string, Control> _pages = new Dictionary<string, Control>();
         private string _activeKey;
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Pages that are not the active one are not children, so base.Dispose does not reach them.
+                foreach (Control page in _pages.Values)
+                {
+                    if (page.Parent != this)
+                    {
+                        page.Dispose();
+                    }
+                }
+            }
+            base.Dispose(disposing);
+        }
+
         public string ActiveKey
         {
             get { return _activeKey; }
@@ -50,10 +66,11 @@ namespace ArisenStudio.Shell
                 old.Dispose();
             }
 
+            // Only the active page is a child of the host. A registered page that is not shown stays out of Controls,
+            // so it can never be painted or laid out by accident (on Mono a hidden child was still drawn, at its
+            // default size in the top-left corner).
             page.Dock = DockStyle.Fill;
-            page.Visible = false;
             _pages[key] = page;
-            Controls.Add(page);
 
             if (wasActive)
             {
@@ -78,9 +95,27 @@ namespace ArisenStudio.Shell
                 return false;
             }
 
-            foreach (Control other in _pages.Values)
+            SuspendLayout();
+            try
             {
-                other.Visible = other == page;
+                // Take every other page out of the host, then put the wanted one in.
+                foreach (Control other in _pages.Values)
+                {
+                    if (other != page && other.Parent == this)
+                    {
+                        Controls.Remove(other);
+                    }
+                }
+                if (page.Parent != this)
+                {
+                    Controls.Add(page);
+                }
+                page.Dock = DockStyle.Fill;
+                page.Visible = true;
+            }
+            finally
+            {
+                ResumeLayout(true);
             }
             _activeKey = key;
 
