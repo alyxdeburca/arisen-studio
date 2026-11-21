@@ -112,6 +112,17 @@
     <EmbeddedResource Include="Resources\Icons\new-window.png">
       <LogicalName>ArisenStudio.Icons.new-window.png</LogicalName>
     </EmbeddedResource>
+    <Compile Include="Forms\Shell\IShellPage.cs" />
+    <Compile Include="Forms\Shell\NavListPanel.cs" />
+    <Compile Include="Forms\Shell\PageHost.cs" />
+    <Compile Include="Forms\Shell\PlaceholderPage.cs" />
+    <Compile Include="Forms\Shell\ShellPageKeys.cs" />
+    <Compile Include="Forms\Dashboard\DashboardModels.cs" />
+    <Compile Include="Forms\Dashboard\IDashboardDataSource.cs" />
+    <Compile Include="Forms\Dashboard\StubDashboardDataSource.cs" />
+    <Compile Include="Forms\Dashboard\AnnouncementItem.cs" />
+    <Compile Include="Forms\Dashboard\DashboardPage.cs" />
+    <Compile Include="Extensions\ImageExtensions.cs" />
     <Compile Include="Forms\Dialogs\ConnectionsDialog.cs" />
     <Compile Include="Forms\Dialogs\NewProfileDialog.cs" />
     <Compile Include="Forms\Dialogs\NewCustomDialog.cs" />

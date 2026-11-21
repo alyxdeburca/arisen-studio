@@ -55,6 +55,14 @@ namespace ArisenStudio
             { "HomebrewDialog", () => new Forms.Dialogs.Details.HomebrewDialog { ModItem = SampleMod(), CategoryType = CategoryType.Homebrew } },
             { "HomebrewXboxDialog", () => new Forms.Dialogs.Details.HomebrewXboxDialog { ModItem = SampleMod(), CategoryType = CategoryType.Homebrew } },
             { "ResourceDialog", () => new Forms.Dialogs.Details.ResourceDialog { ModItem = SampleMod(), CategoryType = CategoryType.Resource } },
+            // The six dialogs below open with their defaults: empty profile list, no model, no network.
+            { "ConnectionsDialog", () => new ConnectionsDialog() },
+            { "NewProfileDialog", () => new NewProfileDialog() },
+            { "NewCustomDialog", () => new NewCustomDialog() },
+            // Platform is set so that closing with no profiles does not open the modal platform picker.
+            { "SetupWizardDialog", () => new SetupWizardDialog { Platform = Platform.PS3 } },
+            { "GameCheatsDialog", () => new Forms.Dialogs.Details.GameCheatsDialog() },
+            { "GamePatchesDialog", () => new Forms.Dialogs.Details.GamePatchesDialog() },
         };
 
         // Sample models for the --form smoke checks. Plain values only: no network, no file access, and the URLs are never opened.
