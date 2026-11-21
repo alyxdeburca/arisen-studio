@@ -119,7 +119,6 @@ namespace ArisenStudio.Shell
                 ShowPage(ShellPageKeys.Dashboard);
             };
             // Last chance before the check harness's Shown handler and capture timer: nothing in the page may be zero-sized.
-            Shown += (s, e) => _pages.EnsureNonZeroSizes();
 
             // Fill control first, then the strips, then the menu (the order the spike verified).
             Controls.Add(_split);

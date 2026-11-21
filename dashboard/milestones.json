@@ -122,6 +122,134 @@
     {
       "old": "Forms/Dialogs/Details/GameTrainersDialog.cs",
       "new": "Forms/Dialogs/Details/GameTrainersDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/ApplicationDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/ApplicationDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/ApplicationDialog.cs",
+      "new": "Forms/Dialogs/Details/ApplicationDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/CustomModDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/CustomModDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/CustomModDialog.cs",
+      "new": "Forms/Dialogs/Details/CustomModDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameModDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/GameModDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameModDialog.cs",
+      "new": "Forms/Dialogs/Details/GameModDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameSaveDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/GameSaveDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameSaveDialog.cs",
+      "new": "Forms/Dialogs/Details/GameSaveDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/HomebrewDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewDialog.cs",
+      "new": "Forms/Dialogs/Details/HomebrewDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewXboxDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/HomebrewXboxDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewXboxDialog.cs",
+      "new": "Forms/Dialogs/Details/HomebrewXboxDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/ResourceDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/ResourceDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/ResourceDialog.cs",
+      "new": "Forms/Dialogs/Details/ResourceDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/ConnectionsDialog.Designer.cs",
+      "new": "Forms/Dialogs/ConnectionsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/ConnectionsDialog.cs",
+      "new": "Forms/Dialogs/ConnectionsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/NewProfileDialog.Designer.cs",
+      "new": "Forms/Dialogs/NewProfileDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/NewProfileDialog.cs",
+      "new": "Forms/Dialogs/NewProfileDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/NewCustomDialog.Designer.cs",
+      "new": "Forms/Dialogs/NewCustomDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/NewCustomDialog.cs",
+      "new": "Forms/Dialogs/NewCustomDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameCheatsDialog.Designer.cs",
+      "new": "Forms/Dialogs/GameCheatsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameCheatsDialog.cs",
+      "new": "Forms/Dialogs/GameCheatsDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GamePatchesDialog.Designer.cs",
+      "new": "Forms/Dialogs/GamePatchesDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GamePatchesDialog.cs",
+      "new": "Forms/Dialogs/GamePatchesDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/SetupWizardDialog.Designer.cs",
+      "new": "Forms/Dialogs/SetupWizardDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/SetupWizardDialog.cs",
+      "new": "Forms/Dialogs/SetupWizardDialog.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/GameRegions.Designer.cs",
+      "new": "Forms/Tools/PS3/GameRegions.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/GameRegions.cs",
+      "new": "Forms/Tools/PS3/GameRegions.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/XboxHDKey.Designer.cs",
+      "new": "Forms/Tools/XBOX/XboxHDKey.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/XboxHDKey.cs",
+      "new": "Forms/Tools/XBOX/XboxHDKey.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/GameUpdatesFinder.Designer.cs",
+      "new": "Forms/Dialogs/GameUpdatesFinder.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/GameUpdatesFinder.cs",
+      "new": "Forms/Dialogs/GameUpdatesFinder.cs"
     }
   ],
   "wip_map": [
@@ -295,7 +423,7 @@
       "approval_note": "Awaiting owner approval",
       "progress_mode": "manual",
       "manual_percent": 100,
-      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF on the build machine from this code; the ELF passes the shell check (six markers) and the form check (SHOWN, ICON-OK, ACTION-OPEN-OK, ACTION-COPY-OK, CAPTURE-OK, EXIT-OK) under a private 24-bit Xvfb display. Known issues: the Open-in-browser icon renders as a missing-glyph box (its source SVG is a DevExpress icon-font glyph); never viewed on a real display; the real browser and clipboard were never exercised (smoke mode injects recorders). Owner approval is not recorded here. Update 2026-11-21: ten forms now pass an ELF form check (ReportIssueDialog, PackagesFaqDialog, EditLoginDialog, DataViewDialog, RequestModsDialog, SortOptionsDialog, BackupFileDialog, ListViewDialog, EasterEgg) plus the shell; the nine detail dialogs written afterwards are not counted because they collapse to 1 pixel of client height. Update after BUILD-REQUEST-2: PackageDialog (686x385) and GameTrainersDialog (766x585) now pass with measured, non-sliver captures (GameTrainersDialog shows a large blank rectangle); seven other detail dialogs still fail to capture. Updates through Round 7 & parallel tracks: Round 4 added nine MinimumSize(1,1) floors (eliminating all non-positive sizes in GameModDialog and resolving hidden tab subtrees in CustomModDialog/GameSaveDialog per Round 5); Round 6 ruled out hidden-tab visibility on GameModDialog; Round 7 DiagRows confirmed all 6 direct children of both depth-10 download rows drew via Control.Size while both rowdraw targets threw InvalidParameter and ListBox child index=4 showed ClientSize=931x-3; Round 8 ListBox perturbation (without changing RowStyle Absolute:0) snapped ListBox back to 935x1 (ClientSize=931x-3), leaving the test inconclusive per protocol; Round 9 RowStyle perturbation (setting RowStyles[4] to Absolute:20 in GameModDialog diagnostic overlay only) resolved both depth-10 download rows (ListBox Size=935x20 ClientSize=931x16, throws 11 -> 0) and GameModDialog passed CAPTURE-OK at 1006x705 (3 PASS / 6 FAIL in diagnostic run; project tree awaiting real fix). Parallel tracks: MainWindow gap inventory completed (read-only); all 6 parallel dialogs (GamePatchesDialog.cs, GameCheatsDialog.cs, SetupWizardDialog.cs, ConnectionsDialog.cs, NewProfileDialog.cs, and NewCustomDialog.cs) are now written and awaiting combined csproj wiring/build (plus 8 console artwork EmbeddedResources)."
+      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF from this code; the ELF passes the shell check and all 27 form checks (28 of 28 total) under a private 24-bit Xvfb display as of ELF -84. All 9 DetailLayout-based dialogs and all 6 parallel dialogs (ConnectionsDialog, NewProfileDialog, NewCustomDialog, SetupWizardDialog, GameCheatsDialog, GamePatchesDialog) plus 3 tool dialogs (GameRegions, XboxHDKey, GameUpdatesFinder) now capture cleanly (empty default states; Dialogs-only behaviour port in GameRegions/XboxHDKey is compiled and smoke-checked but not behaviour-tested). Known visual issues: the Open-in-browser icon renders as a missing-glyph box; never viewed on a real display; browser/clipboard/network flows are not exercised by smoke runs. Owner approval is not recorded here."
     },
     {
       "id": "M3",
@@ -323,7 +451,7 @@
       "approved": false,
       "approval_note": "Not approved",
       "progress_mode": "measured_c_mainwindow",
-      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Slice S2 (Forms/Dashboard/: DashboardModels.cs, IDashboardDataSource.cs, StubDashboardDataSource.cs, AnnouncementItem.cs, DashboardPage.cs — 1,324 lines) written code-only and awaiting csproj wiring/build; Shell+Nav S0+S1 is in progress."
+      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Shell+Nav (S0+S1), Dashboard (S2: Forms/Dashboard/*), RibbonBar (S6), and AboutPage (S7) are compiled, wired, and pass shell capture at 1288x827 with the PageHost zero-size guard removed (TilePanel and DashboardPage empty-panel minimum heights fixed at their sources). Feature pages (Forms/Pages/*) and services remain outside the csproj."
     },
     {
       "id": "M6",
@@ -394,7 +522,7 @@
         {
           "label": "Runs on a machine without Mono",
           "state": "partial",
-          "detail": "PARTIAL — with libMonoPosixHelper and libmono-native embedded in the ELF, 12 of 12 currently passing forms/shell run cleanly in a Mono-free debian:bookworm-slim container; still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
+          "detail": "PARTIAL \u2014 with libMonoPosixHelper and libmono-native embedded in the ELF, 12 of 12 currently passing forms/shell run cleanly in a Mono-free debian:bookworm-slim container; still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
         },
         {
           "label": "Installer or AppImage",
@@ -409,7 +537,7 @@
       "label": "Shared control layer exists in the new project",
       "status": "pass",
       "value": "YES (ActionStrip, IconBox, PageTabs, tiles, stat/tool/profile items, DetailLayout)",
-      "detail": "Twelve shared controls compile in the container build. ActionStrip is used by dialogs that pass an ELF form check. For DetailLayout-based detail dialogs, 2 of 9 (PackageDialog, GameTrainersDialog) pass ELF capture and 7 still fail DrawToBitmap with GDI+ InvalidParameter (round 7 isolated ListBox ClientSize=931x-3 inside GameModDialog depth-10 rows); none of the controls is behaviour-tested."
+      "detail": "Shared controls (ActionStrip, IconBox, PageTabs, tiles, stat/tool/profile items, DetailLayout, NavListPanel, PageHost, RibbonBar) compile in the container build. All 9 of 9 DetailLayout-based detail dialogs and all 27 registered forms plus the shell pass ELF capture under Xvfb (28 of 28 checks on ELF -84); interactive behaviour is not covered by the smoke run."
     },
     "layout_uses_containers": {
       "label": "Layout uses containers, not copied pixel coordinates",

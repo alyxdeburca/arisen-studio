@@ -186,7 +186,7 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
         private void ButtonImportFromFile_Click(object sender, EventArgs e)
         {
-            string fileName = ShowOpenFileDialog("Keyvault File", "Keyvault (*.bin)|*.bin|All Files (*.*)|*.*");
+            string fileName = ShowOpenFileDialog(Lookup("LABEL_OPEN_FILE", "Keyvault File"), "Keyvault (*.bin)|*.bin|All Files (*.*)|*.*");
 
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -239,11 +239,20 @@ namespace ArisenStudio.Forms.Tools.XBOX
                         }
                         output.Append("XboxHDKey: " + _textBoxXboxHDKey.Text);
 
-                        string fileName = ShowSaveFileDialog("Save File", "Text file (*.txt)|*.txt|All files (*.*)|*.*");
+                        string fileName = ShowSaveFileDialog(Lookup("LABEL_SAVE_FILE", "Save File"), "Text file (*.txt)|*.txt|All files (*.*)|*.*");
 
                         if (!string.IsNullOrWhiteSpace(fileName))
                         {
-                            File.WriteAllText(fileName, output.ToString(), Encoding.UTF8);
+                            try
+                            {
+                                File.WriteAllText(fileName, output.ToString(), Encoding.UTF8);
+                            }
+                            catch (Exception ex)
+                            {
+                                AppHost.Logger?.Invoke(ex, "Unable to write the XboxHDKey file.");
+                                _ = MessageBox.Show(this, "Unable to write the XboxHDKey file. Error Message: " + ex.Message, Lookup("ERROR", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
                         }
 
                         // Preserved from the original: this success box also appears when the save dialog was cancelled.

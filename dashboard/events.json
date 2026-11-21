@@ -107,5 +107,32 @@
       "Setting RowStyles[4] Absolute:20 on GameModDialog dropped throws 11->0 and passed CAPTURE-OK (1006x705)",
       "ListBox held Size=935x20 / ClientSize=931x16; 3 PASS / 6 FAIL (diagnostic copy only)"
     ]
+  },
+  {
+    "summary": "Rounds 11-18 wired shell, dashboard, parallel dialogs, and fixed all 7 failing detail dialogs (25/25)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 22:11:00 UTC",
+    "changes": [
+      "Applied 1 px minimum width to empty DetailLayout header labels and 20 px height floor to ListBox download rows",
+      "Wired ShellForm/NavListPanel/PageHost (S0+S1), DashboardPage (S2), and 6 parallel A+B2 dialogs; 25 of 25 ELF checks pass"
+    ]
+  },
+  {
+    "summary": "Rounds 19-27 wired ribbon, AboutPage, and 3 tool dialogs; fixed root empty-panel heights (28/28)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 23:04:00 UTC",
+    "changes": [
+      "Added RibbonBar, AboutPage, GameRegions, XboxHDKey, and GameUpdatesFinder to csproj and FormFactories (108 Compile items)",
+      "Fixed empty-group/panel 1 px minimums in TilePanel and DashboardPage; 28 of 28 ELF checks pass and no-guard overlay confirmed 28/28"
+    ]
+  },
+  {
+    "summary": "Rounds 25 & 28 verified PageHost guard removal and Dialogs-only tool port (ELF -84, 28/28 PASS)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 23:20:00 UTC",
+    "changes": [
+      "Removed PageHost/ShellForm zero-size guard (BUILD-REQUEST-28) and combined with GameRegions/XboxHDKey behaviour port (BUILD-REQUEST-25)",
+      "Container build OK (0 errors) and 28 of 28 Xvfb ELF checks pass including 1288x827 shell capture (0 regressions; behaviour paths untested)"
+    ]
   }
 ]

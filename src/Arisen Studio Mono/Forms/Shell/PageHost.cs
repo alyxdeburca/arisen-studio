@@ -35,45 +35,6 @@ namespace ArisenStudio.Shell
             get { return _activeKey; }
         }
 
-        protected override void OnLayout(LayoutEventArgs levent)
-        {
-            base.OnLayout(levent);
-            EnsureNonZeroSizes();
-        }
-
-        /// <summary>
-        /// Gives every descendant of the active page that is 0 or negative wide or high a MinimumSize of at least 1 px
-        /// on that axis. Mono's Control.DrawToBitmap creates a Bitmap(Width, Height) for each visible child, and GDI+
-        /// answers InvalidParameter for a zero side. Known case: TilePanel sets the Tiles FlowLayoutPanel of an empty
-        /// group to Height = 0 (Controls/TilePanel.cs, Relayout). A MinimumSize clamps later size changes too.
-        /// Pages are not changed otherwise. UI thread only.
-        /// </summary>
-        public void EnsureNonZeroSizes()
-        {
-            foreach (Control child in Controls)
-            {
-                GuardZeroSize(child);
-            }
-        }
-
-        private static void GuardZeroSize(Control control)
-        {
-            if (control.Width < 1 || control.Height < 1)
-            {
-                Size min = control.MinimumSize;
-                control.MinimumSize = new Size(Math.Max(min.Width, 1), Math.Max(min.Height, 1));
-                // If this Mono build does not resize on a MinimumSize change, make the size valid now.
-                if (control.Width < 1 || control.Height < 1)
-                {
-                    control.Size = new Size(Math.Max(control.Width, 1), Math.Max(control.Height, 1));
-                }
-            }
-            foreach (Control child in control.Controls)
-            {
-                GuardZeroSize(child);
-            }
-        }
-
         public bool HasPage(string key)
         {
             return key != null && _pages.ContainsKey(key);
@@ -158,7 +119,6 @@ namespace ArisenStudio.Shell
                 ResumeLayout(true);
             }
             page.PerformLayout();
-            EnsureNonZeroSizes();
             _activeKey = key;
 
             // Notify only after the loop: a page may register another page from inside OnPageShown.
