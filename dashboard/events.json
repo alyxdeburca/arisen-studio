@@ -154,5 +154,14 @@
       "Verified Download | Copy Link | Installation Files unclipped across 4 Details dialogs and new 16x16 open-in-new icon on ReportIssueDialog/RequestModsDialog (28/28 PASS)",
       "Parallel S5 (12 Library pages) queued in BUILD-REQUEST-33 and Parallel T1 (14 PS3/Xbox tool forms + 4 support files) ready for csproj wiring"
     ]
+  },
+  {
+    "summary": "Dispatched TransferDialog port while ELF -90 builds 12 S5 Library pages (BUILD-REQUEST-33)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 23:50:00 UTC",
+    "changes": [
+      "Launched TransferDialog port under Forms/Dialogs/Transfer/ using Services/Transfers helpers and Controls/Extra items",
+      "Running ELF -90 build and 28-form Xvfb verification for 12 Forms/Pages/Library files (BUILD-REQUEST-33)"
+    ]
   }
 ]
