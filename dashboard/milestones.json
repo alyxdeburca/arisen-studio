@@ -124,6 +124,138 @@
       "new": "Forms/Dialogs/Details/GameTrainersDialog.cs"
     }
   ],
+  "wip_map": [
+    {
+      "old": "Forms/Dialogs/Details/ApplicationDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/ApplicationDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/ApplicationDialog.cs",
+      "new": "Forms/Dialogs/Details/ApplicationDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/CustomModDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/CustomModDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/CustomModDialog.cs",
+      "new": "Forms/Dialogs/Details/CustomModDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameModDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/GameModDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameModDialog.cs",
+      "new": "Forms/Dialogs/Details/GameModDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameSaveDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/GameSaveDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameSaveDialog.cs",
+      "new": "Forms/Dialogs/Details/GameSaveDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/HomebrewDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewDialog.cs",
+      "new": "Forms/Dialogs/Details/HomebrewDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewXboxDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/HomebrewXboxDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/HomebrewXboxDialog.cs",
+      "new": "Forms/Dialogs/Details/HomebrewXboxDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/ResourceDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/ResourceDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/Details/ResourceDialog.cs",
+      "new": "Forms/Dialogs/Details/ResourceDialog.cs",
+      "stage": "compiled_failing"
+    },
+    {
+      "old": "Forms/Dialogs/ConnectionsDialog.Designer.cs",
+      "new": "Forms/Dialogs/ConnectionsDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/ConnectionsDialog.cs",
+      "new": "Forms/Dialogs/ConnectionsDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/NewProfileDialog.Designer.cs",
+      "new": "Forms/Dialogs/NewProfileDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/NewProfileDialog.cs",
+      "new": "Forms/Dialogs/NewProfileDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/NewCustomDialog.Designer.cs",
+      "new": "Forms/Dialogs/NewCustomDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/NewCustomDialog.cs",
+      "new": "Forms/Dialogs/NewCustomDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/SetupWizardDialog.Designer.cs",
+      "new": "Forms/Dialogs/SetupWizardDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/SetupWizardDialog.cs",
+      "new": "Forms/Dialogs/SetupWizardDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameCheatsDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/GameCheatsDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GameCheatsDialog.cs",
+      "new": "Forms/Dialogs/Details/GameCheatsDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GamePatchesDialog.Designer.cs",
+      "new": "Forms/Dialogs/Details/GamePatchesDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/Details/GamePatchesDialog.cs",
+      "new": "Forms/Dialogs/Details/GamePatchesDialog.cs",
+      "stage": "written_unwired"
+    }
+  ],
   "milestones": [
     {
       "id": "M0",

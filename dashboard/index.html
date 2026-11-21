@@ -211,6 +211,33 @@
       background: var(--accent-files);
     }
 
+    .bar-fill.wip {
+      background: var(--warn);
+    }
+
+    .hero-wip {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .hero-wip-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px 16px;
+      margin-bottom: 6px;
+    }
+
+    .hero-wip-pct {
+      font-size: clamp(16px, 3.5vw, 20px);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--warn);
+      white-space: nowrap;
+    }
+
     .badge-row {
       display: flex;
       flex-wrap: wrap;
@@ -450,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 20:02:30 UTC",
+  "generated_at_utc": "2026-11-21 20:08:35 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -464,6 +491,22 @@
       "files_percent": 37.0,
       "files_percent_str": "37.0%",
       "formula": "(A_ported + B_ported + C_ported) / (A_total + B_total + C_total); Properties/*.cs excluded"
+    },
+    "written_overall": {
+      "id": "written_overall",
+      "label": "Written / In-Progress (incl. pending verification)",
+      "numerator": 17004,
+      "denominator": 63901,
+      "percent": 26.6,
+      "percent_str": "26.6%",
+      "files_ported": 86,
+      "files_total": 162,
+      "files_percent": 53.0,
+      "files_percent_str": "53.0%",
+      "verified_files": 60,
+      "compiled_failing_files": 14,
+      "written_unwired_files": 12,
+      "formula": "(verified + compiled-failing + written-unwired) / total A+B+C"
     },
     "dimensions": [
       {
@@ -1322,7 +1365,7 @@
       var heroPctText = ov.files_percent_str ? ov.percent_str + " / " + ov.files_percent_str : ov.percent_str;
       heroPctWrap.appendChild(el("div", "hero-pct", heroPctText));
       if (ov.files_percent_str) {
-        heroPctWrap.appendChild(el("div", "hero-pct-sub", "LOC / Files"));
+        heroPctWrap.appendChild(el("div", "hero-pct-sub", "Verified LOC / Files"));
       }
       heroTop.appendChild(heroPctWrap);
       heroCard.appendChild(heroTop);
@@ -1342,6 +1385,41 @@
       heroDetails.appendChild(el("span", null, "Files: " + fmtNum(ov.files_ported) + " / " + fmtNum(ov.files_total) + (ov.files_percent_str ? " (" + ov.files_percent_str + ")" : "")));
       heroDetails.appendChild(el("span", "mono", "Formula: " + ov.formula));
       heroCard.appendChild(heroDetails);
+
+      var wov = data.measurements.written_overall;
+      if (wov && wov.files_ported > ov.files_ported) {
+        var wipWrap = el("div", "hero-wip");
+        var wipTop = el("div", "hero-wip-top");
+        var wipLeft = el("div", "badge-row");
+        wipLeft.appendChild(el("strong", null, wov.label || "Written / In-Progress (incl. pending verification)"));
+        wipLeft.appendChild(badge("Pending", "badge-proposed"));
+        wipTop.appendChild(wipLeft);
+        wipTop.appendChild(el("div", "hero-wip-pct", wov.percent_str + " / " + wov.files_percent_str));
+        wipWrap.appendChild(wipTop);
+        var wipBars = el("div", "hero-bars");
+        var wLocRow = el("div", "hero-bar-row");
+        wLocRow.appendChild(el("span", "hero-bar-label", "LOC"));
+        wLocRow.appendChild(progressBar(wov.percent, wov.percent >= 100, "wip"));
+        wipBars.appendChild(wLocRow);
+        var wFilesRow = el("div", "hero-bar-row");
+        wFilesRow.appendChild(el("span", "hero-bar-label", "Files"));
+        wFilesRow.appendChild(progressBar(wov.files_percent, wov.files_percent >= 100, "wip"));
+        wipBars.appendChild(wFilesRow);
+        wipWrap.appendChild(wipBars);
+        var wipDetails = el("div", "meta-row");
+        wipDetails.appendChild(el("span", null, "Written LOC: " + fmtNum(wov.numerator) + " / " + fmtNum(wov.denominator) + " (" + wov.percent_str + ")"));
+        wipDetails.appendChild(el("span", null, "Written Files: " + fmtNum(wov.files_ported) + " / " + fmtNum(wov.files_total) + " (" + wov.files_percent_str + ")"));
+        wipDetails.appendChild(
+          el(
+            "span",
+            null,
+            "Breakdown: " + fmtNum(wov.verified_files) + " verified + " + fmtNum(wov.compiled_failing_files) + " compiled (failing capture) + " + fmtNum(wov.written_unwired_files) + " written (unwired)"
+          )
+        );
+        wipWrap.appendChild(wipDetails);
+        heroCard.appendChild(wipWrap);
+      }
+
       app.appendChild(heroCard);
 
       // 4. Measured Codebase Progress (Dimensions A, B, C, Overall + Excluded Properties)

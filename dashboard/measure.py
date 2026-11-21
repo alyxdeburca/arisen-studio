@@ -281,6 +281,68 @@ def resolve_port_map(
     return ported_b, ported_c, records
 
 
+def resolve_wip_map(
+    raw_wip_map: object,
+    new_dir: Path,
+    ui_coupled: dict[str, int],
+    layout_designers: dict[str, int],
+    ported_b: set[str],
+    ported_c: set[str],
+) -> tuple[set[str], set[str], set[str], set[str], list[dict[str, object]]]:
+    """Validate explicit wip_map entries (compiled failing capture or written unwired), skipping already verified files."""
+    if not isinstance(raw_wip_map, list):
+        raise ValueError("milestones.json 'wip_map' must be a list")
+
+    new_root = new_dir.resolve()
+    compiled_b: set[str] = set()
+    compiled_c: set[str] = set()
+    unwired_b: set[str] = set()
+    unwired_c: set[str] = set()
+    seen_old: set[str] = set()
+    records: list[dict[str, object]] = []
+
+    for idx, entry in enumerate(raw_wip_map):
+        if not isinstance(entry, dict) or "old" not in entry or "new" not in entry or "stage" not in entry:
+            raise ValueError(f"wip_map[{idx}] must be an object with 'old', 'new', and 'stage'")
+        old_rel = norm_rel(str(entry["old"])).lstrip("/")
+        new_rel = norm_rel(str(entry["new"])).lstrip("/")
+        stage = str(entry["stage"]).strip()
+        if stage not in ("compiled_failing", "written_unwired"):
+            raise ValueError(f"wip_map[{idx}].stage invalid: {stage!r}")
+        if old_rel in seen_old:
+            raise ValueError(f"wip_map[{idx}] duplicate old path: {old_rel}")
+        seen_old.add(old_rel)
+
+        candidate = (new_dir / new_rel).resolve()
+        new_exists = candidate.is_relative_to(new_root) and candidate.is_file()
+
+        already_verified = old_rel in ported_b or old_rel in ported_c
+        counted = False
+        category = None
+        if not already_verified and (stage == "written_unwired" or new_exists):
+            if old_rel in ui_coupled:
+                category = "B"
+                counted = True
+                (compiled_b if stage == "compiled_failing" else unwired_b).add(old_rel)
+            elif old_rel in layout_designers:
+                category = "C"
+                counted = True
+                (compiled_c if stage == "compiled_failing" else unwired_c).add(old_rel)
+
+        records.append(
+            {
+                "old": old_rel,
+                "new": new_rel,
+                "stage": stage,
+                "new_exists": new_exists,
+                "counted": counted,
+                "counted_dimension": category,
+            }
+        )
+
+    return compiled_b, compiled_c, unwired_b, unwired_c, records
+
+
 def render_html(payload: dict[str, object]) -> str:
     """Build self-contained index.html from template with JSON payload embedded."""
     raw_json = json.dumps(payload, ensure_ascii=False, indent=2)
@@ -501,6 +563,33 @@ def render_html(payload: dict[str, object]) -> str:
 
     .bar-fill.files {
       background: var(--accent-files);
+    }
+
+    .bar-fill.wip {
+      background: var(--warn);
+    }
+
+    .hero-wip {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .hero-wip-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px 16px;
+      margin-bottom: 6px;
+    }
+
+    .hero-wip-pct {
+      font-size: clamp(16px, 3.5vw, 20px);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--warn);
+      white-space: nowrap;
     }
 
     .badge-row {
@@ -835,7 +924,7 @@ def render_html(payload: dict[str, object]) -> str:
       var heroPctText = ov.files_percent_str ? ov.percent_str + " / " + ov.files_percent_str : ov.percent_str;
       heroPctWrap.appendChild(el("div", "hero-pct", heroPctText));
       if (ov.files_percent_str) {
-        heroPctWrap.appendChild(el("div", "hero-pct-sub", "LOC / Files"));
+        heroPctWrap.appendChild(el("div", "hero-pct-sub", "Verified LOC / Files"));
       }
       heroTop.appendChild(heroPctWrap);
       heroCard.appendChild(heroTop);
@@ -855,6 +944,41 @@ def render_html(payload: dict[str, object]) -> str:
       heroDetails.appendChild(el("span", null, "Files: " + fmtNum(ov.files_ported) + " / " + fmtNum(ov.files_total) + (ov.files_percent_str ? " (" + ov.files_percent_str + ")" : "")));
       heroDetails.appendChild(el("span", "mono", "Formula: " + ov.formula));
       heroCard.appendChild(heroDetails);
+
+      var wov = data.measurements.written_overall;
+      if (wov && wov.files_ported > ov.files_ported) {
+        var wipWrap = el("div", "hero-wip");
+        var wipTop = el("div", "hero-wip-top");
+        var wipLeft = el("div", "badge-row");
+        wipLeft.appendChild(el("strong", null, wov.label || "Written / In-Progress (incl. pending verification)"));
+        wipLeft.appendChild(badge("Pending", "badge-proposed"));
+        wipTop.appendChild(wipLeft);
+        wipTop.appendChild(el("div", "hero-wip-pct", wov.percent_str + " / " + wov.files_percent_str));
+        wipWrap.appendChild(wipTop);
+        var wipBars = el("div", "hero-bars");
+        var wLocRow = el("div", "hero-bar-row");
+        wLocRow.appendChild(el("span", "hero-bar-label", "LOC"));
+        wLocRow.appendChild(progressBar(wov.percent, wov.percent >= 100, "wip"));
+        wipBars.appendChild(wLocRow);
+        var wFilesRow = el("div", "hero-bar-row");
+        wFilesRow.appendChild(el("span", "hero-bar-label", "Files"));
+        wFilesRow.appendChild(progressBar(wov.files_percent, wov.files_percent >= 100, "wip"));
+        wipBars.appendChild(wFilesRow);
+        wipWrap.appendChild(wipBars);
+        var wipDetails = el("div", "meta-row");
+        wipDetails.appendChild(el("span", null, "Written LOC: " + fmtNum(wov.numerator) + " / " + fmtNum(wov.denominator) + " (" + wov.percent_str + ")"));
+        wipDetails.appendChild(el("span", null, "Written Files: " + fmtNum(wov.files_ported) + " / " + fmtNum(wov.files_total) + " (" + wov.files_percent_str + ")"));
+        wipDetails.appendChild(
+          el(
+            "span",
+            null,
+            "Breakdown: " + fmtNum(wov.verified_files) + " verified + " + fmtNum(wov.compiled_failing_files) + " compiled (failing capture) + " + fmtNum(wov.written_unwired_files) + " written (unwired)"
+          )
+        );
+        wipWrap.appendChild(wipDetails);
+        heroCard.appendChild(wipWrap);
+      }
+
       app.appendChild(heroCard);
 
       // 4. Measured Codebase Progress (Dimensions A, B, C, Overall + Excluded Properties)
@@ -1164,8 +1288,11 @@ def main() -> int:
         ported_b, ported_c, port_records = resolve_port_map(
             config.get("port_map", []), new_dir, ui_coupled, layout_designers
         )
+        compiled_b, compiled_c, unwired_b, unwired_c, wip_records = resolve_wip_map(
+            config.get("wip_map", []), new_dir, ui_coupled, layout_designers, ported_b, ported_c
+        )
     except ValueError as exc:
-        print(f"ERROR: invalid port_map: {exc}", file=sys.stderr)
+        print(f"ERROR: invalid port_map/wip_map: {exc}", file=sys.stderr)
         return 1
 
     a_num = sum(ui_free[p] for p in linked_ui_free) + sum(ui_free[p] for p in copied_ui_free)
@@ -1214,6 +1341,29 @@ def main() -> int:
         "files_percent": overall_files_pct["percent"],
         "files_percent_str": overall_files_pct["percent_str"],
         "formula": "(A_ported + B_ported + C_ported) / (A_total + B_total + C_total); Properties/*.cs excluded",
+    }
+
+    wip_compiled_lines = sum(ui_coupled[p] for p in compiled_b) + sum(layout_designers[p] for p in compiled_c)
+    wip_unwired_lines = sum(ui_coupled[p] for p in unwired_b) + sum(layout_designers[p] for p in unwired_c)
+    wip_lines = wip_compiled_lines + wip_unwired_lines
+    compiled_failing_files = len(compiled_b) + len(compiled_c)
+    written_unwired_files = len(unwired_b) + len(unwired_c)
+    written_num = overall_num + wip_lines
+    written_files = overall_files_ported + compiled_failing_files + written_unwired_files
+    written_loc_pct = calc_pct(written_num, overall_den)
+    written_files_pct = calc_pct(written_files, overall_files_total)
+    written_overall = {
+        "id": "written_overall",
+        "label": "Written / In-Progress (incl. pending verification)",
+        **written_loc_pct,
+        "files_ported": written_files,
+        "files_total": overall_files_total,
+        "files_percent": written_files_pct["percent"],
+        "files_percent_str": written_files_pct["percent_str"],
+        "verified_files": overall_files_ported,
+        "compiled_failing_files": compiled_failing_files,
+        "written_unwired_files": written_unwired_files,
+        "formula": "(verified + compiled-failing + written-unwired) / total A+B+C",
     }
 
     # M4 (excludes MainWindow and ReportIssueDialog) and M5 (MainWindow alone)
@@ -1401,6 +1551,7 @@ def main() -> int:
         "generated_at_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
         "measurements": {
             "overall": overall,
+            "written_overall": written_overall,
             "dimensions": [dim_a, dim_b, dim_c],
             "excluded_properties": {
                 "file_count": len(properties_files),
@@ -1437,6 +1588,11 @@ def main() -> int:
 
     print("CHECKS: PASS (6/6)")
     print(f"Overall: {overall_num:,} / {overall_den:,} lines ({overall['percent_str']}) [{overall_files_ported}/{overall_files_total} files ({overall_files_pct['percent_str']})]")
+    print(
+        f"Written (incl. WIP): {written_num:,} / {overall_den:,} lines ({written_overall['percent_str']}) "
+        f"[{written_files}/{overall_files_total} files ({written_overall['files_percent_str']}): "
+        f"{overall_files_ported} verified, {compiled_failing_files} compiled-failing, {written_unwired_files} written-unwired]"
+    )
     print(
         f"Dimension A (UI-free): {a_num:,} / {a_den:,} lines ({dim_a['percent_str']}) "
         f"[{len(linked_ui_free) + len(copied_ui_free)}/{len(ui_free)} files]"
