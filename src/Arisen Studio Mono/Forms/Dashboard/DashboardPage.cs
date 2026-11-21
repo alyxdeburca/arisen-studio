@@ -101,6 +101,11 @@ namespace ArisenStudio.Forms.Dashboard
             announcementsBody.Controls.Add(announcementsItemsHost);
             announcementsBody.Controls.Add(noAnnouncements);
             announcementsItemsHost.BorderStyle = BorderStyle.None;
+            // This host is hidden while there are no announcements (UpdateAnnouncementsEmptyState), and a hidden
+            // Dock = Fill control is not laid out again, so it keeps the 36x0 it got inside the still-empty body.
+            // Mono's DrawToBitmap then asks GDI+ for a 36x0 Bitmap (InvalidParameter). A 1 px minimum is invisible
+            // and has no effect once the host is shown and docked to its full area.
+            announcementsItemsHost.MinimumSize = new Size(1, 1);
 
             // Change log card.
             ConfigureHeader(headerChangeLog);

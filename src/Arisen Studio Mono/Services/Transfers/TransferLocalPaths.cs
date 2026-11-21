@@ -41,7 +41,7 @@ namespace ArisenStudio.Services.Transfers
         /// <summary>
         /// A file inside a folder: folder + \ + fileName. A trailing backslash on the folder is not checked,
         /// so a folder that already ends in \ gives a doubled backslash, as the old code did.
-        /// Original: TransferDialog.cs:1592, :1593 (fileName = name + ".rap" / ".pkg"), :2591 (fileName = name + ".pkg").
+        /// Original: TransferDialog.cs:1592 (fileName = name + ".pkg"), :1593 (fileName = ContentId + ".rap"), :2591 (fileName = name + ".pkg").
         /// </summary>
         public static string FileInFolder(string folder, string fileName)
         {

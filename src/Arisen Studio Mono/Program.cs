@@ -63,6 +63,10 @@ namespace ArisenStudio
             { "SetupWizardDialog", () => new SetupWizardDialog { Platform = Platform.PS3 } },
             { "GameCheatsDialog", () => new Forms.Dialogs.Details.GameCheatsDialog() },
             { "GamePatchesDialog", () => new Forms.Dialogs.Details.GamePatchesDialog() },
+            // The three tool forms below open with their defaults: no categories, no console hooks, no network.
+            { "GameRegions", () => new Forms.Tools.PS3.GameRegions() },
+            { "XboxHDKey", () => new Forms.Tools.XBOX.XboxHDKey() },
+            { "GameUpdatesFinder", () => new Forms.Tools.PS3.GameUpdatesFinder() },
         };
 
         // Sample models for the --form smoke checks. Plain values only: no network, no file access, and the URLs are never opened.

@@ -21,6 +21,7 @@ namespace ArisenStudio.Forms.Tools.PS3
     {
         private const string GameDirectoryPrefix = "/dev_hdd0/game/";
 
+        private readonly TableLayoutPanel _root;
         private readonly Label _labelTitle;
         private readonly Label _labelRegion;
         private readonly ComboBox _comboTitle;
@@ -40,6 +41,9 @@ namespace ArisenStudio.Forms.Tools.PS3
         public GameRegions()
         {
             Font = SystemFonts.MessageBoxFont;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
@@ -164,6 +168,7 @@ namespace ArisenStudio.Forms.Tools.PS3
             root.Controls.Add(buttonRow, 0, 4);
             root.SetColumnSpan(buttonRow, 2);
             Controls.Add(root);
+            _root = root;
 
             _comboTitle.TabIndex = 0;
             _comboRegion.TabIndex = 1;
@@ -216,12 +221,38 @@ namespace ArisenStudio.Forms.Tools.PS3
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
             ApplyLanguage();
             _buttonDetect.Enabled = IsConsoleConnectedNow();
             LoadGameTitles();
             LoadSavedGameRegions();
+            SizeToContent();
             ResizeColumns();
+            base.OnLoad(e);
+        }
+
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (ModifierKeys == Keys.None && keyData == Keys.Escape)
+            {
+                Close();
+                return true;
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
+        /// <summary>
+        /// Sizes the form to its content, at least 30 font heights wide and 28 high, clamped to 90% of the working area of the screen it is on.
+        /// </summary>
+        private void SizeToContent()
+        {
+            int h = Font.Height;
+            Size preferred = _root.PreferredSize;
+            Rectangle work = Screen.FromControl(this).WorkingArea;
+
+            int width = Math.Min(Math.Max(h * 30, preferred.Width), (int)(work.Width * 0.9));
+            int height = Math.Min(Math.Max(preferred.Height, h * 28), (int)(work.Height * 0.9));
+            ClientSize = new Size(width, height);
         }
 
         private bool IsConsoleConnectedNow()
@@ -318,7 +349,15 @@ namespace ArisenStudio.Forms.Tools.PS3
                 return null;
             }
 
-            return Categories.Categories.FirstOrDefault(c => string.Equals(c.Id, gameId, StringComparison.OrdinalIgnoreCase));
+            try
+            {
+                return Categories.Categories.FirstOrDefault(c => string.Equals(c.Id, gameId, StringComparison.OrdinalIgnoreCase));
+            }
+            catch (Exception)
+            {
+                // A null entry in the category list throws here; treat it as not found.
+                return null;
+            }
         }
 
         private void ListRegions_SelectedIndexChanged(object sender, EventArgs e)
@@ -355,7 +394,8 @@ namespace ArisenStudio.Forms.Tools.PS3
             int index = _comboTitle.SelectedIndex;
             if (index != -1)
             {
-                string[] regions = _gameCategories[index].Regions ?? new string[0];
+                CategoryItem category = index < _gameCategories.Count ? _gameCategories[index] : null;
+                string[] regions = category?.Regions ?? new string[0];
                 foreach (string region in regions)
                 {
                     _ = _comboRegion.Items.Add(region);
@@ -379,7 +419,14 @@ namespace ArisenStudio.Forms.Tools.PS3
                 return;
             }
 
-            CategoryItem category = _gameCategories[_comboTitle.SelectedIndex];
+            int titleIndex = _comboTitle.SelectedIndex;
+            CategoryItem category = titleIndex >= 0 && titleIndex < _gameCategories.Count ? _gameCategories[titleIndex] : null;
+            if (category == null)
+            {
+                _ = MessageBox.Show(this, "The selected game title could not be found.", Lookup("ERROR", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             Settings.UpdateGameRegion(category.Id, _comboRegion.SelectedItem.ToString());
             LoadSavedGameRegions();
         }
@@ -483,9 +530,10 @@ namespace ArisenStudio.Forms.Tools.PS3
             }
             catch (Exception ex)
             {
+                AppHost.Logger?.Invoke(ex, "Unable to detect game regions.");
                 if (!IsDisposed)
                 {
-                    _ = MessageBox.Show(this, "Detecting regions failed: " + ex.Message, Lookup("ERROR", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _ = MessageBox.Show(this, "Detecting regions failed: " + string.Format(Lookup("ERROR_OCCURRED", "An error occurred: {0}"), ex.Message), Lookup("ERROR", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally
