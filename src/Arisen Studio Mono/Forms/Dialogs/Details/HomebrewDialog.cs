@@ -1,0 +1,815 @@
+using ArisenStudio.Controls;
+using ArisenStudio.Models.Database;
+using ArisenStudio.Models.Resources;
+using ArisenStudio.Runtime;
+using Humanizer;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Resources;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+
+namespace ArisenStudio.Forms.Dialogs.Details
+{
+    /// <summary>
+    /// Shows the details of one homebrew item: its stats, description and downloadable files, with Download, Install,
+    /// Favorite, Report Issue and Help. Stock WinForms port of the old DevExpress HomebrewDialog form.
+    /// The dialog opens no other form and never calls the console: the buttons raise events and the host decides what to do.
+    /// Set ModItem, CategoryType, Settings, Categories, ConsoleProfile, Language and IsConsoleConnected before the dialog is shown.
+    /// </summary>
+    internal class HomebrewDialog : Form
+    {
+        private const string SectionName = "Homebrew";
+        private const string TabDescriptionId = "description";
+        private const string TabDownloadsId = "downloads";
+
+        private static readonly Regex LinkPattern = new Regex(@"https?://[^\s<>""']+", RegexOptions.IgnoreCase);
+
+        private readonly Font _boldFont;
+        private readonly int _separatorHeight;
+        private readonly DetailLayout _layout;
+        private readonly StatItem _statLastUpdated;
+        private readonly StatItem _statSystemType;
+        private readonly StatItem _statVersion;
+        private readonly StatItem _statCreatedBy;
+        private readonly StatItem _statSubmittedBy;
+        private readonly PageTabs _tabs;
+        private readonly TextBox _description;
+        private readonly FlowLayoutPanel _links;
+        private readonly TableLayoutPanel _downloadsTable;
+        private readonly Button _buttonDownload;
+        private readonly Button _buttonInstall;
+        private readonly Button _buttonFavorite;
+        private readonly Button _buttonReport;
+        private readonly Button _buttonHelp;
+        private bool IsFavorite;
+
+        public HomebrewDialog()
+        {
+            Font = SystemFonts.MessageBoxFont;
+            Text = "Homebrew Details";
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            SizeGripStyle = SizeGripStyle.Hide;
+            StartPosition = FormStartPosition.CenterParent;
+
+            int h = Font.Height;
+            int pad = h / 2;
+            _boldFont = new Font(Font, FontStyle.Bold);
+            _separatorHeight = Math.Max(1, h / 12);
+
+            // Stats: one row of five, in the old order. Every stat but the last carries a right-hand gap.
+            Padding statMargin = new Padding(0, 0, pad, 0);
+            _statLastUpdated = CreateStat(statMargin);
+            _statSystemType = CreateStat(statMargin);
+            _statVersion = CreateStat(statMargin);
+            _statCreatedBy = CreateStat(statMargin);
+            _statSubmittedBy = CreateStat(Padding.Empty);
+
+            TableLayoutPanel statsGrid = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                ColumnCount = 5,
+                RowCount = 1,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            for (int i = 0; i < 5; i++)
+            {
+                _ = statsGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            }
+            _ = statsGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            statsGrid.Controls.Add(_statLastUpdated, 0, 0);
+            statsGrid.Controls.Add(_statSystemType, 1, 0);
+            statsGrid.Controls.Add(_statVersion, 2, 0);
+            statsGrid.Controls.Add(_statCreatedBy, 3, 0);
+            statsGrid.Controls.Add(_statSubmittedBy, 4, 0);
+
+            // Description page: the text, then the web links found in it. The text box scrolls itself.
+            _description = new TextBox
+            {
+                Multiline = true,
+                ReadOnly = true,
+                ScrollBars = ScrollBars.Vertical,
+                BorderStyle = BorderStyle.None,
+                Dock = DockStyle.Fill,
+                TabStop = false,
+                Margin = Padding.Empty
+            };
+            _links = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                WrapContents = true,
+                Margin = new Padding(0, pad / 2, 0, 0),
+                Padding = Padding.Empty
+            };
+            TableLayoutPanel descriptionPage = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            _ = descriptionPage.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            _ = descriptionPage.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            _ = descriptionPage.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            descriptionPage.Controls.Add(_description, 0, 0);
+            descriptionPage.Controls.Add(_links, 0, 1);
+
+            // Downloads page: one row per download file, in a panel that scrolls when the rows do not fit.
+            _downloadsTable = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                ColumnCount = 1,
+                RowCount = 0,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            _ = _downloadsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Panel downloadsHost = new Panel
+            {
+                Dock = DockStyle.Fill,
+                AutoScroll = true
+            };
+            downloadsHost.Controls.Add(_downloadsTable);
+
+            _tabs = new PageTabs { Dock = DockStyle.Fill };
+            _ = _tabs.AddPage(TabDescriptionId, "Description", descriptionPage);
+            _ = _tabs.AddPage(TabDownloadsId, "Downloads", downloadsHost);
+
+            // Body: the stats above the tabs. The tab area is about 20 text lines tall.
+            TableLayoutPanel body = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                ColumnCount = 1,
+                RowCount = 2,
+                Margin = Padding.Empty,
+                Padding = new Padding(pad, 0, pad, pad)
+            };
+            _ = body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            _ = body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _ = body.RowStyles.Add(new RowStyle(SizeType.Absolute, h * 20));
+            body.Controls.Add(statsGrid, 0, 0);
+            body.Controls.Add(_tabs, 0, 1);
+
+            // Shared shell: header with crumbs, name and separator; the body; and the action row ending with Close.
+            _layout = new DetailLayout
+            {
+                Dock = DockStyle.Fill,
+                CloseText = "Close"
+            };
+            _layout.CloseRequested += (s, e) => Close();
+            _layout.Body = body;
+
+            // AddAction places each button to the left of the ones added before it, after Close.
+            // Added Help first, then Report, Favorite, Install, Download, so the visual order is Download, Install, Favorite, Report Issue, Help & Support, Close.
+            _buttonHelp = _layout.AddAction("Help && Support", ButtonHelp_Click);
+            _buttonReport = _layout.AddAction("Report Issue", ButtonReport_Click);
+            _buttonFavorite = _layout.AddAction("Add to Favorites", ButtonFavorite_Click);
+            _buttonInstall = _layout.AddAction("Install", ButtonInstall_Click);
+            _buttonDownload = _layout.AddAction("Download", ButtonDownload_Click);
+
+            Controls.Add(_layout);
+        }
+
+        /// <summary>
+        /// The homebrew item to show. Read once when the dialog loads; change it before showing the dialog.
+        /// </summary>
+        public ModItemData ModItem { get; set; }
+
+        /// <summary>
+        /// The category type of the item. Used for the favorite key and the installed-mod lookup.
+        /// Defaults to Homebrew, the only type this dialog is opened for.
+        /// </summary>
+        public CategoryType CategoryType { get; set; } = CategoryType.Homebrew;
+
+        /// <summary>
+        /// The installed copy of this item for the console profile, or null. Set when the dialog loads.
+        /// </summary>
+        public InstalledModInfo InstalledModInfo { get; set; }
+
+        /// <summary>
+        /// Settings for relative times, the favorites list and whether Install is enabled for a USB install.
+        /// Defaults to the shared application settings. Null falls back to the shared settings.
+        /// </summary>
+        public SettingsData Settings { get; set; } = AppHost.Settings;
+
+        /// <summary>
+        /// The console profile used to find the installed-mod record. Null (the default) means no installed state is shown.
+        /// Passed in by the host.
+        /// </summary>
+        public ConsoleProfile ConsoleProfile { get; set; }
+
+        /// <summary>
+        /// The categories data, used to look up the category title and the category of a transfer.
+        /// Null (the default) shows the category ID as the category title.
+        /// </summary>
+        public CategoriesData Categories { get; set; }
+
+        /// <summary>
+        /// Localisation source for the dialog texts. Null (the default) shows the English texts.
+        /// Set it before the dialog is shown.
+        /// </summary>
+        public ResourceManager Language { get; set; }
+
+        /// <summary>
+        /// Returns true when a console is connected. The default reports no console.
+        /// The header Install button is enabled when this returns true or Settings.InstallGameModsToUsbDevice is set.
+        /// </summary>
+        public Func<bool> IsConsoleConnected { get; set; } = () => false;
+
+        /// <summary>
+        /// Raised when a Download or Install button is clicked. The host starts the transfer.
+        /// Replaces the old DialogExtensions.ShowTransferFilesDialog calls.
+        /// </summary>
+        public event EventHandler<TransferRequestedEventArgs> TransferRequested;
+
+        /// <summary>
+        /// Raised when Report Issue is clicked. The host shows the report-issue dialog.
+        /// </summary>
+        public event EventHandler ReportIssueRequested;
+
+        /// <summary>
+        /// Raised when Help and Support is clicked. The host opens the help page.
+        /// </summary>
+        public event EventHandler HelpRequested;
+
+        /// <summary>
+        /// Raised when a web link in the description is clicked. The host opens the link.
+        /// </summary>
+        public event EventHandler<LinkRequestedEventArgs> LinkRequested;
+
+        /// <summary>
+        /// Raised when the Favorite button changes the favorites list. The host decides whether to save the settings.
+        /// </summary>
+        public event EventHandler FavoriteChanged;
+
+        protected override void OnLoad(EventArgs e)
+        {
+            ApplyLanguage();
+            ShowModDetails();
+            SizeToContent();
+            base.OnLoad(e);
+        }
+
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (ModifierKeys == Keys.None && keyData == Keys.Escape)
+            {
+                Close();
+                return true;
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _boldFont.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void ApplyLanguage()
+        {
+            _statLastUpdated.Title = Lookup("LABEL_LAST_UPDATED", "Last Updated");
+            _statSystemType.Title = Lookup("LABEL_SYSTEM_TYPE", "System Type");
+            _statVersion.Title = Lookup("LABEL_VERSION", "Version");
+            _statCreatedBy.Title = Lookup("LABEL_CREATED_BY", "Created By");
+            _statSubmittedBy.Title = Lookup("LABEL_SUBMITTED_BY", "Submitted By");
+
+            _ = _tabs.SetTitle(TabDescriptionId, Lookup("LABEL_DESCRIPTION", "Description"));
+
+            _buttonDownload.Text = EscapeMnemonic(Lookup("LABEL_DOWNLOAD", "Download"));
+            _buttonInstall.Text = EscapeMnemonic(Lookup("LABEL_INSTALL", "Install"));
+            _buttonReport.Text = EscapeMnemonic(Lookup("LABEL_REPORT_ISSUE", "Report Issue"));
+            _buttonHelp.Text = EscapeMnemonic(Lookup("LABEL_HELP_SUPPORT", "Help & Support"));
+        }
+
+        private void ShowModDetails()
+        {
+            ModItemData item = ModItem;
+            SettingsData settings = CurrentSettings();
+
+            if (item == null)
+            {
+                _layout.SetCrumbs(SectionName, string.Empty, string.Empty);
+                _layout.SetName(string.Empty);
+                foreach (StatItem stat in StatItems())
+                {
+                    stat.Value = string.Empty;
+                }
+                _description.Text = string.Empty;
+                ShowLinks(string.Empty);
+                ClearDownloadRows();
+                SetDownloadsTitle(0);
+                _buttonDownload.Enabled = false;
+                _buttonInstall.Enabled = false;
+                _buttonFavorite.Enabled = false;
+                return;
+            }
+
+            List<DownloadFiles> files = item.DownloadFiles ?? new List<DownloadFiles>();
+            bool hasFiles = files.Count > 0;
+
+            InstalledModInfo = ConsoleProfile != null ? settings.GetInstalledMods(ConsoleProfile, item.CategoryId, item.Id, false) : null;
+            IsFavorite = settings.FavoriteMods.Exists(x => IsFavoriteOf(x, item));
+
+            // Header: crumbs (Homebrew / category) and the name. The name escapes "&" itself.
+            _layout.SetCrumbs(SectionName, CategoryTitle(item), string.Empty);
+            _layout.SetName(item.Name);
+
+            // Stats. Each value is escaped because the value label treats "&" as a mnemonic marker.
+            _statLastUpdated.Value = hasFiles ? RelativeOrDate(files[0].LastUpdated, settings, "MM/dd/yyyy") : string.Empty;
+            _statSystemType.Value = EscapeMnemonic(item.FirmwareType);
+            _statVersion.Value = EscapeMnemonic(string.Join(" & ", item.Versions));
+            _statCreatedBy.Value = string.IsNullOrWhiteSpace(item.CreatedBy) ? "Unknown" : EscapeMnemonic(item.CreatedBy);
+            _statSubmittedBy.Value = EscapeMnemonic(item.SubmittedBy);
+
+            // Description. The text box shows plain text, so no escaping; line ends are CRLF for the text box.
+            string text = string.IsNullOrWhiteSpace(item.Description)
+                ? Lookup("NO_MORE_DETAILS", "No more details are available.")
+                : item.Description;
+            text = text.Replace("\r\n", "\n").Replace("\n", "\r\n");
+            _description.Text = text;
+            ShowLinks(text);
+
+            // Downloads: one row per file. The last file is the "latest" one for the header buttons.
+            SetDownloadsTitle(files.Count);
+            ShowDownloads(files, settings);
+
+            _buttonDownload.Text = EscapeMnemonic(files.Count > 1 ? Lookup("LABEL_DOWNLOAD_LATEST", "Download Latest") : Lookup("LABEL_DOWNLOAD", "Download"));
+            _buttonDownload.Enabled = hasFiles;
+            _buttonInstall.Text = EscapeMnemonic(files.Count > 1 ? Lookup("LABEL_INSTALL_LATEST", "Install Latest") : Lookup("LABEL_INSTALL", "Install"));
+            _buttonInstall.Enabled = hasFiles && IsInstallAvailable(settings);
+            _buttonFavorite.Enabled = true;
+            UpdateFavoriteButton();
+        }
+
+        private void ShowDownloads(List<DownloadFiles> files, SettingsData settings)
+        {
+            ClearDownloadRows();
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                // The separator sits above every file except the first, when there is more than one.
+                TableLayoutPanel row = CreateDownloadRow(files[i], i > 0 && files.Count > 1, settings);
+                int index = _downloadsTable.RowCount;
+                _ = _downloadsTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                _downloadsTable.RowCount = index + 1;
+                _downloadsTable.Controls.Add(row, 0, index);
+            }
+        }
+
+        private void ClearDownloadRows()
+        {
+            while (_downloadsTable.Controls.Count > 0)
+            {
+                Control control = _downloadsTable.Controls[0];
+                _downloadsTable.Controls.Remove(control);
+                control.Dispose();
+            }
+            _downloadsTable.RowStyles.Clear();
+            _downloadsTable.RowCount = 0;
+        }
+
+        /// <summary>
+        /// One download file: an optional separator, its name and file count, the last updated, region and version,
+        /// the buttons, and a list of the install paths that the toggle button shows.
+        /// </summary>
+        private TableLayoutPanel CreateDownloadRow(DownloadFiles file, bool showSeparator, SettingsData settings)
+        {
+            int h = Font.Height;
+            int pad = h / 2;
+            List<string> installPaths = file.InstallPaths ?? new List<string>();
+            int fileCount = installPaths.Count;
+
+            // Rows: 0 separator, 1 name, 2 file count, 3 facts, 4 buttons, 5 install paths (0 high until the toggle opens it).
+            TableLayoutPanel rowTable = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                ColumnCount = 1,
+                RowCount = 6,
+                Margin = Padding.Empty,
+                Padding = new Padding(pad, pad / 2, pad, pad / 2)
+            };
+            _ = rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            _ = rowTable.RowStyles.Add(new RowStyle(SizeType.Absolute, showSeparator ? _separatorHeight : 0F));
+            for (int i = 0; i < 4; i++)
+            {
+                _ = rowTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            }
+            _ = rowTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 0F));
+
+            Panel separator = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Gainsboro,
+                Margin = Padding.Empty,
+                Visible = showSeparator
+            };
+
+            Label name = new Label
+            {
+                AutoSize = true,
+                UseMnemonic = false,
+                Font = _boldFont,
+                Text = file.Name ?? string.Empty,
+                Margin = new Padding(0, 0, 0, pad / 2)
+            };
+
+            Label fileCountLabel = new Label
+            {
+                AutoSize = true,
+                UseMnemonic = false,
+                Text = fileCount + " " + (fileCount == 1 ? Lookup("LABEL_FILE", "File") : Lookup("LABEL_FILES", "Files")),
+                Margin = new Padding(0, 0, 0, pad / 2)
+            };
+
+            TableLayoutPanel facts = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                ColumnCount = 3,
+                RowCount = 1,
+                Margin = new Padding(0, 0, 0, pad / 2),
+                Padding = Padding.Empty
+            };
+            for (int i = 0; i < 3; i++)
+            {
+                _ = facts.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / 3F));
+            }
+            _ = facts.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            facts.Controls.Add(CreateFact("LABEL_LAST_UPDATED", "Last Updated", RelativeOrDate(file.LastUpdated, settings, "dd MMM yyyy")), 0, 0);
+            facts.Controls.Add(CreateFact("LABEL_REGION", "Region", string.IsNullOrEmpty(file.Region) ? "-" : file.Region), 1, 0);
+            facts.Controls.Add(CreateFact("LABEL_VERSION", "Version", string.IsNullOrEmpty(file.Version) ? "-" : file.Version), 2, 0);
+
+            Button download = CreateRowButton(Lookup("LABEL_DOWNLOAD", "Download"));
+            download.Click += (s, e) => RaiseTransfer(TransferType.DownloadMods, file);
+
+            // Per file, Install is offered when a console is connected or the homebrew USB install is on, as the old per-file row did.
+            Button install = CreateRowButton(Lookup("LABEL_INSTALL", "Install"));
+            install.Visible = IsConsoleConnectedNow() || settings.InstallHomebrewToUsbDevice;
+            install.Click += (s, e) => RaiseTransfer(IsInstalled(settings) ? TransferType.UninstallMods : TransferType.InstallMods, file);
+
+            Button copyLink = CreateRowButton(Lookup("LABEL_COPY_LINK", "Copy Link"));
+            copyLink.Click += (s, e) => CopyLink(file.Url);
+
+            ListBox pathList = new ListBox
+            {
+                Dock = DockStyle.Fill,
+                IntegralHeight = false,
+                TabStop = false,
+                Margin = Padding.Empty
+            };
+            foreach (string path in installPaths)
+            {
+                _ = pathList.Items.Add(path);
+            }
+            int listHeight = Math.Min(Math.Max(1, fileCount), 8) * h + pad;
+
+            bool expanded = false;
+            Button toggle = CreateRowButton(Lookup("LABEL_INSTALLATION_FILES", "Installation Files"));
+            toggle.Click += (s, e) =>
+            {
+                expanded = !expanded;
+                rowTable.RowStyles[5].Height = expanded ? listHeight : 0F;
+            };
+
+            FlowLayoutPanel actions = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            actions.Controls.Add(download);
+            actions.Controls.Add(install);
+            actions.Controls.Add(copyLink);
+            actions.Controls.Add(toggle);
+
+            rowTable.Controls.Add(separator, 0, 0);
+            rowTable.Controls.Add(name, 0, 1);
+            rowTable.Controls.Add(fileCountLabel, 0, 2);
+            rowTable.Controls.Add(facts, 0, 3);
+            rowTable.Controls.Add(actions, 0, 4);
+            rowTable.Controls.Add(pathList, 0, 5);
+            return rowTable;
+        }
+
+        private void ShowLinks(string text)
+        {
+            while (_links.Controls.Count > 0)
+            {
+                Control control = _links.Controls[0];
+                _links.Controls.Remove(control);
+                control.Dispose();
+            }
+
+            int pad = Font.Height / 2;
+            IEnumerable<string> urls = LinkPattern.Matches(text ?? string.Empty)
+                .Cast<Match>()
+                .Select(match => match.Value.TrimEnd('.', ',', ';', ')', ']'))
+                .Distinct();
+
+            foreach (string url in urls)
+            {
+                LinkLabel link = new LinkLabel
+                {
+                    AutoSize = true,
+                    UseMnemonic = false,
+                    Text = url,
+                    LinkArea = new LinkArea(0, url.Length),
+                    Margin = new Padding(0, 0, pad, 0)
+                };
+                link.LinkClicked += LinkLabel_LinkClicked;
+                _links.Controls.Add(link);
+            }
+        }
+
+        private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LinkLabel link = sender as LinkLabel;
+            if (link != null)
+            {
+                LinkRequested?.Invoke(this, new LinkRequestedEventArgs(link.Text));
+            }
+        }
+
+        private void ButtonDownload_Click(object sender, EventArgs e)
+        {
+            DownloadFiles latest = LatestDownload();
+            if (latest != null)
+            {
+                RaiseTransfer(TransferType.DownloadMods, latest);
+            }
+        }
+
+        private void ButtonInstall_Click(object sender, EventArgs e)
+        {
+            DownloadFiles latest = LatestDownload();
+            if (latest != null)
+            {
+                RaiseTransfer(TransferType.InstallMods, latest);
+            }
+        }
+
+        private void ButtonFavorite_Click(object sender, EventArgs e)
+        {
+            ModItemData item = ModItem;
+            if (item == null)
+            {
+                return;
+            }
+
+            List<FavoriteItem> favorites = CurrentSettings().FavoriteMods;
+            if (IsFavorite)
+            {
+                _ = favorites.RemoveAll(x => IsFavoriteOf(x, item));
+                IsFavorite = false;
+            }
+            else
+            {
+                favorites.Add(new FavoriteItem
+                {
+                    CategoryType = CategoryType,
+                    CategoryId = item.CategoryId,
+                    ModId = item.Id,
+                    Platform = item.GetPlatform()
+                });
+                IsFavorite = true;
+            }
+
+            UpdateFavoriteButton();
+            FavoriteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ButtonReport_Click(object sender, EventArgs e)
+        {
+            ReportIssueRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ButtonHelp_Click(object sender, EventArgs e)
+        {
+            HelpRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void UpdateFavoriteButton()
+        {
+            _buttonFavorite.Text = EscapeMnemonic(IsFavorite
+                ? Lookup("LABEL_REMOVE_FROM_FAVORITES", "Remove from Favorites")
+                : Lookup("LABEL_ADD_TO_FAVORITES", "Add to Favorites"));
+        }
+
+        private void RaiseTransfer(TransferType transferType, DownloadFiles downloadFiles)
+        {
+            EventHandler<TransferRequestedEventArgs> handler = TransferRequested;
+            if (handler != null && ModItem != null)
+            {
+                handler(this, new TransferRequestedEventArgs(transferType, ResolveCategory(), ModItem, downloadFiles));
+            }
+        }
+
+        private CategoryItem ResolveCategory()
+        {
+            return Categories != null && ModItem != null ? ModItem.GetCategory(Categories) : null;
+        }
+
+        private DownloadFiles LatestDownload()
+        {
+            List<DownloadFiles> files = ModItem?.DownloadFiles;
+            return files != null && files.Count > 0 ? files[files.Count - 1] : null;
+        }
+
+        private bool IsInstalled(SettingsData settings)
+        {
+            return ConsoleProfile != null && ModItem != null && settings.GetInstalledMods(ConsoleProfile, CategoryType, ModItem.Id) != null;
+        }
+
+        private bool IsFavoriteOf(FavoriteItem favorite, ModItemData item)
+        {
+            return favorite.CategoryType == CategoryType
+                && favorite.CategoryId == item.CategoryId
+                && favorite.ModId == item.Id
+                && favorite.Platform == item.GetPlatform();
+        }
+
+        private bool IsInstallAvailable(SettingsData settings)
+        {
+            // Kept from the old form: the header Install button checks the game-mod USB setting.
+            return IsConsoleConnectedNow() || settings.InstallGameModsToUsbDevice;
+        }
+
+        private bool IsConsoleConnectedNow()
+        {
+            Func<bool> isConnected = IsConsoleConnected;
+            return isConnected != null && isConnected();
+        }
+
+        private SettingsData CurrentSettings()
+        {
+            return Settings ?? AppHost.Settings;
+        }
+
+        private string CategoryTitle(ModItemData item)
+        {
+            if (Categories == null || Categories.Categories == null)
+            {
+                return item.CategoryId ?? string.Empty;
+            }
+
+            return item.GetCategoryName(Categories) ?? string.Empty;
+        }
+
+        private void SetDownloadsTitle(int count)
+        {
+            _ = _tabs.SetTitle(TabDownloadsId, Lookup("LABEL_DOWNLOADS", "Downloads") + " (" + count + ")");
+        }
+
+        private IEnumerable<StatItem> StatItems()
+        {
+            return new[]
+            {
+                _statLastUpdated,
+                _statSystemType,
+                _statVersion,
+                _statCreatedBy,
+                _statSubmittedBy
+            };
+        }
+
+        /// <summary>
+        /// Sizes the form 50 font heights wide and to its content tall, each clamped to 90% of the working area
+        /// of the screen it is on. The width is set first so the header wraps the name to it.
+        /// </summary>
+        private void SizeToContent()
+        {
+            int h = Font.Height;
+            Rectangle work = Screen.FromControl(this).WorkingArea;
+
+            int width = Math.Min(h * 50, (int)(work.Width * 0.9));
+            ClientSize = new Size(width, ClientSize.Height);
+
+            int height = Math.Min(_layout.PreferredSize.Height, (int)(work.Height * 0.9));
+            ClientSize = new Size(width, height);
+        }
+
+        private StatItem CreateStat(Padding margin)
+        {
+            return new StatItem
+            {
+                Dock = DockStyle.Fill,
+                Margin = margin
+            };
+        }
+
+        private StatItem CreateFact(string key, string fallback, string value)
+        {
+            StatItem fact = CreateStat(new Padding(0, 0, Font.Height / 2, 0));
+            fact.Title = Lookup(key, fallback);
+            fact.Value = EscapeMnemonic(value);
+            return fact;
+        }
+
+        private Button CreateRowButton(string text)
+        {
+            return new Button
+            {
+                AutoSize = true,
+                Text = EscapeMnemonic(text),
+                Margin = new Padding(0, 0, Font.Height / 4, 0)
+            };
+        }
+
+        private string RelativeOrDate(DateTime value, SettingsData settings, string format)
+        {
+            return settings.UseRelativeTimes ? value.Humanize() : value.ToString(format, CultureInfo.CurrentCulture);
+        }
+
+        private static void CopyLink(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return;
+            }
+
+            try
+            {
+                Clipboard.SetText(url);
+            }
+            catch (ExternalException)
+            {
+                // The clipboard was busy. The user can click again.
+            }
+        }
+
+        /// <summary>
+        /// Doubles "&amp;" so a label or button shows it literally rather than as a mnemonic.
+        /// </summary>
+        private static string EscapeMnemonic(string text)
+        {
+            return (text ?? string.Empty).Replace("&", "&&");
+        }
+
+        /// <summary>
+        /// Returns the localised text for a key, or the English fallback when there is no language source or no value.
+        /// </summary>
+        private string Lookup(string key, string fallback)
+        {
+            string value = Language?.GetString(key);
+            return string.IsNullOrEmpty(value) ? fallback : value;
+        }
+
+        /// <summary>
+        /// Arguments for TransferRequested. Category is null when the host gave no categories data.
+        /// </summary>
+        public class TransferRequestedEventArgs : EventArgs
+        {
+            public TransferRequestedEventArgs(TransferType transferType, CategoryItem category, ModItemData modItem, DownloadFiles downloadFiles)
+            {
+                TransferType = transferType;
+                Category = category;
+                ModItem = modItem;
+                DownloadFiles = downloadFiles;
+            }
+
+            public TransferType TransferType { get; }
+
+            public CategoryItem Category { get; }
+
+            public ModItemData ModItem { get; }
+
+            public DownloadFiles DownloadFiles { get; }
+        }
+
+        /// <summary>
+        /// Arguments for LinkRequested: the web link that was clicked.
+        /// </summary>
+        public class LinkRequestedEventArgs : EventArgs
+        {
+            public LinkRequestedEventArgs(string url)
+            {
+                Url = url;
+            }
+
+            public string Url { get; }
+        }
+    }
+}

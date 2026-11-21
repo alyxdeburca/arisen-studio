@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5F633C9B-3126-4D36-AE86-7C1006D8254A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ArisenStudio</RootNamespace>
+    <AssemblyName>ArisenStudioMono</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <LangVersion>12.0</LangVersion>
+    <NoWarn>$(NoWarn);CS8632</NoWarn>
+    <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>
+    <ArisenToolsetVersion Condition="'$(ArisenToolsetVersion)' == ''">4.14.0</ArisenToolsetVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(ArisenToolsetVersion)" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Forms\ShellForm.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controls\ActionStrip.cs" />
+    <Compile Include="Forms\Dialogs\ReportIssueDialog.cs" />
+    <Compile Include="Constants\IssueLinks.cs" />
+    <Compile Include="Controls\IconBox.cs" />
+    <Compile Include="Forms\Dialogs\EasterEgg.cs" />
+    <Compile Include="Forms\Dialogs\PackagesFaqDialog.cs" />
+    <Compile Include="Forms\Dialogs\EditLoginDialog.cs" />
+    <Compile Include="Forms\Dialogs\DataViewDialog.cs" />
+    <Compile Include="Controls\TileCard.cs" />
+    <Compile Include="Controls\TilePanel.cs" />
+    <Compile Include="Controls\ChangeLogItem.cs" />
+    <Compile Include="Controls\NewsItem.cs" />
+    <Compile Include="Controls\NoAnnouncementsItem.cs" />
+    <Compile Include="Controls\NoProfilesItem.cs" />
+    <Compile Include="Controls\StatItem.cs" />
+    <Compile Include="Controls\ToolItem.cs" />
+    <Compile Include="Controls\ProfileItem.cs" />
+    <Compile Include="Controls\PageTabs.cs" />
+    <Compile Include="Io\UserFolders.cs" />
+    <Compile Include="Constants\RequestLinks.cs" />
+    <Compile Include="Forms\Dialogs\RequestModsDialog.cs" />
+    <Compile Include="Forms\Dialogs\SortOptionsDialog.cs" />
+    <Compile Include="Forms\Dialogs\BackupFileDialog.cs" />
+    <Compile Include="Forms\Dialogs\ListViewDialog.cs" />
+    <Compile Include="Controls\DetailLayout.cs" />
+    <Compile Include="Forms\Dialogs\Details\PackageDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\ApplicationDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\CustomModDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\GameModDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\GameSaveDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\GameTrainersDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\HomebrewDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\HomebrewXboxDialog.cs" />
+    <Compile Include="Forms\Dialogs\Details\ResourceDialog.cs" />
+    <Compile Include="Shims\Humanizer.cs" />
+    <Compile Include="Runtime\StatusEventArgs.cs" />
+    <Compile Include="Runtime\AppHost.cs" />
+    <Compile Include="Extensions\HttpExtensions.cs" />
+    <Compile Include="Models\Database\CategoryItem.cs" />
+    <Compile Include="Extensions\DataExtensions.cs" />
+    <Compile Include="Models\Configuration\SettingsData.cs" />
+    <Compile Include="Models\Database\GameSaveItemData.cs" />
+    <Compile Include="Models\Database\ModItemData.cs" />
+    <Compile Include="Models\Database\AppItemData.cs" />
+    <Compile Include="Models\Database\TrainerGameItem.cs" />
+    <Compile Include="Database\AppsData.cs" />
+    <Compile Include="Database\ModsData.cs" />
+    <Compile Include="Models\Configuration\BackupFilesData.cs" />
+    <Compile Include="Extensions\UpdateExtensions.cs" />
+    <Compile Include="Extensions\IoExtensions.cs" />
+    <EmbeddedResource Include="Resources\Icons\new-window.png">
+      <LogicalName>ArisenStudio.Icons.new-window.png</LogicalName>
+    </EmbeddedResource>
+    <Compile Include="..\Arisen Studio\Database\GameCheatsData.cs">
+      <Link>Database\GameCheatsData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Database\GamePatchesData.cs">
+      <Link>Database\GamePatchesData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Database\GamesDataPS3.cs">
+      <Link>Database\GamesDataPS3.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Database\PackagesData.cs">
+      <Link>Database\PackagesData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Enums\Enums.cs">
+      <Link>Enums\Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Extensions\DateTimeExtensions.cs">
+      <Link>Extensions\DateTimeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Extensions\GraphicExtensions.cs">
+      <Link>Extensions\GraphicExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Extensions\PS4\PS4Extensions.cs">
+      <Link>Extensions\PS4\PS4Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Extensions\SimpleCache.cs">
+      <Link>Extensions\SimpleCache.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Extensions\StringExtensions.cs">
+      <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Io\Archives.cs">
+      <Link>Io\Archives.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Dashboard\AnnouncementsData.cs">
+      <Link>Models\Dashboard\AnnouncementsData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Dashboard\FavoriteGamesData.cs">
+      <Link>Models\Dashboard\FavoriteGamesData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Dashboard\FavoriteModsData.cs">
+      <Link>Models\Dashboard\FavoriteModsData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Database\AppItemFile.cs">
+      <Link>Models\Database\AppItemFile.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Database\DownloadFiles.cs">
+      <Link>Models\Database\DownloadFiles.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Database\GamePatchItemData.cs">
+      <Link>Models\Database\GamePatchItemData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Database\PackageItemData.cs">
+      <Link>Models\Database\PackageItemData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Database\StatsData.cs">
+      <Link>Models\Database\StatsData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Game Data\PS3\GameItemData.cs">
+      <Link>Models\Game Data\PS3\GameItemData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Game Data\PS3\GameUpdates.cs">
+      <Link>Models\Game Data\PS3\GameUpdates.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Game Data\XBOX360\GameItemData.cs">
+      <Link>Models\Game Data\XBOX360\GameItemData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Game Data\XBOX360\GameTitleIds.cs">
+      <Link>Models\Game Data\XBOX360\GameTitleIds.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Models\Release Data\GitHubReleaseData.cs">
+      <Link>Models\Release Data\GitHubReleaseData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Constants\Urls.cs">
+      <Link>Constants\Urls.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Database\CategoriesData.cs">
+      <Link>Database\CategoriesData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Database\TrainersData.cs">
+      <Link>Database\TrainersData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Database\GameSavesData.cs">
+      <Link>Database\GameSavesData.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Extensions\UsbExtensions.cs">
+      <Link>Extensions\UsbExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Arisen Studio\Database\Client\DatabaseClient.cs">
+      <Link>Database\Client\DatabaseClient.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
