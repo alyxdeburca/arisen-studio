@@ -80,5 +80,14 @@
       "All 6 parallel dialogs (A + B2) now written; awaiting combined csproj wiring + 8 console artwork EmbeddedResources",
       "BUILD-REQUEST-8 (ListBox ClientSize perturbation) launched"
     ]
+  },
+  {
+    "summary": "Round 8 ListBox height perturbation run (inconclusive: height snapped back)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 20:01:00 UTC",
+    "changes": [
+      "Tested diag-listbox across 7 failing dialogs + 2 controls (2 PASS, 7 FAIL)",
+      "Dock=Fill ListBox under Absolute:0 RowStyle snapped back to 935x1 (ClientSize 931x-3)"
+    ]
   }
 ]
