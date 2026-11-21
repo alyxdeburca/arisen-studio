@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 23:55:06 UTC",
+  "generated_at_utc": "2026-11-21 23:57:48 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1248,7 +1248,7 @@
       "approved": false,
       "approval_note": "Not approved",
       "progress_mode": "measured_c_mainwindow",
-      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Shell+Nav (S0+S1), Dashboard (S2: Forms/Dashboard/*), RibbonBar (S6), and AboutPage (S7) are compiled, wired, and pass shell capture at 1288x827 with the PageHost zero-size guard removed (TilePanel and DashboardPage empty-panel minimum heights fixed at their sources). Feature pages (Forms/Pages/*) and services remain outside the csproj.",
+      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Shell+Nav (S0+S1), Dashboard (S2: Forms/Dashboard/*), RibbonBar (S6), AboutPage (S7), Downloads/InstalledFiles/FileManager/Settings (S3/S4: Forms/Pages/*), and all 9 S5 Library pages (Forms/Pages/Library/*: 12 files) compile cleanly as of ELF -90 (150 Compile items). Full ShellForm page registration and real service/data-source wiring remain pending before MainWindow parity completes.",
       "progress_source": "computed",
       "percent": 0.0,
       "percent_str": "0.0%",
@@ -1405,6 +1405,24 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "Dispatched 3 parallel feature/wiring tracks (Adapters, Shell/Dialog Controller, Helpers/M7) and queued T1+TD wiring",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 23:57:00 UTC",
+      "changes": [
+        "Launched Services/Adapters/ (real DataSources + FtpService/Transfer operations), Forms/Shell/Wiring/ (DialogLauncher + ShellController), and Extensions/New/+Services/M7/",
+        "Preparing BUILD-REQUEST-34 (18 T1 tool files + 4 TransferDialog files + Program.cs smoke factories) plus self-check, l10n, and parity audits"
+      ]
+    },
+    {
+      "summary": "Round 33 wired 12 S5 Library pages into csproj and passed all 28 checks (ELF -90, 150 Compile items)",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 23:56:00 UTC",
+      "changes": [
+        "Compiled all 12 Forms/Pages/Library/*.cs files cleanly (150 Compile items: 120 local + 30 linked, 0 errors)",
+        "Bundled arisen-studio-mono-90 and passed 28 of 28 Xvfb checks (0 regressions)"
+      ]
+    },
     {
       "summary": "TransferDialog port completed (4 files under Forms/Dialogs/Transfer/, code-only)",
       "source": "coordinator",
@@ -1568,15 +1586,6 @@
       "changes": [
         "Added MinimumSize(1,1) on path lists, separators, and files list",
         "Full 19-form regression check: 12 PASS, 7 FAIL (0 regressions)"
-      ]
-    },
-    {
-      "summary": "Round 3 diagnostic capture run (diag-capture overlay)",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 18:06:00 UTC",
-      "changes": [
-        "Measured all 9 detail dialogs via DrawToBitmap tree probe (2 PASS, 7 FAIL)",
-        "Isolated first-thrower TableLayoutPanel and non-positive controls"
       ]
     }
   ]

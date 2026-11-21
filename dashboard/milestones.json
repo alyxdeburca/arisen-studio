@@ -629,7 +629,7 @@
       "approved": false,
       "approval_note": "Not approved",
       "progress_mode": "measured_c_mainwindow",
-      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Shell+Nav (S0+S1), Dashboard (S2: Forms/Dashboard/*), RibbonBar (S6), and AboutPage (S7) are compiled, wired, and pass shell capture at 1288x827 with the PageHost zero-size guard removed (TilePanel and DashboardPage empty-panel minimum heights fixed at their sources). Feature pages (Forms/Pages/*) and services remain outside the csproj."
+      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Shell+Nav (S0+S1), Dashboard (S2: Forms/Dashboard/*), RibbonBar (S6), AboutPage (S7), Downloads/InstalledFiles/FileManager/Settings (S3/S4: Forms/Pages/*), and all 9 S5 Library pages (Forms/Pages/Library/*: 12 files) compile cleanly as of ELF -90 (150 Compile items). Full ShellForm page registration and real service/data-source wiring remain pending before MainWindow parity completes."
     },
     {
       "id": "M6",
