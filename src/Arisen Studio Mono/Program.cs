@@ -345,12 +345,40 @@ namespace ArisenStudio
 
         private static bool Capture(Form f, string path)
         {
-            using (Bitmap b = new Bitmap(f.Width, f.Height))
+            bool ok = false;
+            try
             {
-                f.DrawToBitmap(b, new Rectangle(0, 0, f.Width, f.Height));
-                b.Save(path, ImageFormat.Png);
+                using (Bitmap b = new Bitmap(f.Width, f.Height))
+                {
+                    f.DrawToBitmap(b, new Rectangle(0, 0, f.Width, f.Height));
+                    b.Save(path, ImageFormat.Png);
+                }
+                ok = new System.IO.FileInfo(path).Length > 0;
+                return ok;
             }
-            return new System.IO.FileInfo(path).Length > 0;
+            finally
+            {
+                if (!ok) { PrintNonPositive(f); }
+            }
+        }
+
+        // Diagnostic only: lists descendants with a non-positive width or height. Never throws, never changes the result.
+        private static void PrintNonPositive(Form f)
+        {
+            try { WalkNonPositive(f, f.GetType().Name); }
+            catch (Exception) { }
+        }
+
+        private static void WalkNonPositive(System.Windows.Forms.Control parent, string chain)
+        {
+            foreach (System.Windows.Forms.Control c in parent.Controls)
+            {
+                if (c.Width <= 0 || c.Height <= 0)
+                {
+                    Console.WriteLine("NONPOS type=" + c.GetType().Name + " name='" + c.Name + "' size=" + c.Width + "x" + c.Height + " chain=" + chain);
+                }
+                WalkNonPositive(c, chain + ">" + c.GetType().Name);
+            }
         }
     }
 }

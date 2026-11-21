@@ -223,6 +223,12 @@ namespace ArisenStudio.Controls
                     {
                         bottom = Math.Max(bottom, child.Bottom + child.Margin.Bottom);
                     }
+                    if (group.Tiles.Controls.Count == 0)
+                    {
+                        // An empty group shows nothing, but must never be zero-size: Mono's DrawToBitmap makes a
+                        // Bitmap(width, 0) for it and GDI+ answers InvalidParameter.
+                        bottom = 1;
+                    }
                     if (group.Tiles.Height != bottom)
                     {
                         group.Tiles.Height = bottom;
