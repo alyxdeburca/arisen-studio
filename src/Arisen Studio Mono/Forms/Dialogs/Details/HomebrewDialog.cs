@@ -398,7 +398,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
             List<string> installPaths = file.InstallPaths ?? new List<string>();
             int fileCount = installPaths.Count;
 
-            // Rows: 0 separator, 1 name, 2 file count, 3 facts, 4 buttons, 5 install paths (0 high until the toggle opens it).
+            // Rows: 0 separator, 1 name, 2 file count, 3 facts, 4 buttons, 5 install paths (20 high until the toggle opens it; never 0, a zero-height ListBox has a negative client height and cannot be drawn on Mono).
             TableLayoutPanel rowTable = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -414,7 +414,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
             {
                 _ = rowTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             }
-            _ = rowTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 0F));
+            _ = rowTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
 
             Panel separator = new Panel
             {
@@ -489,7 +489,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
             toggle.Click += (s, e) =>
             {
                 expanded = !expanded;
-                rowTable.RowStyles[5].Height = expanded ? listHeight : 0F;
+                rowTable.RowStyles[5].Height = expanded ? listHeight : 20F;
             };
 
             FlowLayoutPanel actions = new FlowLayoutPanel

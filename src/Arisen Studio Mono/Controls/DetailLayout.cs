@@ -68,7 +68,9 @@ namespace ArisenStudio.Controls
                 UseMnemonic = true,
                 Font = _boldFont,
                 Text = string.Empty,
-                Margin = new Padding(0, 0, 0, pad)
+                Margin = new Padding(0, 0, 0, pad),
+                // Same reason as in CreateLabel: an empty name must not be 0 wide.
+                MinimumSize = new Size(1, 0)
             };
 
             _separator = new Panel
@@ -260,7 +262,10 @@ namespace ArisenStudio.Controls
                 UseMnemonic = false,
                 Font = _boldFont,
                 Text = string.Empty,
-                Margin = margin
+                Margin = margin,
+                // An AutoSize label with empty text measures 0 wide on Mono, and a zero-width control cannot be drawn
+                // (Bitmap(0, h) fails). 1 px keeps empty crumbs (region, category) harmless; labels with text are unaffected.
+                MinimumSize = new Size(1, 0)
             };
         }
 

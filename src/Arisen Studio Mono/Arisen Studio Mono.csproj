@@ -112,6 +112,36 @@
     <EmbeddedResource Include="Resources\Icons\new-window.png">
       <LogicalName>ArisenStudio.Icons.new-window.png</LogicalName>
     </EmbeddedResource>
+    <Compile Include="Forms\Dialogs\ConnectionsDialog.cs" />
+    <Compile Include="Forms\Dialogs\NewProfileDialog.cs" />
+    <Compile Include="Forms\Dialogs\NewCustomDialog.cs" />
+    <Compile Include="Forms\Dialogs\SetupWizardDialog.cs" />
+    <Compile Include="Forms\Dialogs\GameCheatsDialog.cs" />
+    <Compile Include="Forms\Dialogs\GamePatchesDialog.cs" />
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Fat.png">
+      <LogicalName>ArisenStudio.Icons.PlayStation3Fat.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Slim.png">
+      <LogicalName>ArisenStudio.Icons.PlayStation3Slim.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3SuperSlim.png">
+      <LogicalName>ArisenStudio.Icons.PlayStation3SuperSlim.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\playstation4.png">
+      <LogicalName>ArisenStudio.Icons.playstation4.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\XboxFat.png">
+      <LogicalName>ArisenStudio.Icons.XboxFat.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\XboxFatElite.png">
+      <LogicalName>ArisenStudio.Icons.XboxFatElite.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\XboxSlim.png">
+      <LogicalName>ArisenStudio.Icons.XboxSlim.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\XboxSlimE.png">
+      <LogicalName>ArisenStudio.Icons.XboxSlimE.png</LogicalName>
+    </EmbeddedResource>
     <Compile Include="..\Arisen Studio\Database\GameCheatsData.cs">
       <Link>Database\GameCheatsData.cs</Link>
     </Compile>

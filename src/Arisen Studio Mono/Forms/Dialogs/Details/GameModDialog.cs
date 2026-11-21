@@ -431,8 +431,8 @@ namespace ArisenStudio.Forms.Dialogs.Details
             {
                 _ = rowTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             }
-            // Row 4 is the install path list, 0 high until the toggle opens it. Row 5 is the separator.
-            _ = rowTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 0F));
+            // Row 4 is the install path list, 20 high until the toggle opens it (never 0: a zero-height ListBox has a negative client height and cannot be drawn on Mono). Row 5 is the separator.
+            _ = rowTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             _ = rowTable.RowStyles.Add(new RowStyle(SizeType.Absolute, showSeparator ? _separatorHeight : 0F));
 
             Label name = new Label
@@ -500,7 +500,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
             toggle.Click += (s, e) =>
             {
                 expanded = !expanded;
-                rowTable.RowStyles[4].Height = expanded ? listHeight : 0F;
+                rowTable.RowStyles[4].Height = expanded ? listHeight : 20F;
             };
 
             FlowLayoutPanel actions = new FlowLayoutPanel

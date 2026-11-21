@@ -78,10 +78,9 @@ namespace ArisenStudio.Controls
         public Image ConsoleImage { get; set; }
 
         /// <summary>
-        /// The profile this tile represents. Typed as object because the profile model is not part of this project yet;
-        /// callers that need the model must cast it.
+        /// The profile this tile represents. Typed as the profile model, as in the old control.
         /// </summary>
-        public object ConsoleProfile { get; set; }
+        public ArisenStudio.Models.Resources.ConsoleProfile ConsoleProfile { get; set; }
 
         /// <summary>The name shown under the picture.</summary>
         public string ConsoleName { get; set; }
