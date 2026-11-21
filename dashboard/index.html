@@ -450,7 +450,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 19:39:59 UTC",
+  "generated_at_utc": "2026-11-21 19:47:01 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -925,7 +925,7 @@
       "approval_note": "Awaiting owner approval",
       "progress_mode": "manual",
       "manual_percent": 100,
-      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF on the build machine from this code; the ELF passes the shell check (six markers) and the form check (SHOWN, ICON-OK, ACTION-OPEN-OK, ACTION-COPY-OK, CAPTURE-OK, EXIT-OK) under a private 24-bit Xvfb display. Known issues: the Open-in-browser icon renders as a missing-glyph box (its source SVG is a DevExpress icon-font glyph); never viewed on a real display; the real browser and clipboard were never exercised (smoke mode injects recorders). Owner approval is not recorded here. Update 2026-11-21: ten forms now pass an ELF form check (ReportIssueDialog, PackagesFaqDialog, EditLoginDialog, DataViewDialog, RequestModsDialog, SortOptionsDialog, BackupFileDialog, ListViewDialog, EasterEgg) plus the shell; the nine detail dialogs written afterwards are not counted because they collapse to 1 pixel of client height. Update after BUILD-REQUEST-2: PackageDialog (686x385) and GameTrainersDialog (766x585) now pass with measured, non-sliver captures (GameTrainersDialog shows a large blank rectangle); seven other detail dialogs still fail to capture.",
+      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF on the build machine from this code; the ELF passes the shell check (six markers) and the form check (SHOWN, ICON-OK, ACTION-OPEN-OK, ACTION-COPY-OK, CAPTURE-OK, EXIT-OK) under a private 24-bit Xvfb display. Known issues: the Open-in-browser icon renders as a missing-glyph box (its source SVG is a DevExpress icon-font glyph); never viewed on a real display; the real browser and clipboard were never exercised (smoke mode injects recorders). Owner approval is not recorded here. Update 2026-11-21: ten forms now pass an ELF form check (ReportIssueDialog, PackagesFaqDialog, EditLoginDialog, DataViewDialog, RequestModsDialog, SortOptionsDialog, BackupFileDialog, ListViewDialog, EasterEgg) plus the shell; the nine detail dialogs written afterwards are not counted because they collapse to 1 pixel of client height. Update after BUILD-REQUEST-2: PackageDialog (686x385) and GameTrainersDialog (766x585) now pass with measured, non-sliver captures (GameTrainersDialog shows a large blank rectangle); seven other detail dialogs still fail to capture. Updates through Round 7 & parallel tracks: Round 4 added nine MinimumSize(1,1) floors (eliminating all non-positive sizes in GameModDialog and resolving hidden tab subtrees in CustomModDialog/GameSaveDialog per Round 5); Round 6 ruled out hidden-tab visibility on GameModDialog; Round 7 DiagRows confirmed all 6 direct children of both depth-10 download rows drew via Control.Size while both rowdraw targets threw InvalidParameter and ListBox child index=4 showed ClientSize=931x-3. Parallel tracks: MainWindow gap inventory completed (read-only); GamePatchesDialog.cs, GameCheatsDialog.cs, and SetupWizardDialog.cs written and awaiting wiring/build alongside NewProfileDialog, ConnectionsDialog, and NewCustomDialog.",
       "progress_source": "manual",
       "percent": 100.0,
       "percent_str": "100.0%"
@@ -1071,8 +1071,8 @@
         },
         {
           "label": "Runs on a machine without Mono",
-          "state": "no",
-          "detail": "NO — the ELF loads Mono's two native helper libraries libMonoPosixHelper and libmono-native, plus libgdiplus, from the installed system."
+          "state": "partial",
+          "detail": "PARTIAL — with libMonoPosixHelper and libmono-native embedded in the ELF, 12 of 12 currently passing forms/shell run cleanly in a Mono-free debian:bookworm-slim container; still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
         },
         {
           "label": "Installer or AppImage",
@@ -1092,7 +1092,7 @@
       "status": "pass",
       "value": "YES (ActionStrip, IconBox, PageTabs, tiles, stat/tool/profile items, DetailLayout)",
       "source": "manual",
-      "detail": "Twelve shared controls compile in the container build. ActionStrip is used by dialogs that pass an ELF form check. The DetailLayout-based detail dialogs currently collapse to a client height of 1 pixel (measured 2026-11-21) and are NOT verified; none of the controls is behaviour-tested."
+      "detail": "Twelve shared controls compile in the container build. ActionStrip is used by dialogs that pass an ELF form check. For DetailLayout-based detail dialogs, 2 of 9 (PackageDialog, GameTrainersDialog) pass ELF capture and 7 still fail DrawToBitmap with GDI+ InvalidParameter (round 7 isolated ListBox ClientSize=931x-3 inside GameModDialog depth-10 rows); none of the controls is behaviour-tested."
     },
     {
       "id": "no_windows_paths_or_fonts",
@@ -1122,12 +1122,85 @@
       "id": "self_contained_elf",
       "label": "Self-contained ELF without installed Mono",
       "status": "unknown",
-      "value": "PARTIAL (shell only)",
+      "value": "PARTIAL (12/12 passing forms verified)",
       "source": "manual",
-      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, the shell runs --smoke in a clean debian:bookworm-slim container with no Mono installed. It still needs system libx11, libgdiplus, fontconfig and libgssapi_krb5. The forms have not been run in the clean container yet."
+      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, all 12 currently passing targets (shell plus 11 dialogs) run cleanly under Xvfb in a Mono-free debian:bookworm-slim container, and all 9 remaining managed NuGet packages pass build, mkbundle, and clean-container execution. Still needs system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
     }
   ],
-  "recent_events": []
+  "recent_events": [
+    {
+      "summary": "Round 7 DiagRows probe on GameModDialog depth-10 download rows",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 19:43:00 UTC",
+      "changes": [
+        "All 6 children in both 955x148 and 955x149 rows drew via Control.Size",
+        "Both rowdraw targets threw InvalidParameter at stage=draw; ListBox child 4 ClientSize=931x-3"
+      ]
+    },
+    {
+      "summary": "Parallel B2 finished writing 3 dialogs on design host",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 19:40:00 UTC",
+      "changes": [
+        "Wrote GamePatchesDialog.cs (277L), GameCheatsDialog.cs (393L), SetupWizardDialog.cs (679L)",
+        "Awaiting Parallel A completion and combined csproj wiring / build request"
+      ]
+    },
+    {
+      "summary": "Parallel C finished MainWindow design gap inventory (read-only)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 19:19:00 UTC",
+      "changes": [
+        "Audited ShellForm (38 lines) against MainWindow Designer (19 pages, ribbon, status)",
+        "Zero project edits; logged ledger discrepancy against MAINWINDOW-DESIGN.md"
+      ]
+    },
+    {
+      "summary": "Round 6 TabWalk diagnostic run (visible tab capture)",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 19:07:00 UTC",
+      "changes": [
+        "Switched TabControls to downloads/files tab before capture across 9 dialogs",
+        "Refuted hidden-tab hypothesis for GameModDialog (depth-10 rows threw while visible)"
+      ]
+    },
+    {
+      "summary": "Parallel clean-container & 9-package NuGet/mkbundle verification",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 19:04:00 UTC",
+      "changes": [
+        "Verified 12/12 passing forms/shell in Mono-free debian:bookworm-slim container",
+        "Proved all 9 remaining managed NuGet packages build, mkbundle, and run Mono-free"
+      ]
+    },
+    {
+      "summary": "Round 5 diagnostic re-measurement on round-4 tree",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 18:52:00 UTC",
+      "changes": [
+        "Confirmed 0 non-positive Size controls remain in GameModDialog (935x0 became 935x1)",
+        "Hidden tab subtrees in CustomModDialog and GameSaveDialog stopped throwing"
+      ]
+    },
+    {
+      "summary": "Round 4 minimum size fix across 6 detail dialogs (9 lines)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 18:36:00 UTC",
+      "changes": [
+        "Added MinimumSize(1,1) on path lists, separators, and files list",
+        "Full 19-form regression check: 12 PASS, 7 FAIL (0 regressions)"
+      ]
+    },
+    {
+      "summary": "Round 3 diagnostic capture run (diag-capture overlay)",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 18:06:00 UTC",
+      "changes": [
+        "Measured all 9 detail dialogs via DrawToBitmap tree probe (2 PASS, 7 FAIL)",
+        "Isolated first-thrower TableLayoutPanel and non-positive controls"
+      ]
+    }
+  ]
 }</script>
   <script>
     (function () {

@@ -1,0 +1,74 @@
+[
+  {
+    "summary": "Round 3 diagnostic capture run (diag-capture overlay)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 18:06:00 UTC",
+    "changes": [
+      "Measured all 9 detail dialogs via DrawToBitmap tree probe (2 PASS, 7 FAIL)",
+      "Isolated first-thrower TableLayoutPanel and non-positive controls"
+    ]
+  },
+  {
+    "summary": "Round 4 minimum size fix across 6 detail dialogs (9 lines)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 18:36:00 UTC",
+    "changes": [
+      "Added MinimumSize(1,1) on path lists, separators, and files list",
+      "Full 19-form regression check: 12 PASS, 7 FAIL (0 regressions)"
+    ]
+  },
+  {
+    "summary": "Round 5 diagnostic re-measurement on round-4 tree",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 18:52:00 UTC",
+    "changes": [
+      "Confirmed 0 non-positive Size controls remain in GameModDialog (935x0 became 935x1)",
+      "Hidden tab subtrees in CustomModDialog and GameSaveDialog stopped throwing"
+    ]
+  },
+  {
+    "summary": "Parallel clean-container & 9-package NuGet/mkbundle verification",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 19:04:00 UTC",
+    "changes": [
+      "Verified 12/12 passing forms/shell in Mono-free debian:bookworm-slim container",
+      "Proved all 9 remaining managed NuGet packages build, mkbundle, and run Mono-free"
+    ]
+  },
+  {
+    "summary": "Round 6 TabWalk diagnostic run (visible tab capture)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 19:07:00 UTC",
+    "changes": [
+      "Switched TabControls to downloads/files tab before capture across 9 dialogs",
+      "Refuted hidden-tab hypothesis for GameModDialog (depth-10 rows threw while visible)"
+    ]
+  },
+  {
+    "summary": "Parallel C finished MainWindow design gap inventory (read-only)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 19:19:00 UTC",
+    "changes": [
+      "Audited ShellForm (38 lines) against MainWindow Designer (19 pages, ribbon, status)",
+      "Zero project edits; logged ledger discrepancy against MAINWINDOW-DESIGN.md"
+    ]
+  },
+  {
+    "summary": "Parallel B2 finished writing 3 dialogs on design host",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 19:40:00 UTC",
+    "changes": [
+      "Wrote GamePatchesDialog.cs (277L), GameCheatsDialog.cs (393L), SetupWizardDialog.cs (679L)",
+      "Awaiting Parallel A completion and combined csproj wiring / build request"
+    ]
+  },
+  {
+    "summary": "Round 7 DiagRows probe on GameModDialog depth-10 download rows",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 19:43:00 UTC",
+    "changes": [
+      "All 6 children in both 955x148 and 955x149 rows drew via Control.Size",
+      "Both rowdraw targets threw InvalidParameter at stage=draw; ListBox child 4 ClientSize=931x-3"
+    ]
+  }
+]
