@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 20:26:51 UTC",
+  "generated_at_utc": "2026-11-21 20:27:42 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -968,7 +968,7 @@
       "approval_note": "Awaiting owner approval",
       "progress_mode": "manual",
       "manual_percent": 100,
-      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF on the build machine from this code; the ELF passes the shell check (six markers) and the form check (SHOWN, ICON-OK, ACTION-OPEN-OK, ACTION-COPY-OK, CAPTURE-OK, EXIT-OK) under a private 24-bit Xvfb display. Known issues: the Open-in-browser icon renders as a missing-glyph box (its source SVG is a DevExpress icon-font glyph); never viewed on a real display; the real browser and clipboard were never exercised (smoke mode injects recorders). Owner approval is not recorded here. Update 2026-11-21: ten forms now pass an ELF form check (ReportIssueDialog, PackagesFaqDialog, EditLoginDialog, DataViewDialog, RequestModsDialog, SortOptionsDialog, BackupFileDialog, ListViewDialog, EasterEgg) plus the shell; the nine detail dialogs written afterwards are not counted because they collapse to 1 pixel of client height. Update after BUILD-REQUEST-2: PackageDialog (686x385) and GameTrainersDialog (766x585) now pass with measured, non-sliver captures (GameTrainersDialog shows a large blank rectangle); seven other detail dialogs still fail to capture. Updates through Round 7 & parallel tracks: Round 4 added nine MinimumSize(1,1) floors (eliminating all non-positive sizes in GameModDialog and resolving hidden tab subtrees in CustomModDialog/GameSaveDialog per Round 5); Round 6 ruled out hidden-tab visibility on GameModDialog; Round 7 DiagRows confirmed all 6 direct children of both depth-10 download rows drew via Control.Size while both rowdraw targets threw InvalidParameter and ListBox child index=4 showed ClientSize=931x-3; Round 8 ListBox perturbation (without changing RowStyle Absolute:0) snapped ListBox back to 935x1 (ClientSize=931x-3), leaving the test inconclusive per protocol. Parallel tracks: MainWindow gap inventory completed (read-only); all 6 parallel dialogs (GamePatchesDialog.cs, GameCheatsDialog.cs, SetupWizardDialog.cs, ConnectionsDialog.cs, NewProfileDialog.cs, and NewCustomDialog.cs) are now written and awaiting combined csproj wiring/build (plus 8 console artwork EmbeddedResources).",
+      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF on the build machine from this code; the ELF passes the shell check (six markers) and the form check (SHOWN, ICON-OK, ACTION-OPEN-OK, ACTION-COPY-OK, CAPTURE-OK, EXIT-OK) under a private 24-bit Xvfb display. Known issues: the Open-in-browser icon renders as a missing-glyph box (its source SVG is a DevExpress icon-font glyph); never viewed on a real display; the real browser and clipboard were never exercised (smoke mode injects recorders). Owner approval is not recorded here. Update 2026-11-21: ten forms now pass an ELF form check (ReportIssueDialog, PackagesFaqDialog, EditLoginDialog, DataViewDialog, RequestModsDialog, SortOptionsDialog, BackupFileDialog, ListViewDialog, EasterEgg) plus the shell; the nine detail dialogs written afterwards are not counted because they collapse to 1 pixel of client height. Update after BUILD-REQUEST-2: PackageDialog (686x385) and GameTrainersDialog (766x585) now pass with measured, non-sliver captures (GameTrainersDialog shows a large blank rectangle); seven other detail dialogs still fail to capture. Updates through Round 7 & parallel tracks: Round 4 added nine MinimumSize(1,1) floors (eliminating all non-positive sizes in GameModDialog and resolving hidden tab subtrees in CustomModDialog/GameSaveDialog per Round 5); Round 6 ruled out hidden-tab visibility on GameModDialog; Round 7 DiagRows confirmed all 6 direct children of both depth-10 download rows drew via Control.Size while both rowdraw targets threw InvalidParameter and ListBox child index=4 showed ClientSize=931x-3; Round 8 ListBox perturbation (without changing RowStyle Absolute:0) snapped ListBox back to 935x1 (ClientSize=931x-3), leaving the test inconclusive per protocol; Round 9 RowStyle perturbation (setting RowStyles[4] to Absolute:20 in GameModDialog diagnostic overlay only) resolved both depth-10 download rows (ListBox Size=935x20 ClientSize=931x16, throws 11 -> 0) and GameModDialog passed CAPTURE-OK at 1006x705 (3 PASS / 6 FAIL in diagnostic run; project tree awaiting real fix). Parallel tracks: MainWindow gap inventory completed (read-only); all 6 parallel dialogs (GamePatchesDialog.cs, GameCheatsDialog.cs, SetupWizardDialog.cs, ConnectionsDialog.cs, NewProfileDialog.cs, and NewCustomDialog.cs) are now written and awaiting combined csproj wiring/build (plus 8 console artwork EmbeddedResources).",
       "progress_source": "manual",
       "percent": 100.0,
       "percent_str": "100.0%"
@@ -1171,6 +1171,15 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "Round 9 RowStyle diagnostic proved GameModDialog captures at 1006x705",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 20:27:00 UTC",
+      "changes": [
+        "Setting RowStyles[4] Absolute:20 on GameModDialog dropped throws 11->0 and passed CAPTURE-OK (1006x705)",
+        "ListBox held Size=935x20 / ClientSize=931x16; 3 PASS / 6 FAIL (diagnostic copy only)"
+      ]
+    },
     {
       "summary": "MainWindow Dashboard slice (S2) finished (5 files, 1,324 lines)",
       "source": "coordinator",

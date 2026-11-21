@@ -98,5 +98,14 @@
       "Wrote Forms/Dashboard/{DashboardModels,IDashboardDataSource,StubDashboardDataSource,AnnouncementItem,DashboardPage}.cs (code-only, not yet wired/compiled)",
       "MainWindow Shell+Nav (S0+S1) and Parallel A+B2 csproj wiring workers still running"
     ]
+  },
+  {
+    "summary": "Round 9 RowStyle diagnostic proved GameModDialog captures at 1006x705",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 20:27:00 UTC",
+    "changes": [
+      "Setting RowStyles[4] Absolute:20 on GameModDialog dropped throws 11->0 and passed CAPTURE-OK (1006x705)",
+      "ListBox held Size=935x20 / ClientSize=931x16; 3 PASS / 6 FAIL (diagnostic copy only)"
+    ]
   }
 ]
