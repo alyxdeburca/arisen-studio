@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 20:08:35 UTC",
+  "generated_at_utc": "2026-11-21 20:26:51 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1014,7 +1014,7 @@
       "approved": false,
       "approval_note": "Not approved",
       "progress_mode": "measured_c_mainwindow",
-      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone.",
+      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Slice S2 (Forms/Dashboard/: DashboardModels.cs, IDashboardDataSource.cs, StubDashboardDataSource.cs, AnnouncementItem.cs, DashboardPage.cs — 1,324 lines) written code-only and awaiting csproj wiring/build; Shell+Nav S0+S1 is in progress.",
       "progress_source": "computed",
       "percent": 0.0,
       "percent_str": "0.0%",
@@ -1171,6 +1171,15 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "MainWindow Dashboard slice (S2) finished (5 files, 1,324 lines)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 20:25:00 UTC",
+      "changes": [
+        "Wrote Forms/Dashboard/{DashboardModels,IDashboardDataSource,StubDashboardDataSource,AnnouncementItem,DashboardPage}.cs (code-only, not yet wired/compiled)",
+        "MainWindow Shell+Nav (S0+S1) and Parallel A+B2 csproj wiring workers still running"
+      ]
+    },
     {
       "summary": "Round 8 ListBox height perturbation run (inconclusive: height snapped back)",
       "source": "build-runner",

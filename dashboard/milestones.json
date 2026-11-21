@@ -323,7 +323,7 @@
       "approved": false,
       "approval_note": "Not approved",
       "progress_mode": "measured_c_mainwindow",
-      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone."
+      "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Slice S2 (Forms/Dashboard/: DashboardModels.cs, IDashboardDataSource.cs, StubDashboardDataSource.cs, AnnouncementItem.cs, DashboardPage.cs — 1,324 lines) written code-only and awaiting csproj wiring/build; Shell+Nav S0+S1 is in progress."
     },
     {
       "id": "M6",

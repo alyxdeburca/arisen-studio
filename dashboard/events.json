@@ -89,5 +89,14 @@
       "Tested diag-listbox across 7 failing dialogs + 2 controls (2 PASS, 7 FAIL)",
       "Dock=Fill ListBox under Absolute:0 RowStyle snapped back to 935x1 (ClientSize 931x-3)"
     ]
+  },
+  {
+    "summary": "MainWindow Dashboard slice (S2) finished (5 files, 1,324 lines)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 20:25:00 UTC",
+    "changes": [
+      "Wrote Forms/Dashboard/{DashboardModels,IDashboardDataSource,StubDashboardDataSource,AnnouncementItem,DashboardPage}.cs (code-only, not yet wired/compiled)",
+      "MainWindow Shell+Nav (S0+S1) and Parallel A+B2 csproj wiring workers still running"
+    ]
   }
 ]
