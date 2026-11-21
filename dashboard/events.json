@@ -134,5 +134,15 @@
       "Removed PageHost/ShellForm zero-size guard (BUILD-REQUEST-28) and combined with GameRegions/XboxHDKey behaviour port (BUILD-REQUEST-25)",
       "Container build OK (0 errors) and 28 of 28 Xvfb ELF checks pass including 1288x827 shell capture (0 regressions; behaviour paths untested)"
     ]
+  },
+  {
+    "summary": "Dispatched 4 parallel tracks: csproj wiring (30 files + FluentFTP), dialog/shell bug fixes, S5 library pages, and tool forms",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 23:28:00 UTC",
+    "changes": [
+      "Track 1: single csproj writer registering Forms/Pages (7), Controls/Extra (6), Services (17), and FluentFTP 53.0.1",
+      "Track 2: bug fixes for hidden Install overlap in 4 Detail dialogs, GameSaveDialog 20F collapse, ReportIssueDialog glyph, and stale ShellForm comment",
+      "Tracks 3a/3b: S5 library pages (Forms/Pages/Library/) and unported PS3/Xbox tool forms in disjoint directories"
+    ]
   }
 ]

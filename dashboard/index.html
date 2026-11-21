@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 23:22:11 UTC",
+  "generated_at_utc": "2026-11-21 23:28:54 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1363,6 +1363,16 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "Dispatched 4 parallel tracks: csproj wiring (30 files + FluentFTP), dialog/shell bug fixes, S5 library pages, and tool forms",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 23:28:00 UTC",
+      "changes": [
+        "Track 1: single csproj writer registering Forms/Pages (7), Controls/Extra (6), Services (17), and FluentFTP 53.0.1",
+        "Track 2: bug fixes for hidden Install overlap in 4 Detail dialogs, GameSaveDialog 20F collapse, ReportIssueDialog glyph, and stale ShellForm comment",
+        "Tracks 3a/3b: S5 library pages (Forms/Pages/Library/) and unported PS3/Xbox tool forms in disjoint directories"
+      ]
+    },
     {
       "summary": "Rounds 25 & 28 verified PageHost guard removal and Dialogs-only tool port (ELF -84, 28/28 PASS)",
       "source": "build-runner",
