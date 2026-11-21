@@ -90,8 +90,8 @@ namespace ArisenStudio.Forms.Dialogs
             _headingWelcome = new Label { AutoSize = true, UseMnemonic = false, Font = headingFont, Margin = new Padding(0, 0, 0, pad), Text = "Welcome to Arisen Studio" };
             _labelAbout = new Label { AutoSize = true, UseMnemonic = false, Margin = new Padding(0, 0, 0, pad), Text = AboutText };
 
-            _labelChangeLogVersion = new Label { AutoSize = true, UseMnemonic = false, Font = headingFont, Margin = new Padding(0, 0, 0, pad), Text = string.Empty };
-            _labelChangeLog = new Label { AutoSize = true, UseMnemonic = false, Margin = Padding.Empty, Text = string.Empty };
+            _labelChangeLogVersion = new Label { AutoSize = true, UseMnemonic = false, Font = headingFont, Margin = new Padding(0, 0, 0, pad), Text = string.Empty, MinimumSize = new Size(1, 0) }; // Never 0 wide: LoadChangeLog leaves this label empty when there is no release data, and a zero-width control cannot be drawn on Mono.
+            _labelChangeLog = new Label { AutoSize = true, UseMnemonic = false, Margin = Padding.Empty, Text = string.Empty, MinimumSize = new Size(1, 0) }; // Never 0 wide: LoadChangeLog leaves this label empty when there is no release data, and a zero-width control cannot be drawn on Mono.
 
             FlowLayoutPanel changeLogBody = new FlowLayoutPanel
             {

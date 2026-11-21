@@ -49,7 +49,9 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 UseMnemonic = false,
                 Font = new Font(Font, FontStyle.Bold),
                 Margin = new Padding(0, 0, pad, 0),
-                Text = "Game"
+                Text = "Game",
+                // Never 0 wide: LoadPatches empties this label when there is no GamePatchItem, and a zero-width control cannot be drawn on Mono.
+                MinimumSize = new Size(1, 0)
             };
 
             _labelTitleId = new Label
@@ -57,7 +59,9 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 AutoSize = true,
                 UseMnemonic = false,
                 Margin = new Padding(0),
-                Text = "(TitleId)"
+                Text = "(TitleId)",
+                // Never 0 wide: LoadPatches empties this label when there is no GamePatchItem, and a zero-width control cannot be drawn on Mono.
+                MinimumSize = new Size(1, 0)
             };
 
             _columnName = new ColumnHeader { Text = "Name", Width = Font.Height * 20 };

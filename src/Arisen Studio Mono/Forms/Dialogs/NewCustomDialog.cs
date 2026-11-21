@@ -372,8 +372,8 @@ namespace ArisenStudio.Forms.Dialogs
             _labelModType.Text = Lookup("LABEL_MOD_TYPE", "Mod Type");
             _labelVersion.Text = Lookup("LABEL_VERSION", "Version");
 
-            // The old form set the description label from LABEL_VERSION. Kept for parity.
-            _labelDescription.Text = Lookup("LABEL_VERSION", "Version");
+            // The old form set this label from LABEL_VERSION, which showed a second "Version". Its designer text is "Description".
+            _labelDescription.Text = Lookup("LABEL_DESCRIPTION", "Description");
 
             _groupInstallationFiles.Text = Lookup("LABEL_INSTALLATION_FILES", "Installation Files");
             _buttonChooseFile.Text = Lookup("LABEL_CHOOSE_FILE", "Choose File");

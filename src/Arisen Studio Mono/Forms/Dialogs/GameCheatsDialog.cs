@@ -55,7 +55,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
 
             int pad = Font.Height / 2;
 
-            _labelGame = new Label { AutoSize = true, UseMnemonic = false, Font = new Font(Font, FontStyle.Bold), Margin = new Padding(0, 0, pad, 0), Text = "Game" };
+            _labelGame = new Label { AutoSize = true, UseMnemonic = false, Font = new Font(Font, FontStyle.Bold), Margin = new Padding(0, 0, pad, 0), Text = "Game", MinimumSize = new Size(1, 0) }; // Never 0 wide: LoadHeader empties this label when there is no GameItem, and a zero-width control cannot be drawn on Mono.
             _labelVersion = new Label { AutoSize = true, UseMnemonic = false, Margin = new Padding(0, 0, pad, 0), Text = "- Version" };
             _labelRegion = new Label { AutoSize = true, UseMnemonic = false, Margin = new Padding(0), Text = "(REGION)" };
 
