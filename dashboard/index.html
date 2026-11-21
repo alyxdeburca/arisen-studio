@@ -477,33 +477,33 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 23:28:54 UTC",
+  "generated_at_utc": "2026-11-21 23:49:07 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
       "label": "Overall Codebase (A + B + C)",
-      "numerator": 18894,
+      "numerator": 20382,
       "denominator": 63901,
-      "percent": 29.5,
-      "percent_str": "29.5%",
-      "files_ported": 93,
+      "percent": 31.8,
+      "percent_str": "31.8%",
+      "files_ported": 100,
       "files_total": 162,
-      "files_percent": 57.4,
-      "files_percent_str": "57.4%",
+      "files_percent": 61.7,
+      "files_percent_str": "61.7%",
       "formula": "(A_ported + B_ported + C_ported) / (A_total + B_total + C_total); Properties/*.cs excluded"
     },
     "written_overall": {
       "id": "written_overall",
       "label": "Written / In-Progress (incl. pending verification)",
-      "numerator": 18894,
+      "numerator": 20382,
       "denominator": 63901,
-      "percent": 29.5,
-      "percent_str": "29.5%",
-      "files_ported": 93,
+      "percent": 31.8,
+      "percent_str": "31.8%",
+      "files_ported": 100,
       "files_total": 162,
-      "files_percent": 57.4,
-      "files_percent_str": "57.4%",
-      "verified_files": 93,
+      "files_percent": 61.7,
+      "files_percent_str": "61.7%",
+      "verified_files": 100,
       "compiled_failing_files": 0,
       "written_unwired_files": 0,
       "formula": "(verified + compiled-failing + written-unwired) / total A+B+C"
@@ -523,22 +523,22 @@
       {
         "id": "B",
         "label": "Dimension B — UI-coupled code-behind & logic",
-        "numerator": 4988,
+        "numerator": 5474,
         "denominator": 26073,
-        "percent": 19.1,
-        "percent_str": "19.1%",
-        "files_ported": 27,
+        "percent": 20.9,
+        "percent_str": "20.9%",
+        "files_ported": 31,
         "files_total": 66,
         "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
       },
       {
         "id": "C",
         "label": "Dimension C — Layout designers",
-        "numerator": 10167,
+        "numerator": 11169,
         "denominator": 33505,
-        "percent": 30.3,
-        "percent_str": "30.3%",
-        "files_ported": 27,
+        "percent": 33.3,
+        "percent_str": "33.3%",
+        "files_ported": 30,
         "files_total": 54,
         "formula": "ported layout designer lines (port_map) / all 54 layout designer lines"
       }
@@ -734,8 +734,8 @@
       }
     ],
     "port_map_summary": {
-      "total_entries": 62,
-      "active_count": 54,
+      "total_entries": 69,
+      "active_count": 61,
       "entries": [
         {
           "old": "Forms/Dialogs/ReportIssueDialog.Designer.cs",
@@ -1108,6 +1108,48 @@
           "new": "Forms/Dialogs/GameUpdatesFinder.cs",
           "new_exists": true,
           "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/CustomFileItem.Designer.cs",
+          "new": "Controls/Extra/CustomFileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/CustomFileItem.cs",
+          "new": "Controls/Extra/CustomFileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/DownloadAppFileItem.Designer.cs",
+          "new": "Controls/Extra/DownloadAppFileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/DownloadAppFileItem.cs",
+          "new": "Controls/Extra/DownloadAppFileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/DownloadFileItem.Designer.cs",
+          "new": "Controls/Extra/DownloadFileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/DownloadFileItem.cs",
+          "new": "Controls/Extra/DownloadFileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/FeatureNotAvailableOverlay.cs",
+          "new": "Controls/Extra/FeatureNotAvailableOverlay.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
         }
       ]
     }
@@ -1160,7 +1202,7 @@
       "approval_note": "Awaiting owner approval",
       "progress_mode": "manual",
       "manual_percent": 100,
-      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF from this code; the ELF passes the shell check and all 27 form checks (28 of 28 total) under a private 24-bit Xvfb display as of ELF -84. All 9 DetailLayout-based dialogs and all 6 parallel dialogs (ConnectionsDialog, NewProfileDialog, NewCustomDialog, SetupWizardDialog, GameCheatsDialog, GamePatchesDialog) plus 3 tool dialogs (GameRegions, XboxHDKey, GameUpdatesFinder) now capture cleanly (empty default states; Dialogs-only behaviour port in GameRegions/XboxHDKey is compiled and smoke-checked but not behaviour-tested). Known visual issues: the Open-in-browser icon renders as a missing-glyph box; never viewed on a real display; browser/clipboard/network flows are not exercised by smoke runs. Owner approval is not recorded here.",
+      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 errors, 6 pre-existing CS0108 warnings, 138 Compile items) and bundled as an x86-64 ELF from this code; ELF -89 passes the shell check and all 27 form checks (28 of 28 total) under Xvfb. All 9 DetailLayout dialogs (with hidden Install overlap fixed), all 6 parallel dialogs, 3 tool dialogs, and ReportIssueDialog/RequestModsDialog (clean 16x16 open-in-new icon, ICON-OK) capture cleanly. Forms/Pages/* (S3/S4), Controls/Extra/*, and Services/* (incl. FluentFTP 53.0.1) now compile; interactive runtime behaviour and browser/network/console flows remain untested by smoke runs. Owner approval is not recorded here.",
       "progress_source": "manual",
       "percent": 100.0,
       "percent_str": "100.0%"
@@ -1187,14 +1229,14 @@
       "progress_mode": "measured_c_other",
       "evidence": "Measured from Dimension C excluding Forms/Windows/MainWindow.Designer.cs and Forms/Dialogs/ReportIssueDialog.Designer.cs (no double counting with M2 or M5).",
       "progress_source": "computed",
-      "percent": 57.0,
-      "percent_str": "57.0%",
+      "percent": 62.7,
+      "percent_str": "62.7%",
       "measurement": {
-        "numerator": 9957,
+        "numerator": 10959,
         "denominator": 17467,
-        "percent": 57.0,
-        "percent_str": "57.0%",
-        "files_ported": 26,
+        "percent": 62.7,
+        "percent_str": "62.7%",
+        "files_ported": 29,
         "files_total": 52,
         "formula": "ported lines in Dimension C excluding MainWindow & ReportIssueDialog / 17,467 lines"
       }
@@ -1230,14 +1272,14 @@
       "progress_mode": "measured_b",
       "evidence": "Measured from Dimension B across all UI-coupled code-behind and logic files.",
       "progress_source": "computed",
-      "percent": 19.1,
-      "percent_str": "19.1%",
+      "percent": 20.9,
+      "percent_str": "20.9%",
       "measurement": {
-        "numerator": 4988,
+        "numerator": 5474,
         "denominator": 26073,
-        "percent": 19.1,
-        "percent_str": "19.1%",
-        "files_ported": 27,
+        "percent": 20.9,
+        "percent_str": "20.9%",
+        "files_ported": 31,
         "files_total": 66,
         "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
       }
@@ -1335,7 +1377,7 @@
       "status": "fail",
       "value": "NO",
       "source": "computed",
-      "detail": "Found 38 issue(s): Controls/ChangeLogItem.cs:18 string literal backslash path; Controls/Extra/ExtraItemText.cs:15 string literal backslash path; Controls/Extra/ExtraItemText.cs:16 string literal backslash path; Controls/Extra/ExtraItemText.cs:19 string literal backslash path; Controls/NewsItem.cs:16 string literal backslash path; Controls/NewsItem.cs:17 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:18 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:19 string literal backslash path; Forms/Dialogs/Details/GameModDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewXboxDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/ResourceDialog.cs:30 verbatim string backslash path; Forms/Dialogs/GameUpdatesFinder.cs:297 verbatim string backslash path; Models/Configuration/SettingsData.cs:56 verbatim string backslash path; Models/Configuration/SettingsData.cs:82 verbatim string backslash path; Models/Configuration/SettingsData.cs:84 verbatim string backslash path; Models/Configuration/SettingsData.cs:104 verbatim string backslash path; Models/Database/GameSaveItemData.cs:66 verbatim string backslash path; Models/Database/GameSaveItemData.cs:75 verbatim string backslash path; Models/Database/ModItemData.cs:149 verbatim string backslash path; Models/Database/ModItemData.cs:158 verbatim string backslash path; Models/Database/TrainerGameItem.cs:36 verbatim string backslash path; Models/Database/TrainerGameItem.cs:45 verbatim string backslash path; Program.cs:45 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:35 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:44 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:57 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:58 string literal backslash path; Services/GameUpdateParser.cs:119 verbatim string backslash path; Services/ServicesSelfCheck.cs:61 string literal backslash path; Services/ServicesSelfCheckBatch2.cs:134 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:18 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:27 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:37 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:47 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:66 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path"
+      "detail": "Found 39 issue(s): Controls/ChangeLogItem.cs:18 string literal backslash path; Controls/Extra/ExtraItemText.cs:15 string literal backslash path; Controls/Extra/ExtraItemText.cs:16 string literal backslash path; Controls/Extra/ExtraItemText.cs:19 string literal backslash path; Controls/NewsItem.cs:16 string literal backslash path; Controls/NewsItem.cs:17 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:18 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:19 string literal backslash path; Forms/Dialogs/Details/GameModDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewXboxDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/ResourceDialog.cs:30 verbatim string backslash path; Forms/Dialogs/GameUpdatesFinder.cs:297 verbatim string backslash path; Forms/Tools/XBOX/New/ModuleLoader.cs:39 string literal backslash path; Models/Configuration/SettingsData.cs:56 verbatim string backslash path; Models/Configuration/SettingsData.cs:82 verbatim string backslash path; Models/Configuration/SettingsData.cs:84 verbatim string backslash path; Models/Configuration/SettingsData.cs:104 verbatim string backslash path; Models/Database/GameSaveItemData.cs:66 verbatim string backslash path; Models/Database/GameSaveItemData.cs:75 verbatim string backslash path; Models/Database/ModItemData.cs:149 verbatim string backslash path; Models/Database/ModItemData.cs:158 verbatim string backslash path; Models/Database/TrainerGameItem.cs:36 verbatim string backslash path; Models/Database/TrainerGameItem.cs:45 verbatim string backslash path; Program.cs:45 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:35 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:44 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:57 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:58 string literal backslash path; Services/GameUpdateParser.cs:119 verbatim string backslash path; Services/ServicesSelfCheck.cs:61 string literal backslash path; Services/ServicesSelfCheckBatch2.cs:134 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:18 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:27 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:37 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:47 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:66 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path"
     },
     {
       "id": "layout_uses_containers",
@@ -1363,6 +1405,16 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "Rounds 29-32 wired 30 pages/services/controls and fixed Download overlap & ReportIssue icon (ELF -89, 28/28 PASS)",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-21 23:48:00 UTC",
+      "changes": [
+        "Added FluentFTP 53.0.1 and System.Data reference; compiled 138 items (Forms/Pages x7, Controls/Extra x6, Services x17) with 0 errors",
+        "Verified Download | Copy Link | Installation Files unclipped across 4 Details dialogs and new 16x16 open-in-new icon on ReportIssueDialog/RequestModsDialog (28/28 PASS)",
+        "Parallel S5 (12 Library pages) queued in BUILD-REQUEST-33 and Parallel T1 (14 PS3/Xbox tool forms + 4 support files) ready for csproj wiring"
+      ]
+    },
     {
       "summary": "Dispatched 4 parallel tracks: csproj wiring (30 files + FluentFTP), dialog/shell bug fixes, S5 library pages, and tool forms",
       "source": "coordinator",

@@ -250,6 +250,34 @@
     {
       "old": "Forms/Tools/PS3/GameUpdatesFinder.cs",
       "new": "Forms/Dialogs/GameUpdatesFinder.cs"
+    },
+    {
+      "old": "Controls/CustomFileItem.Designer.cs",
+      "new": "Controls/Extra/CustomFileItem.cs"
+    },
+    {
+      "old": "Controls/CustomFileItem.cs",
+      "new": "Controls/Extra/CustomFileItem.cs"
+    },
+    {
+      "old": "Controls/DownloadAppFileItem.Designer.cs",
+      "new": "Controls/Extra/DownloadAppFileItem.cs"
+    },
+    {
+      "old": "Controls/DownloadAppFileItem.cs",
+      "new": "Controls/Extra/DownloadAppFileItem.cs"
+    },
+    {
+      "old": "Controls/DownloadFileItem.Designer.cs",
+      "new": "Controls/Extra/DownloadFileItem.cs"
+    },
+    {
+      "old": "Controls/DownloadFileItem.cs",
+      "new": "Controls/Extra/DownloadFileItem.cs"
+    },
+    {
+      "old": "Controls/FeatureNotAvailableOverlay.cs",
+      "new": "Controls/Extra/FeatureNotAvailableOverlay.cs"
     }
   ],
   "wip_map": [
@@ -423,7 +451,7 @@
       "approval_note": "Awaiting owner approval",
       "progress_mode": "manual",
       "manual_percent": 100,
-      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 warnings, 0 errors) and bundled as an x86-64 ELF from this code; the ELF passes the shell check and all 27 form checks (28 of 28 total) under a private 24-bit Xvfb display as of ELF -84. All 9 DetailLayout-based dialogs and all 6 parallel dialogs (ConnectionsDialog, NewProfileDialog, NewCustomDialog, SetupWizardDialog, GameCheatsDialog, GamePatchesDialog) plus 3 tool dialogs (GameRegions, XboxHDKey, GameUpdatesFinder) now capture cleanly (empty default states; Dialogs-only behaviour port in GameRegions/XboxHDKey is compiled and smoke-checked but not behaviour-tested). Known visual issues: the Open-in-browser icon renders as a missing-glyph box; never viewed on a real display; browser/clipboard/network flows are not exercised by smoke runs. Owner approval is not recorded here."
+      "evidence": "Slice 1 built in the mono:6.12 container (BUILD-OK, 0 errors, 6 pre-existing CS0108 warnings, 138 Compile items) and bundled as an x86-64 ELF from this code; ELF -89 passes the shell check and all 27 form checks (28 of 28 total) under Xvfb. All 9 DetailLayout dialogs (with hidden Install overlap fixed), all 6 parallel dialogs, 3 tool dialogs, and ReportIssueDialog/RequestModsDialog (clean 16x16 open-in-new icon, ICON-OK) capture cleanly. Forms/Pages/* (S3/S4), Controls/Extra/*, and Services/* (incl. FluentFTP 53.0.1) now compile; interactive runtime behaviour and browser/network/console flows remain untested by smoke runs. Owner approval is not recorded here."
     },
     {
       "id": "M3",

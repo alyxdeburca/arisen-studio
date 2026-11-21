@@ -497,7 +497,11 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 Padding = Padding.Empty
             };
             actions.Controls.Add(download);
-            actions.Controls.Add(install);
+            // A hidden button still gets a flow slot on Mono and is painted at (0,0) over Download, so add Install only when it is offered.
+            if (install.Visible)
+            {
+                actions.Controls.Add(install);
+            }
             actions.Controls.Add(copyLink);
             actions.Controls.Add(toggle);
 

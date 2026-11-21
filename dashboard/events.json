@@ -144,5 +144,15 @@
       "Track 2: bug fixes for hidden Install overlap in 4 Detail dialogs, GameSaveDialog 20F collapse, ReportIssueDialog glyph, and stale ShellForm comment",
       "Tracks 3a/3b: S5 library pages (Forms/Pages/Library/) and unported PS3/Xbox tool forms in disjoint directories"
     ]
+  },
+  {
+    "summary": "Rounds 29-32 wired 30 pages/services/controls and fixed Download overlap & ReportIssue icon (ELF -89, 28/28 PASS)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-21 23:48:00 UTC",
+    "changes": [
+      "Added FluentFTP 53.0.1 and System.Data reference; compiled 138 items (Forms/Pages x7, Controls/Extra x6, Services x17) with 0 errors",
+      "Verified Download | Copy Link | Installation Files unclipped across 4 Details dialogs and new 16x16 open-in-new icon on ReportIssueDialog/RequestModsDialog (28/28 PASS)",
+      "Parallel S5 (12 Library pages) queued in BUILD-REQUEST-33 and Parallel T1 (14 PS3/Xbox tool forms + 4 support files) ready for csproj wiring"
+    ]
   }
 ]

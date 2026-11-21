@@ -473,7 +473,8 @@ namespace ArisenStudio.Forms.Dialogs.Details
             {
                 expanded = !expanded;
                 installFiles.Visible = expanded;
-                row.RowStyles[4].Height = expanded ? listHeight : 0F;
+                // Collapsed height is 20, never 0: a zero-height ListBox has a negative client height and cannot be drawn on Mono.
+                row.RowStyles[4].Height = expanded ? listHeight : 20F;
             };
             actions.Controls.Add(toggleFiles);
 

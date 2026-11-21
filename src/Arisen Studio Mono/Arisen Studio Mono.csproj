@@ -38,6 +38,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -55,6 +56,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="HtmlAgilityPack" Version="1.12.3" />
+    <PackageReference Include="FluentFTP" Version="53.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -138,6 +140,36 @@
     <Compile Include="Forms\Tools\PS3\GameRegions.cs" />
     <Compile Include="Forms\Tools\XBOX\XboxHDKey.cs" />
     <Compile Include="Forms\Dialogs\GameUpdatesFinder.cs" />
+    <Compile Include="Forms\Pages\PageSupport.cs" />
+    <Compile Include="Forms\Pages\ListGrid.cs" />
+    <Compile Include="Forms\Pages\TextPromptForm.cs" />
+    <Compile Include="Forms\Pages\DownloadsPage.cs" />
+    <Compile Include="Forms\Pages\InstalledFilesPage.cs" />
+    <Compile Include="Forms\Pages\FileManagerPage.cs" />
+    <Compile Include="Forms\Pages\SettingsPage.cs" />
+    <Compile Include="Controls\Extra\AnnouncementItem.cs" />
+    <Compile Include="Controls\Extra\CustomFileItem.cs" />
+    <Compile Include="Controls\Extra\DownloadAppFileItem.cs" />
+    <Compile Include="Controls\Extra\DownloadFileItem.cs" />
+    <Compile Include="Controls\Extra\ExtraItemText.cs" />
+    <Compile Include="Controls\Extra\FeatureNotAvailableOverlay.cs" />
+    <Compile Include="Services\BootPluginsFile.cs" />
+    <Compile Include="Services\ConsolePaths.cs" />
+    <Compile Include="Services\FtpService.cs" />
+    <Compile Include="Services\GameUpdateParser.cs" />
+    <Compile Include="Services\InstallBackupPlanner.cs" />
+    <Compile Include="Services\ParamSfoReader.cs" />
+    <Compile Include="Services\ServicesSelfCheck.cs" />
+    <Compile Include="Services\ServicesSelfCheckBatch2.cs" />
+    <Compile Include="Services\Extra\GameRegionPlanner.cs" />
+    <Compile Include="Services\Extra\LaunchIniFile.cs" />
+    <Compile Include="Services\Extra\ServicesExtraSelfCheck.cs" />
+    <Compile Include="Services\Extra\XboxHdKeyCalculator.cs" />
+    <Compile Include="Services\Transfers\TransferFileRules.cs" />
+    <Compile Include="Services\Transfers\TransferLocalPaths.cs" />
+    <Compile Include="Services\Transfers\TransferPlaceholders.cs" />
+    <Compile Include="Services\Transfers\TransferStatusText.cs" />
+    <Compile Include="Services\Transfers\TransferXboxPaths.cs" />
     <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Fat.png">
       <LogicalName>ArisenStudio.Icons.PlayStation3Fat.png</LogicalName>
     </EmbeddedResource>
