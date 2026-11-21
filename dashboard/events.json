@@ -163,5 +163,14 @@
       "Launched TransferDialog port under Forms/Dialogs/Transfer/ using Services/Transfers helpers and Controls/Extra items",
       "Running ELF -90 build and 28-form Xvfb verification for 12 Forms/Pages/Library files (BUILD-REQUEST-33)"
     ]
+  },
+  {
+    "summary": "TransferDialog port completed (4 files under Forms/Dialogs/Transfer/, code-only)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-21 23:54:00 UTC",
+    "changes": [
+      "Wrote TransferDialog.cs, TransferContracts.cs, TransferDownloadOperations.cs, and TransferConsoleOperationsStub.cs (code-only, awaiting csproj wiring)",
+      "Uses Services/Transfers helpers and Controls/Extra items; console operations sit behind stub interface"
+    ]
   }
 ]

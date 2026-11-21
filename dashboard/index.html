@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 23:52:27 UTC",
+  "generated_at_utc": "2026-11-21 23:55:06 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -495,17 +495,17 @@
     "written_overall": {
       "id": "written_overall",
       "label": "Written / In-Progress (incl. pending verification)",
-      "numerator": 28282,
+      "numerator": 31378,
       "denominator": 63901,
-      "percent": 44.2,
-      "percent_str": "44.2%",
-      "files_ported": 128,
+      "percent": 49.1,
+      "percent_str": "49.1%",
+      "files_ported": 130,
       "files_total": 162,
-      "files_percent": 79.0,
-      "files_percent_str": "79.0%",
+      "files_percent": 80.2,
+      "files_percent_str": "80.2%",
       "verified_files": 100,
       "compiled_failing_files": 0,
-      "written_unwired_files": 28,
+      "written_unwired_files": 30,
       "formula": "(verified + compiled-failing + written-unwired) / total A+B+C"
     },
     "dimensions": [
@@ -1405,6 +1405,15 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "TransferDialog port completed (4 files under Forms/Dialogs/Transfer/, code-only)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-21 23:54:00 UTC",
+      "changes": [
+        "Wrote TransferDialog.cs, TransferContracts.cs, TransferDownloadOperations.cs, and TransferConsoleOperationsStub.cs (code-only, awaiting csproj wiring)",
+        "Uses Services/Transfers helpers and Controls/Extra items; console operations sit behind stub interface"
+      ]
+    },
     {
       "summary": "Dispatched TransferDialog port while ELF -90 builds 12 S5 Library pages (BUILD-REQUEST-33)",
       "source": "coordinator",

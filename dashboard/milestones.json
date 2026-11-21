@@ -550,6 +550,16 @@
       "old": "Forms/Tools/XBOX/XuidGameSpoofer.cs",
       "new": "Forms/Tools/XBOX/New/XuidGameSpoofer.cs",
       "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/TransferDialog.Designer.cs",
+      "new": "Forms/Dialogs/Transfer/TransferDialog.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Dialogs/TransferDialog.cs",
+      "new": "Forms/Dialogs/Transfer/TransferDialog.cs",
+      "stage": "written_unwired"
     }
   ],
   "milestones": [
