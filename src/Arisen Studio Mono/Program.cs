@@ -377,7 +377,7 @@ namespace ArisenStudio
                 {
                     Console.WriteLine("NONPOS type=" + c.GetType().Name + " name='" + c.Name + "' size=" + c.Width + "x" + c.Height + " chain=" + chain);
                 }
-                WalkNonPositive(c, chain + ">" + c.GetType().Name);
+                WalkNonPositive(c, chain + "/" + c.GetType().Name);
             }
         }
     }

@@ -1,15 +1,19 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
+using ArisenStudio.Constants;
 using ArisenStudio.Controls;
 using ArisenStudio.Forms.Dashboard;
 using ArisenStudio.Forms.Dialogs;
+using ArisenStudio.Io;
 
 namespace ArisenStudio.Shell
 {
     /// <summary>
-    /// Main window shell (S0 and S1): a menu strip, an action strip placeholder, a status strip, and a split
-    /// with the left navigation list and the page host. Stock WinForms defaults, no palette (D7/D8).
+    /// Main window shell (S0, S1 and S6): a menu strip, an action strip holding the ribbon replacement commands, a status
+    /// strip, and a split with the left navigation list and the page host. Stock WinForms defaults, no palette (D7/D8).
     /// Page keys are ShellPageKeys values. Host hooks not wired yet are listed in the S0S1 result file.
     /// UI thread only.
     /// </summary>
@@ -22,7 +26,9 @@ namespace ArisenStudio.Shell
         private readonly NavListPanel _nav;
         private readonly PageHost _pages;
         private readonly ActionStrip _actions;
+        private readonly RibbonBar _ribbon;
         private readonly DashboardPage _dashboard;
+        private readonly AboutPage _about;
         private readonly StatusStrip _status;
         private readonly MenuStrip _menu;
         private readonly ToolStripStatusLabel _statusText;
@@ -42,7 +48,8 @@ namespace ArisenStudio.Shell
             _split.Panel2.Controls.Add(_pages);
 
             _actions = new ActionStrip();
-            _ = _actions.AddLabel("shell.actions.placeholder", "Commands are added with the ribbon replacement (S6).");
+            _ribbon = new RibbonBar(_actions);
+            _ribbon.CommandInvoked += OnRibbonCommand;
 
             _status = new StatusStrip();
             ToolStripStatusLabel headerStatus = new ToolStripStatusLabel("Status:") { Name = "StatusLabelHeaderStatus" };
@@ -92,7 +99,8 @@ namespace ArisenStudio.Shell
             AddNavLeaf(GroupLibrary, ShellPageKeys.Games, "Games");
             AddNavLeaf(GroupLibrary, ShellPageKeys.GameSaves, "Game Saves");
             AddNavLeaf(GroupLibrary, ShellPageKeys.GameCheats, "Game Cheats");
-            _pages.RegisterPage(ShellPageKeys.About, new PlaceholderPage("About"));
+            _about = new AboutPage();
+            _pages.RegisterPage(ShellPageKeys.About, _about);
 
             // The real dashboard replaces the placeholder registered above under the same key (S2). It reads from the
             // empty stub data source until the shell supplies a real one (set _dashboard.DataSource, then ReloadAll).
@@ -138,11 +146,53 @@ namespace ArisenStudio.Shell
         }
 
         /// <summary>
-        /// The top action strip. S6 adds the ribbon commands here.
+        /// The top action strip. It holds the ribbon replacement commands (S6); use Ribbon to change them.
         /// </summary>
         public ActionStrip Actions
         {
             get { return _actions; }
+        }
+
+        /// <summary>
+        /// The ribbon replacement. Its SetCaption, SetEnabled, SetVisible, SetChecked and ApplyConsoleState are the
+        /// language, platform and settings hooks.
+        /// </summary>
+        internal RibbonBar Ribbon
+        {
+            get { return _ribbon; }
+        }
+
+        /// <summary>
+        /// The About page (S7). Call its SetVersion with the release date once the release list is loaded (MW3-137).
+        /// </summary>
+        internal AboutPage About
+        {
+            get { return _about; }
+        }
+
+        /// <summary>
+        /// Raised for a ribbon command the shell does not carry out itself (connection, profiles, downloads folder, the
+        /// PS3 and Xbox tools and webMAN/XBDM commands, update) and for the two check commands (Discord Presence and
+        /// Install Mods to USB) after the shell has shown the Settings page. Without a subscriber an unhandled command only
+        /// sets the status text. UI thread only.
+        /// </summary>
+        internal event EventHandler<RibbonCommandEventArgs> RibbonCommandRequested;
+
+        /// <summary>
+        /// Shows or hides the "New Update Available" button (old UpdateAvailable, MW1-027). UI thread only.
+        /// </summary>
+        public void SetUpdateAvailable(bool available)
+        {
+            _ribbon.SetUpdateAvailable(available);
+        }
+
+        /// <summary>
+        /// Applies the connected platform and state to the tool commands (old EnableConsoleActions, MW3-148). UI thread only.
+        /// </summary>
+        public void SetConsoleState(Platform platform, bool connected, bool webManInstalled)
+        {
+            SetConnectionState(connected);
+            _ribbon.ApplyConsoleState(platform, connected, webManInstalled);
         }
 
         /// <summary>
@@ -179,6 +229,7 @@ namespace ArisenStudio.Shell
         public void SetConnectionState(bool connected)
         {
             _connectionText.Text = connected ? "Connected" : "Not Connected";
+            _ribbon.SetConnected(connected);
         }
 
         /// <summary>
@@ -202,6 +253,99 @@ namespace ArisenStudio.Shell
         {
             _nav.AddLeaf(groupKey, leafKey, caption);
             _pages.RegisterPage(leafKey, new PlaceholderPage(caption));
+        }
+
+        private void OnRibbonCommand(object sender, RibbonCommandEventArgs e)
+        {
+            switch (e.CommandId)
+            {
+                case RibbonCommandIds.HeaderDonate:
+                    OpenExternal(Urls.DonatePatreon);
+                    return;
+                case RibbonCommandIds.SendFeedback:
+                    OpenExternal(Urls.GitHubRepo + "issues/new/choose");
+                    return;
+                case RibbonCommandIds.HowToGuides:
+                    if (MessageBox.Show(this, "Our How-To-Guides have been moved to our website at https://arisen.studio/guide\n\nWould you like to open the link in your browser?.", "How-To Guides", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    {
+                        OpenExternal(Urls.ProjectWebsite);
+                    }
+                    return;
+                case RibbonCommandIds.SetupWizard:
+                    using (SetupWizardDialog dialog = new SetupWizardDialog()) { _ = dialog.ShowDialog(this); }
+                    return;
+                case RibbonCommandIds.RequestMods:
+                    using (RequestModsDialog dialog = new RequestModsDialog()) { _ = dialog.ShowDialog(this); }
+                    return;
+                case RibbonCommandIds.AdvancedSettings:
+                    _ = ShowPage(ShellPageKeys.Settings);
+                    return;
+                case RibbonCommandIds.About:
+                    _ = ShowPage(ShellPageKeys.About);
+                    return;
+                case RibbonCommandIds.OpenLogFile:
+                    OpenLogFile();
+                    return;
+                case RibbonCommandIds.OpenLogFolder:
+                    SetStatusText("Opening Log folder...");
+                    if (!Directory.Exists(UserFolders.Logs))
+                    {
+                        _ = Directory.CreateDirectory(UserFolders.Logs);
+                    }
+                    OpenExternal(UserFolders.Logs);
+                    return;
+                case RibbonCommandIds.DiscordPresence:
+                case RibbonCommandIds.InstallModsToUsb:
+                    // The old check items only jumped to the Settings page (MW1-038, MW1-039); the tab is not selected yet
+                    // because SettingsPage has no public way to select a tab. The host may write the setting from the event.
+                    _ = ShowPage(ShellPageKeys.Settings);
+                    break;
+            }
+
+            EventHandler<RibbonCommandEventArgs> handler = RibbonCommandRequested;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+            else if (!e.IsCheck)
+            {
+                SetStatusText(e.Caption + ": not available yet.");
+            }
+        }
+
+        private void OpenLogFile()
+        {
+            SetStatusText("Opening Log file...");
+            string logFile = Path.Combine(UserFolders.Logs, "latest.log");
+            if (File.Exists(logFile))
+            {
+                try
+                {
+                    _ = Process.Start(new ProcessStartInfo(logFile) { UseShellExecute = true });
+                }
+                catch (Exception ex)
+                {
+                    SetStatusText("Failed to open Log file... " + ex.Message);
+                    _ = MessageBox.Show(this, "Failed to open the log file.\nIt may have been deleted, that's ok.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                SetStatusText("Failed to find Log file...");
+                _ = MessageBox.Show(this, "Failed to find the log file.\nIt may have been deleted, that's ok.", "No Log File.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OpenExternal(string target)
+        {
+            try
+            {
+                _ = Process.Start(new ProcessStartInfo(target) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                SetStatusText("Could not open " + target + ": " + ex.Message);
+            }
         }
 
         private void ShowResolvedPage(string leafKey)

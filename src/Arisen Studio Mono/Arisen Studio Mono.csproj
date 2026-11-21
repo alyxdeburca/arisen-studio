@@ -113,6 +113,7 @@
     <EmbeddedResource Include="Resources\Icons\new-window.png">
       <LogicalName>ArisenStudio.Icons.new-window.png</LogicalName>
     </EmbeddedResource>
+    <Compile Include="Forms\Shell\AboutPage.cs" />
     <Compile Include="Forms\Shell\IShellPage.cs" />
     <Compile Include="Forms\Shell\NavListPanel.cs" />
     <Compile Include="Forms\Shell\PageHost.cs" />
@@ -131,6 +132,12 @@
     <Compile Include="Forms\Dialogs\SetupWizardDialog.cs" />
     <Compile Include="Forms\Dialogs\GameCheatsDialog.cs" />
     <Compile Include="Forms\Dialogs\GamePatchesDialog.cs" />
+    <Compile Include="Forms\Ribbon\RibbonBar.cs" />
+    <Compile Include="Forms\Ribbon\RibbonCommandEventArgs.cs" />
+    <Compile Include="Forms\Ribbon\RibbonCommandIds.cs" />
+    <Compile Include="Forms\Tools\PS3\GameRegions.cs" />
+    <Compile Include="Forms\Tools\XBOX\XboxHDKey.cs" />
+    <Compile Include="Forms\Dialogs\GameUpdatesFinder.cs" />
     <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Fat.png">
       <LogicalName>ArisenStudio.Icons.PlayStation3Fat.png</LogicalName>
     </EmbeddedResource>
