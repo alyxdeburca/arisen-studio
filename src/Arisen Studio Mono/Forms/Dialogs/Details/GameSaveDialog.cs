@@ -387,6 +387,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 BackColor = Color.Gainsboro,
                 Margin = Padding.Empty
             };
+            separator.MinimumSize = new Size(1, 1);
 
             Label name = new Label
             {

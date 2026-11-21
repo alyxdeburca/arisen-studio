@@ -475,6 +475,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 TabStop = false,
                 Margin = Padding.Empty
             };
+            pathList.MinimumSize = new Size(1, 1);
             foreach (string path in installPaths)
             {
                 _ = pathList.Items.Add(path);
@@ -509,6 +510,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 BackColor = Color.Gainsboro,
                 Margin = Padding.Empty
             };
+            separator.MinimumSize = new Size(1, 1);
 
             rowTable.Controls.Add(name, 0, 0);
             rowTable.Controls.Add(fileCountLabel, 0, 1);

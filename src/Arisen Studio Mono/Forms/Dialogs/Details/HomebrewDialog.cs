@@ -477,6 +477,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 TabStop = false,
                 Margin = Padding.Empty
             };
+            pathList.MinimumSize = new Size(1, 1);
             foreach (string path in installPaths)
             {
                 _ = pathList.Items.Add(path);

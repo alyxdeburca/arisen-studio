@@ -99,6 +99,7 @@ namespace ArisenStudio.Forms.Dialogs.Details
                 Margin = Padding.Empty,
                 Padding = Padding.Empty
             };
+            _filesList.MinimumSize = new Size(1, 1);
             _ = _filesList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 
             _filesScroll = new Panel
