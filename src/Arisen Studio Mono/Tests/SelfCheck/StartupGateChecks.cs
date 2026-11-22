@@ -432,7 +432,9 @@ namespace ArisenStudio.Tests.SelfCheck
             return lines;
         }
 
-        // Falls back to the Mono folder this file was compiled from (CallerFilePath is Tests/SelfCheck/<file>), so a plain run finds the source.
+        // Looks from --source-root, the executable folder and the working directory, walking up from each. The executable folder is what finds
+        // the source on a plain run (bin/<config> sits under the Mono folder). The [CallerFilePath] fallback only works when the build and the
+        // run share a file system: the container compiles with /work/src paths, so on the host it finds nothing.
         private static string FindSource(string relative, [CallerFilePath] string callerFile = null)
         {
             List<string> starts = new List<string>();
