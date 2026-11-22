@@ -242,21 +242,55 @@ namespace ArisenStudio.Forms.Pages
         {
             GroupBox group = new GroupBox();
             group.Text = title;
-            group.AutoSize = true;
-            group.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            // The group is sized from its content by FitGroup. GroupBox.AutoSize with a docked, auto-sized child did not grow on Mono,
+            // so the groups were cut off below their first rows (b104). The old page (MainWindow.Designer.cs) was a flat list of rows with no group.
+            group.AutoSize = false;
             group.Padding = new Padding(8);
             group.Margin = new Padding(0, 0, 0, 8);
             group.MinimumSize = new Size(520, 0);
 
             FlowLayoutPanel inner = new FlowLayoutPanel();
-            inner.Dock = DockStyle.Fill;
+            inner.Dock = DockStyle.Top;
             inner.AutoSize = true;
             inner.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             inner.FlowDirection = FlowDirection.TopDown;
             inner.WrapContents = false;
             group.Controls.Add(inner);
+            inner.Layout += delegate { FitGroup(group, inner); };
+            inner.SizeChanged += delegate { FitGroup(group, inner); };
+            inner.ControlAdded += delegate (object sender, ControlEventArgs e)
+            {
+                // A child can finish sizing after the inner list measured itself (a LinkLabel did), and the inner list then stays too short.
+                e.Control.SizeChanged += delegate { FitGroup(group, inner); };
+                e.Control.VisibleChanged += delegate { FitGroup(group, inner); };
+                FitGroup(group, inner);
+            };
+            group.Size = new Size(520, 40);
             stack.Controls.Add(group);
             return group;
+        }
+
+        // Group height = the inner list's preferred height plus the group's own frame, title and padding. Width is at least 520.
+        private static void FitGroup(GroupBox group, FlowLayoutPanel inner)
+        {
+            Size wanted = inner.GetPreferredSize(Size.Empty);
+            // The preferred size can be stale while a child (a LinkLabel) is still sizing itself: also reach the lowest child's bottom edge.
+            foreach (Control child in inner.Controls)
+            {
+                if (child.Visible)
+                {
+                    wanted.Height = Math.Max(wanted.Height, child.Bottom + child.Margin.Bottom);
+                    wanted.Width = Math.Max(wanted.Width, child.Right + child.Margin.Right);
+                }
+            }
+            int chromeHeight = group.Height - group.DisplayRectangle.Height;
+            int chromeWidth = group.Width - group.DisplayRectangle.Width;
+            int height = wanted.Height + chromeHeight;
+            int width = Math.Max(520, wanted.Width + chromeWidth);
+            if (group.Height != height || group.Width != width)
+            {
+                group.Size = new Size(width, height);
+            }
         }
 
         private static FlowLayoutPanel InnerOf(GroupBox group)
@@ -446,6 +480,7 @@ namespace ArisenStudio.Forms.Pages
             comboLanguage.SelectedIndexChanged += ComboLanguage_SelectedIndexChanged;
             linkTranslate.Text = "Help translate Arisen Studio on Crowdin";
             linkTranslate.AutoSize = true;
+            linkTranslate.Padding = new Padding(0, 0, 0, 4); // Mono sized the link too short and cut the descenders of its text
             linkTranslate.LinkClicked += LinkTranslate_LinkClicked;
             InnerOf(language).Controls.Add(labelLanguage);
             InnerOf(language).Controls.Add(comboLanguage);

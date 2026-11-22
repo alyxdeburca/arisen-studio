@@ -78,6 +78,9 @@ namespace ArisenStudio.Runtime
         // Old behaviour (MainWindow.cs:215): the maintenance message is followed by Application.Exit(). Q-010.
         private const bool ExitOnMaintenance = true;
 
+        // Result of the single internet check (normal mode only). Set in Attach, before the shell's Shown event, and read by the Shown startup handler.
+        private static bool _internetConnected;
+
         /// <summary>True when <see cref="Attach" /> found another running instance (normal mode only). The shell then closes itself once shown.</summary>
         public static bool AnotherInstanceRunning { get; private set; }
 
@@ -261,6 +264,15 @@ namespace ArisenStudio.Runtime
                     services.StartupAsync = delegate { return LoadDatabaseAsync(adapters, dialogs); };
                 }
 
+                // Old rule (MainWindow.cs:203, 227): the database load runs only when the internet check passes.
+                // The check runs once here, before ShellController's Shown handler reads InternetCheckPassed. Smoke mode: no check.
+                _internetConnected = false;
+                if (!smokeMode)
+                {
+                    RunStep("internet check", delegate { _internetConnected = ArisenStudio.Extensions.HttpExtensions.CheckInternetConnection(); });
+                }
+                controller.InternetCheckPassed = _internetConnected;
+
                 controller.Attach(shell, services);
 
                 _adapterContext = adapters;
@@ -359,11 +371,28 @@ namespace ArisenStudio.Runtime
             {
                 shell.Shown -= OnShellShownStartup;
 
-                // Old rule (MainWindow.cs:203): everything below sits inside the "internet connection detected" branch.
-                bool internet = false;
-                RunStep("internet check", delegate { internet = ArisenStudio.Extensions.HttpExtensions.CheckInternetConnection(); });
-                if (!internet || shell.IsDisposed)
+                if (shell.IsDisposed)
                 {
+                    return;
+                }
+
+                // Old rule (MainWindow.cs:232-234): no internet shows the message, sets the status, then closes. The check itself ran in Attach.
+                if (!_internetConnected)
+                {
+                    RunStep("no internet message", delegate
+                    {
+                        string text = ResourceText.Get("NO_INTERNET_CONNECTION", "You must be connected to the Internet to use this application.");
+                        string caption = ResourceText.Get("NO_INTERNET_CONNECTION_TITLE", "No Internet Detected");
+                        MessageBox.Show(shell, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        AppHost.SetStatus(caption);
+                    });
+                    RunStep("close after no internet", delegate
+                    {
+                        if (!shell.IsDisposed)
+                        {
+                            shell.Close();
+                        }
+                    });
                     return;
                 }
 

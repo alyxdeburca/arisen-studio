@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using ArisenStudio.Runtime.Startup;
 
 namespace ArisenStudio.Tests.SelfCheck
@@ -431,13 +432,15 @@ namespace ArisenStudio.Tests.SelfCheck
             return lines;
         }
 
-        private static string FindSource(string relative)
+        // Falls back to the Mono folder this file was compiled from (CallerFilePath is Tests/SelfCheck/<file>), so a plain run finds the source.
+        private static string FindSource(string relative, [CallerFilePath] string callerFile = null)
         {
             List<string> starts = new List<string>();
             if (SelfCheckRunner.SourceRoot != null)
             {
                 starts.Add(SelfCheckRunner.SourceRoot);
             }
+            starts.Add(AppDomain.CurrentDomain.BaseDirectory);
             starts.Add(Directory.GetCurrentDirectory());
 
             string native = relative.Replace('/', Path.DirectorySeparatorChar);
@@ -457,6 +460,19 @@ namespace ArisenStudio.Tests.SelfCheck
                         return nested;
                     }
                     folder = Path.GetDirectoryName(folder);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(callerFile))
+            {
+                string monoFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(callerFile)));
+                if (!string.IsNullOrEmpty(monoFolder))
+                {
+                    string compiled = Path.Combine(monoFolder, native);
+                    if (File.Exists(compiled))
+                    {
+                        return compiled;
+                    }
                 }
             }
             return null;

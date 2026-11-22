@@ -318,6 +318,11 @@ namespace ArisenStudio.Forms.Dashboard
                 // The feed loader throws for an empty or failed feed. Treat that as an empty list and report nothing.
                 entries = null;
             }
+            catch (NotSupportedException)
+            {
+                // Smoke mode has no feed loader (DashboardDataSource). Report nothing, the same as an empty feed (Q-121).
+                entries = null;
+            }
             catch (Exception ex)
             {
                 ReportStatus("Could not load the news feed: " + ex.Message, ex);

@@ -42,6 +42,10 @@ namespace ArisenStudio.Shell.Wiring
     {
         private ShellForm _form;
         private ShellServices _services;
+
+        /// <summary>Set by FullShellIntegration from its single internet check (before Attach). False: the database load (StartupAsync) is not started.</summary>
+        internal bool InternetCheckPassed { get; set; }
+
         private DialogContext _dialogs;
         private IConsoleConnection _connection;
         private string _settingsPath;
@@ -626,7 +630,7 @@ namespace ArisenStudio.Shell.Wiring
                     ApplyConnectionState(false);
                 }
 
-                if (_services.StartupAsync != null)
+                if (_services.StartupAsync != null && InternetCheckPassed)
                 {
                     _form.SetStatusText("Initializing...");
                     await _services.StartupAsync();

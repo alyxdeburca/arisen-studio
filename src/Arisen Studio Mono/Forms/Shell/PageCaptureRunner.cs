@@ -209,7 +209,11 @@ namespace ArisenStudio.Shell
                     tabs.SelectedIndex = i;
                     shell.PerformLayout();
                     Pump(shell);
-                    problem = SaveShell(shell, Path.Combine(target, fileName));
+                    problem = CheckTabContent(key, name, tabs, i);
+                    if (problem == null)
+                    {
+                        problem = SaveShell(shell, Path.Combine(target, fileName), tabs.TabPages[i]);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -229,6 +233,105 @@ namespace ArisenStudio.Shell
             return exitCode;
         }
 
+        // Content check for the selected tab (b102). The page must hold controls, and a control whose text says Discord
+        // must appear only under the Discord tab (the settings page). Prints one PAGE-CAPTURE-CONTENT line per tab.
+        // Returns null when the content is right, otherwise the reason.
+        private static string CheckTabContent(string key, string tabName, TabControl tabs, int index)
+        {
+            TabPage page = tabs.TabPages[index];
+            int count = 0;
+            int discord = 0;
+            CountContent(page, ref count, ref discord);
+            bool isDiscordTab = string.Equals(tabs.TabPages[index].Text, "Discord", StringComparison.OrdinalIgnoreCase);
+            Console.WriteLine("PAGE-CAPTURE-CONTENT " + key + " " + tabName + " selected=" + (tabs.SelectedIndex == index ? "yes" : "no")
+                + " controls=" + count + " discord=" + discord);
+            if (tabs.SelectedIndex != index)
+            {
+                return "the tab did not become selected";
+            }
+            if (count == 0)
+            {
+                return "the tab page has no controls";
+            }
+            string clipped = FindClipped(page);
+            if (clipped != null)
+            {
+                Console.WriteLine("PAGE-CAPTURE-CLIPPED " + key + " " + tabName + " " + clipped);
+                return "a control is cut off by its group box: " + clipped;
+            }
+            if (key == ShellPageKeys.Settings && !isDiscordTab && discord > 0)
+            {
+                return "a Discord control appears under the " + tabName + " tab";
+            }
+            if (key == ShellPageKeys.Settings && isDiscordTab && discord == 0)
+            {
+                return "the Discord tab has no Discord control";
+            }
+            return null;
+        }
+
+        // The first visible control whose bottom edge lies below the display area of the GroupBox that holds it (null: none).
+        // This measures the live layout, so it tells a layout fault from a painting fault.
+        private static string FindClipped(Control parent)
+        {
+            foreach (Control child in parent.Controls)
+            {
+                GroupBox group = child as GroupBox;
+                if (group != null && group.Visible)
+                {
+                    string found = FindBelow(group, group);
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+                string deeper = FindClipped(child);
+                if (deeper != null)
+                {
+                    return deeper;
+                }
+            }
+            return null;
+        }
+
+        private static string FindBelow(GroupBox group, Control parent)
+        {
+            int limit = group.DisplayRectangle.Bottom + 1;
+            foreach (Control child in parent.Controls)
+            {
+                if (!child.Visible)
+                {
+                    continue;
+                }
+                int bottom = group.PointToClient(child.PointToScreen(new Point(0, child.Height))).Y;
+                if (bottom > limit)
+                {
+                    return "'" + (child.Text ?? string.Empty) + "' (" + child.GetType().Name + ") ends at " + bottom + ", group '" + group.Text + "' shows to " + limit
+                        + " (group " + group.Size.Width + "x" + group.Size.Height + ", display " + group.DisplayRectangle
+                        + ", child bounds " + child.Bounds + ", parent " + parent.GetType().Name + " " + parent.Bounds + ")";
+                }
+                string deeper = FindBelow(group, child);
+                if (deeper != null)
+                {
+                    return deeper;
+                }
+            }
+            return null;
+        }
+
+        private static void CountContent(Control parent, ref int count, ref int discord)
+        {
+            foreach (Control child in parent.Controls)
+            {
+                count++;
+                if (child.Text != null && child.Text.IndexOf("Discord", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    discord++;
+                }
+                CountContent(child, ref count, ref discord);
+            }
+        }
+
         // ASCII letters, digits and dashes only. Any other character becomes a dash; an empty result falls back to the tab number.
         private static string SafeTabName(string text, int index)
         {
@@ -246,7 +349,9 @@ namespace ArisenStudio.Shell
         }
 
         // Draws the whole shell into a PNG. Returns null on success, otherwise the reason.
-        private static string SaveShell(ShellForm shell, string file)
+        // overlay: a tab page to paint again, by itself, over the shell image. Shell.DrawToBitmap on Mono paints the same tab
+        // page (the last one) whichever tab is selected, although the selected page holds the right controls (b102 content check).
+        private static string SaveShell(ShellForm shell, string file, TabPage overlay = null)
         {
             int width = shell.Width;
             int height = shell.Height;
@@ -258,6 +363,21 @@ namespace ArisenStudio.Shell
             using (Bitmap bitmap = new Bitmap(width, height))
             {
                 shell.DrawToBitmap(bitmap, new Rectangle(0, 0, width, height));
+                if (overlay != null && overlay.Width > 0 && overlay.Height > 0)
+                {
+                    Point at = shell.PointToClient(overlay.PointToScreen(Point.Empty));
+                    using (Bitmap pageImage = new Bitmap(overlay.Width, overlay.Height))
+                    using (Graphics g = Graphics.FromImage(bitmap))
+                    {
+                        overlay.DrawToBitmap(pageImage, new Rectangle(0, 0, overlay.Width, overlay.Height));
+                        Color back = overlay.BackColor.A == 0 ? SystemColors.Control : overlay.BackColor;
+                        using (SolidBrush brush = new SolidBrush(back))
+                        {
+                            g.FillRectangle(brush, new Rectangle(at, overlay.Size));
+                        }
+                        g.DrawImage(pageImage, at);
+                    }
+                }
                 bitmap.Save(file, ImageFormat.Png);
             }
             if (new FileInfo(file).Length <= 0)

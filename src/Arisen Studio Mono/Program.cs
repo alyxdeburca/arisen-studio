@@ -224,7 +224,7 @@ namespace ArisenStudio
 
             string formName = null;
             Func<Form> formFactory = null;
-            int fi = Array.IndexOf(args, "--form");
+            int fi = pageKey != null ? -1 : Array.IndexOf(args, "--form"); // --page wins: a stray --form must not run
             if (fi >= 0)
             {
                 if (fi + 1 >= args.Length) { Console.WriteLine("FORM-FAIL missing name argument"); return 2; }
