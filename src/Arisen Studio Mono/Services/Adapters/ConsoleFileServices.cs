@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using ArisenStudio.Forms.Pages;
 using ArisenStudio.Models.Resources;
+using ArisenStudio.Runtime;
 using FluentFTP;
 
 namespace ArisenStudio.Services.Adapters
@@ -105,6 +106,12 @@ namespace ArisenStudio.Services.Adapters
 
         public async Task<IList<FileManagerEntry>> ListAsync(string path)
         {
+            // Ported from FtpConsoleFileService: an empty path lists nothing and makes no FTP call.
+            if (string.IsNullOrEmpty(path))
+            {
+                return new List<FileManagerEntry>();
+            }
+
             AsyncFtpClient client = Client();
 
             List<FileManagerEntry> entries = new List<FileManagerEntry>();
@@ -187,9 +194,25 @@ namespace ArisenStudio.Services.Adapters
             return _ftp.RenameFileOrFolderAsync(consolePath, ConsolePaths.GetDirectory(consolePath) + newName);
         }
 
-        public Task<bool> ExistsAsync(string consolePath, bool isDirectory)
+        // Ported from FtpConsoleFileService: an empty path is not there, and any FTP error reads as "not there" and is logged.
+        public async Task<bool> ExistsAsync(string consolePath, bool isDirectory)
         {
-            return isDirectory ? _ftp.DirectoryExistsAsync(consolePath) : _ftp.FileExistsAsync(consolePath);
+            if (string.IsNullOrEmpty(consolePath))
+            {
+                return false;
+            }
+
+            try
+            {
+                return isDirectory
+                    ? await _ftp.DirectoryExistsAsync(consolePath)
+                    : await _ftp.FileExistsAsync(consolePath);
+            }
+            catch (Exception ex)
+            {
+                AppHost.Logger?.Invoke(ex, "Ps3ConsoleFileService.ExistsAsync: " + consolePath);
+                return false;
+            }
         }
 
         public Task CreateFolderAsync(string consolePath)

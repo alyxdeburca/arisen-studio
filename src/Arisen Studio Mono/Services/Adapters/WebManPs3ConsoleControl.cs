@@ -1,5 +1,5 @@
 using System;
-using System.Net;
+using System.Threading.Tasks;
 using ArisenStudio.Extensions;
 using ArisenStudio.Forms.Tools.PS3;
 
@@ -54,15 +54,15 @@ namespace ArisenStudio.Services.Adapters
             }
 
             string target = string.IsNullOrWhiteSpace(address) ? _address : address;
-            if (string.IsNullOrWhiteSpace(target) || !IPAddress.TryParse(target, out _))
+            if (string.IsNullOrWhiteSpace(target))
             {
-                throw new ArgumentException("The console address must be an IP address.", nameof(address));
+                throw new ArgumentException("No console address was given.", nameof(address));
             }
 
             string answer;
             try
             {
-                answer = WebManExtensions.GetGameAsync(target).GetAwaiter().GetResult();
+                answer = Task.Run(() => WebManExtensions.GetGameAsync(target)).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

@@ -116,6 +116,8 @@ namespace ArisenStudio.Tests.SelfCheck
             TransferDialogChecks.AddTo(cases);
             IntegrationChecks.AddTo(cases);
             FakeConsoleServerChecks.AddTo(cases);
+            StartupGateChecks.AddTo(cases);
+            FakeServerPs3ControlChecks.AddTo(cases);
 
             if (listOnly)
             {

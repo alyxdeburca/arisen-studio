@@ -70,6 +70,11 @@ namespace ArisenStudio.Runtime
         private static IConsoleConnection _pollConnection;
         private static EventHandler _pollConnectionChanged;
 
+        // PS3 adapters (webMAN). Set by WirePs3Adapters on the UI thread; cleared by StopPs3Wiring.
+        private static string _ps3Address;
+        private static IConsoleConnection _ps3Connection;
+        private static EventHandler _ps3ConnectionChanged;
+
         // Old behaviour (MainWindow.cs:215): the maintenance message is followed by Application.Exit(). Q-010.
         private const bool ExitOnMaintenance = true;
 
@@ -318,6 +323,15 @@ namespace ArisenStudio.Runtime
                     StartCurrentGamePoll(shell, controller);
                 }
             });
+
+            // Startup 6: PS3 console control and game browser (webMAN). Normal mode only; see WirePs3Adapters.
+            RunStep("PS3 console control and browser", delegate
+            {
+                if (!smokeMode)
+                {
+                    WirePs3Adapters(controller, _dialogContext);
+                }
+            });
         }
 
         private static void RunStep(string name, Action action)
@@ -469,23 +483,27 @@ namespace ArisenStudio.Runtime
             return releases != null && releases.Count > 0 ? releases[0] : null;
         }
 
-        // Normal mode only (see Attach). Runs on the UI thread from ShellController.OnFormShown and awaits the download.
-        // On success it fills DialogContext.Database and AdapterContext.Catalog. On failure both stay empty and the
-        // error is logged and shown in the status strip. The controller then sets its own "Idling..." status.
+        // Normal mode only (see Attach). Awaited by ShellController.OnFormShown after the shell is shown. The download and
+        // the cache file I/O run on a thread-pool task. On success it fills DialogContext.Database and AdapterContext.Catalog.
+        // On failure both stay as they were (empty), the error is logged, and it is rethrown: ShellController then shows
+        // "Start-up failed: ..." in the status strip and skips its reload and its "Idling..." status write.
         private static async Task LoadDatabaseAsync(AdapterContext adapters, DialogContext dialogs)
         {
+            ArisenStudio.Database.DatabaseClient client;
             try
             {
-                ArisenStudio.Database.DatabaseClient client = await ArisenStudio.Database.DatabaseClient.InitializeAsync();
-                dialogs.Database = client;
-                adapters.Catalog = DatabaseClientCatalogueAdapter.ToCatalog(client);
+                client = await Task.Run(() => ArisenStudio.Database.DatabaseClient.InitializeAsync());
             }
             catch (Exception ex)
             {
-                string text = ResourceText.Get("UNABLE_LOAD_DATABASE", "Unable to load the database");
+                string text = ResourceText.Get("UNABLE_LOAD_DATABASE", "Unable to load database.");
                 AppBootstrapper.LogError(ex, text);
-                AppHost.SetStatus(text + ": " + ex.Message, ex);
+                throw new InvalidOperationException(text + " " + ex.Message, ex);
             }
+
+            // Back on the UI thread (the await captured the shell's context). Assigned only on success.
+            dialogs.Database = client;
+            adapters.Catalog = DatabaseClientCatalogueAdapter.ToCatalog(client);
         }
 
         private static void StartIdleTimer(ShellForm shell)
@@ -611,6 +629,82 @@ namespace ArisenStudio.Runtime
             }
         }
 
+        // Normal mode only (see StartStartupBehaviours). Subscribes to the connection's Changed event, the same way the
+        // current-game poll does. The PS3 adapters are built only for a connected PS3 profile with an address, so the
+        // forms keep their "Unavailable..." defaults until then. The Changed event is raised on the UI thread.
+        private static void WirePs3Adapters(ShellController controller, DialogContext dialogs)
+        {
+            StopPs3Wiring();
+
+            IConsoleConnection connection = controller.Connection;
+            if (connection == null || dialogs == null)
+            {
+                return;
+            }
+
+            EventHandler apply = delegate
+            {
+                try
+                {
+                    ApplyPs3Adapters(connection, dialogs);
+                }
+                catch (Exception ex)
+                {
+                    AppBootstrapper.LogError(ex, "Unable to update the PS3 console control and browser.");
+                }
+            };
+
+            connection.Changed += apply;
+            _ps3Connection = connection;
+            _ps3ConnectionChanged = apply;
+
+            apply(connection, EventArgs.Empty);
+        }
+
+        private static void ApplyPs3Adapters(IConsoleConnection connection, DialogContext dialogs)
+        {
+            ConsoleProfile profile = connection.Profile;
+            bool ps3 = connection.IsConnected && profile != null && profile.Platform == Platform.PS3;
+            string address = ps3 && !string.IsNullOrWhiteSpace(profile.Address) ? profile.Address.Trim() : null;
+
+            // Rebuild only when the address changes: Changed can be raised for other reasons.
+            if (address == _ps3Address)
+            {
+                return;
+            }
+            _ps3Address = address;
+
+            if (address == null)
+            {
+                // Null keeps the forms' own defaults (DialogLauncher checks for null before it assigns).
+                dialogs.Ps3ConsoleControl = null;
+                dialogs.Ps3GameBrowser = null;
+                return;
+            }
+
+            // Normal mode only: AllowNetwork is set here, once a PS3 console is connected. The constructors do no I/O.
+            dialogs.Ps3ConsoleControl = new WebManPs3ConsoleControl(address) { AllowNetwork = true };
+            dialogs.Ps3GameBrowser = new WebManPs3GameBrowser(address);
+        }
+
+        private static void StopPs3Wiring()
+        {
+            try
+            {
+                if (_ps3Connection != null && _ps3ConnectionChanged != null)
+                {
+                    _ps3Connection.Changed -= _ps3ConnectionChanged;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppBootstrapper.LogError(ex, "Unable to stop the PS3 wiring.");
+            }
+            _ps3ConnectionChanged = null;
+            _ps3Connection = null;
+            _ps3Address = null;
+        }
+
         private static void StopIdleTimer()
         {
             try
@@ -686,6 +780,7 @@ namespace ArisenStudio.Runtime
             }
 
             StopCurrentGamePoll();
+            StopPs3Wiring();
             StopIdleTimer();
 
             SingleInstanceGuard guard = _guard;
@@ -782,7 +877,8 @@ namespace ArisenStudio.Runtime
                     Func<string, string> map = adapters.Catalog.TitleIdToTitle;
                     return map != null ? map(titleId) : titleId;
                 }
-                // Ps3ConsoleControl, Ps3GameBrowser, XboxConsole, XboxPackageFactory: no implementation exists; the forms keep their
+                // Ps3ConsoleControl and Ps3GameBrowser: set by WirePs3Adapters (normal mode, connected PS3 profile only); until then
+                // the forms keep their "Unavailable..." defaults. XboxConsole, XboxPackageFactory: no implementation exists; the forms keep their
                 // "Unavailable..." defaults. ConnectedProfile, IsConsoleConnected, SaveSettings, SetStatus, ConnectConsole,
                 // ScanXboxConsoles, ConsoleAddress and Language are filled in by ShellController.Attach when left null.
             };

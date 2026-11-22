@@ -137,7 +137,11 @@ namespace ArisenStudio.Forms.Tools.PS3
             ApplyLanguage();
             SetControlsEnabled(false);
 
-            ClientSize = new Size(h * 40, h * 38);
+            // The root table does not grow with its content (AutoSize is off), so a client area smaller than the content clips the bottom rows.
+            // The nominal size is the floor; the content's preferred size (plus the status bar) is the minimum that shows every button.
+            Size fitRoot = root.PreferredSize;
+            Size fitStatus = _status.Owner.PreferredSize;
+            ClientSize = new Size(Math.Max(h * 40, fitRoot.Width), Math.Max(h * 38, fitRoot.Height + fitStatus.Height));
         }
 
         /// <summary>

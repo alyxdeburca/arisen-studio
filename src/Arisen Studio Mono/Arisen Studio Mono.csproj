@@ -35,6 +35,16 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SelfCheck|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\SelfCheck\</OutputPath>
+    <DefineConstants>TRACE;SELFCHECK</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -243,6 +253,8 @@
     <Compile Include="Services\Adapters\Ps3TransferConsoleOperations.cs" />
     <Compile Include="Services\Adapters\Ps3TransferHooks.cs" />
     <Compile Include="Services\Adapters\WebManConsoleConnection.cs" />
+    <Compile Include="Services\Adapters\WebManPs3ConsoleControl.cs" />
+    <Compile Include="Services\Adapters\WebManPs3GameBrowser.cs" />
     <Compile Include="Services\Transfers\TransferXboxPaths.cs" />
     <Compile Include="Runtime\FullShellIntegration.cs" />
     <Compile Include="Runtime\Startup\CurrentGamePoller.cs" />
@@ -256,6 +268,8 @@
     <Compile Include="Forms\Shell\PageCaptureHarness.cs" />
     <Compile Include="Tests\SelfCheck\IntegrationChecks.cs" />
     <Compile Include="Tests\SelfCheck\FakeConsoleServerChecks.cs" />
+    <Compile Include="Tests\SelfCheck\StartupGateChecks.cs" />
+    <Compile Include="Tests\SelfCheck\FakeServerPs3ControlChecks.cs" />
     <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Fat.png">
       <LogicalName>ArisenStudio.Icons.PlayStation3Fat.png</LogicalName>
     </EmbeddedResource>

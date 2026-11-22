@@ -199,7 +199,11 @@ namespace ArisenStudio.Forms.Tools.XBOX
             ApplyLanguage();
 
             AutoScroll = true;
-            ClientSize = new Size(h * 42, h * 58);
+            // The root table does not grow with its content (AutoSize is off), so a client area smaller than the content clips the bottom rows.
+            // The nominal size is the floor; the content's preferred size (plus the status bar) is the minimum that shows every button.
+            Size fitRoot = root.PreferredSize;
+            Size fitStatus = _status.Owner.PreferredSize;
+            ClientSize = new Size(Math.Max(h * 42, fitRoot.Width), Math.Max(h * 58, fitRoot.Height + fitStatus.Height));
         }
 
         /// <summary>

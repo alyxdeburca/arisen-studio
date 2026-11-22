@@ -179,7 +179,7 @@ namespace ArisenStudio.Tests.SelfCheck
         public static void AddTo(List<SelfCheckCase> cases)
         {
             cases.Add(new SelfCheckCase("FakeConsole.WebManStatus.InstalledOnFake", WebManStatusTrueOnFake));
-            cases.Add(new SelfCheckCase("FakeConsole.WebManStatus.ClosedPortIsFalse", WebManStatusFalseOnClosedPort));
+            cases.Add(new SelfCheckCase("FakeConsole.WebManStatus.ClosedPortIsTrue", WebManStatusTrueOnClosedPort));
             cases.Add(new SelfCheckCase("FakeConsole.WebManPower.SendsShutdownPath", PowerSendsShutdownPath));
             cases.Add(new SelfCheckCase("FakeConsole.WebManPower.SendsQuickRebootPath", PowerSendsQuickRebootPath));
             cases.Add(new SelfCheckCase("FakeConsole.GameInfo.ReadsTitleFromFake", GameInfoReadsTitleFromFake));
@@ -207,15 +207,17 @@ namespace ArisenStudio.Tests.SelfCheck
             }
         }
 
-        // (a2) Expected behaviour: false when nothing listens. CURRENTLY FAILS: IsWebManInstalled returns true because
-        // HandleRequest catches the connection error and IsWebManInstalled never reads the result. See BUILD-REQUEST-f6.
-        private static void WebManStatusFalseOnClosedPort()
+        // (a2) Q-054 decided: keep the OLD behaviour. With nothing listening, IsWebManInstalled returns true, because
+        // HandleRequest swallows the connection error and the LED call never throws. The old app relies on this:
+        // src/Arisen Studio/Extensions/PS3/WebManExtensions.cs:20-33 (return true at line 26), and the old connect at
+        // src/Arisen Studio/Forms/Windows/MainWindow.cs:1160 uses the result to decide the console is webMAN-ready.
+        private static void WebManStatusTrueOnClosedPort()
         {
             string address = ClosedPortAddress();
 
             bool installed = WebManExtensions.IsWebManInstalled(address);
 
-            SelfCheckAssert.True(!installed, "IsWebManInstalled against a closed port returned true");
+            SelfCheckAssert.True(installed, "IsWebManInstalled against a closed port returned false; old app returns true (Q-054)");
         }
 
         // (b) A power command sends its webMAN path to the fake.
