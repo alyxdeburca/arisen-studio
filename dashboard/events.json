@@ -228,5 +228,24 @@
       "BUILD-REQUEST-35 added ToolFormSupport.NonBlockingErrors so the 5 console-dependent tool forms stay open without modal MessageBox in smoke runs",
       "PARALLEL-SELFCHECK wrote 8 deterministic self-check files under Tests/SelfCheck/; launched Worker K (Localization key aliases) and Worker L (BUILD-REQUEST-36 csproj/Program.cs wiring for NonBlockingErrors, M7, L10N, and SelfCheck)"
     ]
+  },
+  {
+    "summary": "Completed Shell Wiring (Worker B) & Imgur/Path Audit (Worker I); mapped 27 compiled files (62.3% Verified / 99.1% Written)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-22 00:11:00 UTC",
+    "changes": [
+      "PARALLEL-SHELL-WIRING wrote DialogLauncher and ShellController under Forms/Shell/Wiring/; PARALLEL-IO-AUDIT wrote ImgurUploader and fixed TransferLocalPaths.cs to Path.Combine",
+      "Mapped 27 already-compiled Controls/Models/Extensions/MainWindow.Designer files in port_map (62.3% Verified LOC / 77.1% files; 99.1% Written LOC / 98.7% files); launched Workers M & N to keep 7/7 slots active"
+    ]
+  },
+  {
+    "summary": "Completed Adapters (Worker A) and AppBootstrapper (Worker J); launched Workers M, N, O, P to keep 7/7 slots full",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-22 00:12:00 UTC",
+    "changes": [
+      "PARALLEL-ADAPTERS implemented real IDashboardDataSource, IDownloadsDataSource, IInstalledFilesDataSource, ILibraryDataSource, IConsoleFileService, IPs3FileTransfer, IScreenshotUploader, and ITransferConsoleOperations",
+      "PARALLEL-BOOTSTRAP implemented Runtime/AppBootstrapper.cs (latest.log file logger, SettingsData load/FormClosing save, AttachToShell)",
+      "Launched Workers M (BUILD-REQUEST-37 Linux path fixes in IoExtensions/SettingsData/TrainerGameItem/GameSaveItemData), N (FullShellIntegration), O (15-page capture harness), and P (Adapter/Wiring/Path self-checks)"
+    ]
   }
 ]

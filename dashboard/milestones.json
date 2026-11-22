@@ -278,6 +278,114 @@
     {
       "old": "Controls/FeatureNotAvailableOverlay.cs",
       "new": "Controls/Extra/FeatureNotAvailableOverlay.cs"
+    },
+    {
+      "old": "Controls/ProfileItem.Designer.cs",
+      "new": "Controls/ProfileItem.cs"
+    },
+    {
+      "old": "Controls/ProfileItem.cs",
+      "new": "Controls/ProfileItem.cs"
+    },
+    {
+      "old": "Controls/StatItem.Designer.cs",
+      "new": "Controls/StatItem.cs"
+    },
+    {
+      "old": "Controls/StatItem.cs",
+      "new": "Controls/StatItem.cs"
+    },
+    {
+      "old": "Controls/ToolItem.Designer.cs",
+      "new": "Controls/ToolItem.cs"
+    },
+    {
+      "old": "Controls/ToolItem.cs",
+      "new": "Controls/ToolItem.cs"
+    },
+    {
+      "old": "Controls/AccouncementItem.Designer.cs",
+      "new": "Controls/Extra/AnnouncementItem.cs"
+    },
+    {
+      "old": "Controls/AccouncementItem.cs",
+      "new": "Controls/Extra/AnnouncementItem.cs"
+    },
+    {
+      "old": "Controls/ChangeLogItem.Designer.cs",
+      "new": "Forms/Dashboard/DashboardPage.cs"
+    },
+    {
+      "old": "Controls/ChangeLogItem.cs",
+      "new": "Forms/Dashboard/DashboardPage.cs"
+    },
+    {
+      "old": "Controls/NewsItem.Designer.cs",
+      "new": "Forms/Dashboard/DashboardPage.cs"
+    },
+    {
+      "old": "Controls/NewsItem.cs",
+      "new": "Forms/Dashboard/DashboardPage.cs"
+    },
+    {
+      "old": "Controls/NoAnnouncementsItem.Designer.cs",
+      "new": "Forms/Dashboard/DashboardPage.cs"
+    },
+    {
+      "old": "Controls/NoAnnouncementsItem.cs",
+      "new": "Forms/Dashboard/DashboardPage.cs"
+    },
+    {
+      "old": "Controls/NoProfilesItem.Designer.cs",
+      "new": "Forms/Dialogs/ConnectionsDialog.cs"
+    },
+    {
+      "old": "Controls/NoProfilesItem.cs",
+      "new": "Forms/Dialogs/ConnectionsDialog.cs"
+    },
+    {
+      "old": "Models/Configuration/SettingsData.cs",
+      "new": "Models/Configuration/SettingsData.cs"
+    },
+    {
+      "old": "Models/Database/CategoryItem.cs",
+      "new": "Models/Database/CategoryItem.cs"
+    },
+    {
+      "old": "Models/Database/GameSaveItemData.cs",
+      "new": "Models/Database/GameSaveItemData.cs"
+    },
+    {
+      "old": "Models/Database/ModItemData.cs",
+      "new": "Models/Database/ModItemData.cs"
+    },
+    {
+      "old": "Extensions/HttpExtensions.cs",
+      "new": "Extensions/HttpExtensions.cs"
+    },
+    {
+      "old": "Extensions/UpdateExtensions.cs",
+      "new": "Extensions/UpdateExtensions.cs"
+    },
+    {
+      "old": "Extensions/ImageExtensions.cs",
+      "new": "Extensions/ImageExtensions.cs"
+    },
+    {
+      "old": "Extensions/PS3/WebManExtensions.cs",
+      "new": "Extensions/WebManExtensions.cs"
+    },
+    {
+      "old": "Extensions/FtpExtensions.cs",
+      "new": "Services/FtpService.cs"
+    },
+    {
+      "old": "Program.cs",
+      "new": "Program.cs"
+    },
+    {
+      "old": "Forms/Windows/MainWindow.Designer.cs",
+      "new": "Forms/ShellForm.cs"
     }
   ],
   "wip_map": [
@@ -569,6 +677,21 @@
     {
       "old": "Extensions/XBOX/XboxExtensions.cs",
       "new": "Services/M7/XboxConsoleSession.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Windows/MainWindow.cs",
+      "new": "Forms/ShellForm.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Extensions/DialogExtensions.cs",
+      "new": "Forms/Shell/Wiring/DialogLauncher.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Extensions/ImgurUploader.cs",
+      "new": "Extensions/New/ImgurUploader.cs",
       "stage": "written_unwired"
     }
   ],

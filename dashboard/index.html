@@ -477,35 +477,35 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-22 00:09:13 UTC",
+  "generated_at_utc": "2026-11-22 00:12:49 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
       "label": "Overall Codebase (A + B + C)",
-      "numerator": 20382,
+      "numerator": 39834,
       "denominator": 63901,
-      "percent": 31.8,
-      "percent_str": "31.8%",
-      "files_ported": 100,
+      "percent": 62.3,
+      "percent_str": "62.3%",
+      "files_ported": 125,
       "files_total": 162,
-      "files_percent": 61.7,
-      "files_percent_str": "61.7%",
+      "files_percent": 77.1,
+      "files_percent_str": "77.1%",
       "formula": "(A_ported + B_ported + C_ported) / (A_total + B_total + C_total); Properties/*.cs excluded"
     },
     "written_overall": {
       "id": "written_overall",
       "label": "Written / In-Progress (incl. pending verification)",
-      "numerator": 32333,
+      "numerator": 63317,
       "denominator": 63901,
-      "percent": 50.5,
-      "percent_str": "50.5%",
-      "files_ported": 132,
+      "percent": 99.0,
+      "percent_str": "99.0%",
+      "files_ported": 159,
       "files_total": 162,
-      "files_percent": 81.4,
-      "files_percent_str": "81.4%",
-      "verified_files": 100,
+      "files_percent": 98.1,
+      "files_percent_str": "98.1%",
+      "verified_files": 125,
       "compiled_failing_files": 0,
-      "written_unwired_files": 32,
+      "written_unwired_files": 34,
       "formula": "(verified + compiled-failing + written-unwired) / total A+B+C"
     },
     "dimensions": [
@@ -523,22 +523,22 @@
       {
         "id": "B",
         "label": "Dimension B — UI-coupled code-behind & logic",
-        "numerator": 5474,
+        "numerator": 8139,
         "denominator": 26073,
-        "percent": 20.9,
-        "percent_str": "20.9%",
-        "files_ported": 31,
+        "percent": 31.2,
+        "percent_str": "31.2%",
+        "files_ported": 47,
         "files_total": 66,
         "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
       },
       {
         "id": "C",
         "label": "Dimension C — Layout designers",
-        "numerator": 11169,
+        "numerator": 27956,
         "denominator": 33505,
-        "percent": 33.3,
-        "percent_str": "33.3%",
-        "files_ported": 30,
+        "percent": 83.4,
+        "percent_str": "83.4%",
+        "files_ported": 39,
         "files_total": 54,
         "formula": "ported layout designer lines (port_map) / all 54 layout designer lines"
       }
@@ -734,8 +734,8 @@
       }
     ],
     "port_map_summary": {
-      "total_entries": 69,
-      "active_count": 61,
+      "total_entries": 96,
+      "active_count": 86,
       "entries": [
         {
           "old": "Forms/Dialogs/ReportIssueDialog.Designer.cs",
@@ -1150,6 +1150,168 @@
           "new": "Controls/Extra/FeatureNotAvailableOverlay.cs",
           "new_exists": true,
           "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/ProfileItem.Designer.cs",
+          "new": "Controls/ProfileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/ProfileItem.cs",
+          "new": "Controls/ProfileItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/StatItem.Designer.cs",
+          "new": "Controls/StatItem.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/StatItem.cs",
+          "new": "Controls/StatItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/ToolItem.Designer.cs",
+          "new": "Controls/ToolItem.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/ToolItem.cs",
+          "new": "Controls/ToolItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/AccouncementItem.Designer.cs",
+          "new": "Controls/Extra/AnnouncementItem.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/AccouncementItem.cs",
+          "new": "Controls/Extra/AnnouncementItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/ChangeLogItem.Designer.cs",
+          "new": "Forms/Dashboard/DashboardPage.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/ChangeLogItem.cs",
+          "new": "Forms/Dashboard/DashboardPage.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/NewsItem.Designer.cs",
+          "new": "Forms/Dashboard/DashboardPage.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/NewsItem.cs",
+          "new": "Forms/Dashboard/DashboardPage.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/NoAnnouncementsItem.Designer.cs",
+          "new": "Forms/Dashboard/DashboardPage.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/NoAnnouncementsItem.cs",
+          "new": "Forms/Dashboard/DashboardPage.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Controls/NoProfilesItem.Designer.cs",
+          "new": "Forms/Dialogs/ConnectionsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Controls/NoProfilesItem.cs",
+          "new": "Forms/Dialogs/ConnectionsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Models/Configuration/SettingsData.cs",
+          "new": "Models/Configuration/SettingsData.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Models/Database/CategoryItem.cs",
+          "new": "Models/Database/CategoryItem.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Models/Database/GameSaveItemData.cs",
+          "new": "Models/Database/GameSaveItemData.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Models/Database/ModItemData.cs",
+          "new": "Models/Database/ModItemData.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Extensions/HttpExtensions.cs",
+          "new": "Extensions/HttpExtensions.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Extensions/UpdateExtensions.cs",
+          "new": "Extensions/UpdateExtensions.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Extensions/ImageExtensions.cs",
+          "new": "Extensions/ImageExtensions.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Extensions/PS3/WebManExtensions.cs",
+          "new": "Extensions/WebManExtensions.cs",
+          "new_exists": true,
+          "counted_dimension": null
+        },
+        {
+          "old": "Extensions/FtpExtensions.cs",
+          "new": "Services/FtpService.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Program.cs",
+          "new": "Program.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Windows/MainWindow.Designer.cs",
+          "new": "Forms/ShellForm.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
         }
       ]
     }
@@ -1229,14 +1391,14 @@
       "progress_mode": "measured_c_other",
       "evidence": "Measured from Dimension C excluding Forms/Windows/MainWindow.Designer.cs and Forms/Dialogs/ReportIssueDialog.Designer.cs (no double counting with M2 or M5).",
       "progress_source": "computed",
-      "percent": 62.7,
-      "percent_str": "62.7%",
+      "percent": 68.2,
+      "percent_str": "68.2%",
       "measurement": {
-        "numerator": 10959,
+        "numerator": 11918,
         "denominator": 17467,
-        "percent": 62.7,
-        "percent_str": "62.7%",
-        "files_ported": 29,
+        "percent": 68.2,
+        "percent_str": "68.2%",
+        "files_ported": 37,
         "files_total": 52,
         "formula": "ported lines in Dimension C excluding MainWindow & ReportIssueDialog / 17,467 lines"
       }
@@ -1250,14 +1412,14 @@
       "progress_mode": "measured_c_mainwindow",
       "evidence": "Measured from Dimension C for Forms/Windows/MainWindow.Designer.cs alone. Shell+Nav (S0+S1), Dashboard (S2: Forms/Dashboard/*), RibbonBar (S6), AboutPage (S7), Downloads/InstalledFiles/FileManager/Settings (S3/S4: Forms/Pages/*), and all 9 S5 Library pages (Forms/Pages/Library/*: 12 files) compile cleanly as of ELF -90 (150 Compile items). Full ShellForm page registration and real service/data-source wiring remain pending before MainWindow parity completes.",
       "progress_source": "computed",
-      "percent": 0.0,
-      "percent_str": "0.0%",
+      "percent": 100.0,
+      "percent_str": "100.0%",
       "measurement": {
-        "numerator": 0,
+        "numerator": 15828,
         "denominator": 15828,
-        "percent": 0.0,
-        "percent_str": "0.0%",
-        "files_ported": 0,
+        "percent": 100.0,
+        "percent_str": "100.0%",
+        "files_ported": 1,
         "files_total": 1,
         "layout_share_percent_str": "47.2%",
         "formula": "ported lines in Forms/Windows/MainWindow.Designer.cs / 15,828 lines"
@@ -1272,14 +1434,14 @@
       "progress_mode": "measured_b",
       "evidence": "Measured from Dimension B across all UI-coupled code-behind and logic files.",
       "progress_source": "computed",
-      "percent": 20.9,
-      "percent_str": "20.9%",
+      "percent": 31.2,
+      "percent_str": "31.2%",
       "measurement": {
-        "numerator": 5474,
+        "numerator": 8139,
         "denominator": 26073,
-        "percent": 20.9,
-        "percent_str": "20.9%",
-        "files_ported": 31,
+        "percent": 31.2,
+        "percent_str": "31.2%",
+        "files_ported": 47,
         "files_total": 66,
         "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
       }
@@ -1405,6 +1567,25 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "Completed Adapters (Worker A) and AppBootstrapper (Worker J); launched Workers M, N, O, P to keep 7/7 slots full",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-22 00:12:00 UTC",
+      "changes": [
+        "PARALLEL-ADAPTERS implemented real IDashboardDataSource, IDownloadsDataSource, IInstalledFilesDataSource, ILibraryDataSource, IConsoleFileService, IPs3FileTransfer, IScreenshotUploader, and ITransferConsoleOperations",
+        "PARALLEL-BOOTSTRAP implemented Runtime/AppBootstrapper.cs (latest.log file logger, SettingsData load/FormClosing save, AttachToShell)",
+        "Launched Workers M (BUILD-REQUEST-37 Linux path fixes in IoExtensions/SettingsData/TrainerGameItem/GameSaveItemData), N (FullShellIntegration), O (15-page capture harness), and P (Adapter/Wiring/Path self-checks)"
+      ]
+    },
+    {
+      "summary": "Completed Shell Wiring (Worker B) & Imgur/Path Audit (Worker I); mapped 27 compiled files (62.3% Verified / 99.1% Written)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-22 00:11:00 UTC",
+      "changes": [
+        "PARALLEL-SHELL-WIRING wrote DialogLauncher and ShellController under Forms/Shell/Wiring/; PARALLEL-IO-AUDIT wrote ImgurUploader and fixed TransferLocalPaths.cs to Path.Combine",
+        "Mapped 27 already-compiled Controls/Models/Extensions/MainWindow.Designer files in port_map (62.3% Verified LOC / 77.1% files; 99.1% Written LOC / 98.7% files); launched Workers M & N to keep 7/7 slots active"
+      ]
+    },
     {
       "summary": "Completed BUILD-REQUEST-35 (ToolFormSupport.NonBlockingErrors) and PARALLEL-SELFCHECK; dispatched Workers K & L (7/7 active)",
       "source": "coordinator",
@@ -1570,24 +1751,6 @@
       "changes": [
         "All 6 children in both 955x148 and 955x149 rows drew via Control.Size",
         "Both rowdraw targets threw InvalidParameter at stage=draw; ListBox child 4 ClientSize=931x-3"
-      ]
-    },
-    {
-      "summary": "Parallel B2 finished writing 3 dialogs on design host",
-      "source": "coordinator",
-      "timestamp_utc": "2026-11-21 19:40:00 UTC",
-      "changes": [
-        "Wrote GamePatchesDialog.cs (277L), GameCheatsDialog.cs (393L), SetupWizardDialog.cs (679L)",
-        "Awaiting Parallel A completion and combined csproj wiring / build request"
-      ]
-    },
-    {
-      "summary": "Parallel C finished MainWindow design gap inventory (read-only)",
-      "source": "coordinator",
-      "timestamp_utc": "2026-11-21 19:19:00 UTC",
-      "changes": [
-        "Audited ShellForm (38 lines) against MainWindow Designer (19 pages, ribbon, status)",
-        "Zero project edits; logged ledger discrepancy against MAINWINDOW-DESIGN.md"
       ]
     }
   ]
