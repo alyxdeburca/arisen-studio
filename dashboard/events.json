@@ -277,5 +277,16 @@
       "Console tools (14) and TransferDialog stay in wip_map as written_unwired: they render but open on not-available stubs (not verified).",
       "Run 92 looked at the Dashboard page only; the other nav pages still show placeholders, which run 92 did not measure."
     ]
+  },
+  {
+    "summary": "Run 94 (ELF -94, venus tree after the second overnight batch): 43 of 43 smoke checks render, same count as run 92. Render checks only; no behaviour check has run.",
+    "source": "launching session",
+    "timestamp_utc": "2026-11-22T14:21:15Z",
+    "changes": [
+      "Shell status line no longer shows developer text; it now says the news feed is not available. Editor grids render white. TransferDialog now says to connect to a console first.",
+      "Console manager layout fixes are only partly visible: several buttons are still clipped at the bottom of their groups.",
+      "Console boundary (PS3 control, PS3 browser, Xbox console, Xbox package factory) is not wired; console tools and TransferDialog remain written but unwired.",
+      "No map changes this run."
+    ]
   }
 ]
