@@ -288,5 +288,15 @@
       "Console boundary (PS3 control, PS3 browser, Xbox console, Xbox package factory) is not wired; console tools and TransferDialog remain written but unwired.",
       "No map changes this run."
     ]
+  },
+  {
+    "summary": "Run 97 (ELF -97): 43 of 43 smoke checks render; first --page run (15 of 15 navigation pages capture); first self-check run (80 of 82 pass).",
+    "source": "launching session",
+    "timestamp_utc": "2026-11-22T15:08:01Z",
+    "changes": [
+      "Every navigation page is a real page with its toolbar, filters and grid, but all are empty (no catalogue data). The earlier 'placeholder pages' note is out of date.",
+      "Self-check (SelfCheck configuration, host mono): 2 failures, XboxHDKey.ImportMissingFile (FileNotFoundException) and FakeConsole.GameInfo.ReadsTitleFromFake (30 s timeout). The 11 startup gate checks pass; they inspect source text, not traffic.",
+      "The MainWindow share of the verified percentage still rests on layout rendering, not on pages working with data. No map changes this run."
+    ]
   }
 ]
