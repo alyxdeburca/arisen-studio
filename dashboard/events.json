@@ -320,5 +320,17 @@
       "--page: 15 of 15 pages and 20 captures. Open: every settings tab shows the same Discord group in the capture, so either the tab content does not switch or the capture misses it; not yet resolved",
       "The tree built also holds one unreviewed news-feed edit; it is flagged for review"
     ]
+  },
+  {
+    "summary": "b107 batch on a clean tree (commit 9b784e1): Release 0 errors, 231 Compile items; 43 of 43 smoke checks; --page 15 of 15; self-check 88 of 88 from a scratch directory",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-22 22:52:13 UTC",
+    "changes": [
+      "Applied the b107 batch (announcements decoder, explicit blank-name guard, release list and statistics, navigation rules, --page-platform, settings headers, XboxHDKey delegate) as diffs on fdd5659. The blank-name self-check fails on the base file and passes with the guard (red then green).",
+      "PS4 Game Mods now routes to Homebrew once a console is engaged; a --page-platform test seam shows it (output ends 'resolved=homebrew'). No system-call trace was possible (no strace), only a run with no network.",
+      "Xbox ConsoleManager and NeighborhoodEditor: the Icon Color combo is no longer cut at the bottom (box 27 px tall), and the Neighborhood label sits level with its combo. The earlier 172 px row change did not help and was reverted.",
+      "Offline start (b99): the box shows with no setup wizard first; the shell closing after OK was not clicked, so it is unverified. The OK button label is blank in every Mono MessageBox (shown by a stock probe), a runtime limit.",
+      "Not fixed or not measured: the clip check still covers only the settings tabs; one unexplained exit-124 hang right after a fresh build, twice; the Neighborhood editor stretches its second row. No map changes this run."
+    ]
   }
 ]
