@@ -149,8 +149,7 @@ namespace ArisenStudio.Forms.Tools.PS3
                 if (!await FileTransfer.FileExistsAsync(ConsoleFilePath))
                 {
                     ToolFormSupport.LogError(new FileNotFoundException("boot_plugins.txt does not exist on the console: " + ConsoleFilePath), "Unable to load the boot_plugins.txt file. It doesn't exist on the console.");
-                    ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), "Unable to find the boot_plugins.txt file on your console.");
-                    Close();
+                    ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to find the boot_plugins.txt file on your console.");
                     return;
                 }
 
@@ -177,8 +176,7 @@ namespace ArisenStudio.Forms.Tools.PS3
             catch (Exception ex)
             {
                 ToolFormSupport.LogError(ex, "Unable to load the boot_plugins.txt file. Error: " + ex.Message);
-                ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), "Unable to load the boot_plugins.txt file. Edit the file path in Settings to your correct file location.\n\nError Message: " + ex.Message);
-                Close();
+                ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to load the boot_plugins.txt file. Edit the file path in Settings to your correct file location.\n\nError Message: " + ex.Message);
             }
         }
 

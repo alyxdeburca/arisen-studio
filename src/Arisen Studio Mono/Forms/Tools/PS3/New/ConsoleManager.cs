@@ -238,16 +238,14 @@ namespace ArisenStudio.Forms.Tools.PS3
                 else
                 {
                     SetStatus("Console Manager: " + Text_("UNABLE_TO_CONNECT", "Unable to connect to the console."));
-                    ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), Text_("UNABLE_TO_CONNECT", "Unable to connect to the console."));
-                    Close();
+                    ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), Text_("UNABLE_TO_CONNECT", "Unable to connect to the console."));
                 }
             }
             catch (Exception ex)
             {
                 ToolFormSupport.LogError(ex, "Console Manager: unable to connect.");
                 SetStatus("Console Manager: " + Text_("UNABLE_TO_CONNECT", "Unable to connect to the console."));
-                ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), Text_("UNABLE_TO_CONNECT", "Unable to connect to the console.") + "\n\n" + ex.Message);
-                Close();
+                ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), Text_("UNABLE_TO_CONNECT", "Unable to connect to the console.") + "\n\n" + ex.Message);
             }
         }
 

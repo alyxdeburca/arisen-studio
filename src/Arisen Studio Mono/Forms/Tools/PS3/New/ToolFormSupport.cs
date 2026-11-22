@@ -220,9 +220,35 @@ namespace ArisenStudio.Forms.Tools
             }
         }
 
+        /// <summary>
+        /// Opt-in non-blocking mode for headless or smoke runs. When true, <see cref="ShowError" /> writes a
+        /// "TOOL-NOTICE" line to the console instead of showing a modal MessageBox, and
+        /// <see cref="ShowErrorAndClose" /> leaves the form open. Default false: behaviour is unchanged.
+        /// </summary>
+        public static bool NonBlockingErrors { get; set; }
+
         public static void ShowError(IWin32Window owner, string title, string message)
         {
+            if (NonBlockingErrors)
+            {
+                Console.WriteLine("TOOL-NOTICE: " + title + ": " + message);
+                return;
+            }
+
             MessageBox.Show(owner, message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        /// <summary>
+        /// Show an error and close the form (the load-failure path). In non-blocking mode the form is not closed.
+        /// </summary>
+        public static void ShowErrorAndClose(Form form, string title, string message)
+        {
+            ShowError(form, title, message);
+
+            if (!NonBlockingErrors)
+            {
+                form.Close();
+            }
         }
 
         public static void ShowInfo(IWin32Window owner, string title, string message)

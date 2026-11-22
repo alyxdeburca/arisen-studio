@@ -179,8 +179,7 @@ namespace ArisenStudio.Forms.Tools.PS3
 
                 ToolFormSupport.LogError(ex, "Unable to fetch the package listing of " + PackageFolder);
                 SetStatus("Unable to fetch the listing of " + PackageFolder);
-                ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), "Unable to fetch the listing of " + PackageFolder + ".\n\n" + ex.Message);
-                Close();
+                ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to fetch the listing of " + PackageFolder + ".\n\n" + ex.Message);
             }
             finally
             {

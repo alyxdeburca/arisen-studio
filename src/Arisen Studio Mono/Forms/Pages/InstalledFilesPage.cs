@@ -29,6 +29,9 @@ namespace ArisenStudio.Forms.Pages
         private readonly ListGrid grid = new ListGrid();
         private readonly ComboBox comboPlatform = new ComboBox();
         private readonly ComboBox comboCategory = new ComboBox();
+        private readonly ComboBox comboModType = new ComboBox();
+        private readonly ComboBox comboRegion = new ComboBox();
+        private readonly ComboBox comboVersion = new ComboBox();
         private readonly TextBox textName = new TextBox();
         private readonly CheckBox checkTotalFiles = new CheckBox();
         private readonly Button buttonFilesMode = new Button();
@@ -38,6 +41,9 @@ namespace ArisenStudio.Forms.Pages
         private readonly Label labelPlatform = new Label();
         private readonly Label labelCategory = new Label();
         private readonly Label labelName = new Label();
+        private readonly Label labelModType = new Label();
+        private readonly Label labelRegion = new Label();
+        private readonly Label labelVersion = new Label();
         private readonly Label labelDate = new Label();
         private readonly Label labelCount = new Label();
 
@@ -78,6 +84,12 @@ namespace ArisenStudio.Forms.Pages
             comboPlatform.Width = 130;
             comboCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             comboCategory.Width = 170;
+            comboModType.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboModType.Width = 110;
+            comboRegion.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboRegion.Width = 91;
+            comboVersion.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboVersion.Width = 71;
             textName.Width = 150;
 
             checkTotalFiles.AutoSize = true;
@@ -110,6 +122,9 @@ namespace ArisenStudio.Forms.Pages
             AddFilter(filters, labelPlatform, comboPlatform);
             AddFilter(filters, labelCategory, comboCategory);
             AddFilter(filters, labelName, textName);
+            AddFilter(filters, labelModType, comboModType);
+            AddFilter(filters, labelRegion, comboRegion);
+            AddFilter(filters, labelVersion, comboVersion);
 
             FlowLayoutPanel filesBox = new FlowLayoutPanel();
             filesBox.AutoSize = true;
@@ -127,6 +142,9 @@ namespace ArisenStudio.Forms.Pages
 
             comboPlatform.SelectedIndexChanged += Filter_Changed;
             comboCategory.SelectedIndexChanged += Filter_Changed;
+            comboModType.SelectedIndexChanged += Filter_Changed;
+            comboRegion.SelectedIndexChanged += Filter_Changed;
+            comboVersion.SelectedIndexChanged += Filter_Changed;
             textName.TextChanged += Filter_Changed;
 
             labelCount.Dock = DockStyle.Bottom;
@@ -235,6 +253,9 @@ namespace ArisenStudio.Forms.Pages
             labelPlatform.Text = PageUi.Text(localizer, "PLATFORM", "Platform");
             labelCategory.Text = PageUi.Text(localizer, "CATEGORY", "Category");
             labelName.Text = PageUi.Text(localizer, "NAME", "Name");
+            labelModType.Text = PageUi.Text(localizer, "MOD_TYPE", "Mod Type");
+            labelRegion.Text = PageUi.Text(localizer, "REGION", "Region");
+            labelVersion.Text = PageUi.Text(localizer, "VERSION", "Version");
             checkTotalFiles.Text = PageUi.Text(localizer, "TOTAL_FILES", "Total Files");
             labelDate.Text = PageUi.Text(localizer, "INSTALLED_ON", "Installed On");
             buttonDelete.Text = PageUi.Text(localizer, "DELETE_ITEM", "Delete Item");
@@ -264,6 +285,10 @@ namespace ArisenStudio.Forms.Pages
                 categories.Sort(StringComparer.CurrentCultureIgnoreCase);
                 FillCombo(comboPlatform, platforms);
                 FillCombo(comboCategory, categories);
+                // The old type, region and version lists were never filled (MainWindow.Designer.cs has no items); they hold (All) only.
+                FillCombo(comboModType, new List<string>());
+                FillCombo(comboRegion, new List<string>());
+                FillCombo(comboVersion, new List<string>());
             }
             finally
             {
@@ -327,8 +352,8 @@ namespace ArisenStudio.Forms.Pages
         }
 
         // The old filter compared with == and so showed nothing until both combos were set (ledger MW1-149); an
-        // unset filter now means "all". The old type, region and version filters were stored but never applied
-        // (ledger MW1-140 to MW1-142) and are not ported.
+        // unset filter now means "all". The type, region and version combos (ledger MW1-140 to MW1-142) are ported as in
+        // the old app: they hold (All) only and are stored but never applied to the rows. See OPEN-QUESTIONS Q-009.
         private void ApplyFilters()
         {
             string platform = Chosen(comboPlatform);

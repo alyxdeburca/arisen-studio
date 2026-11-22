@@ -73,6 +73,13 @@ namespace ArisenStudio.Forms.Pages.Library
         public bool DateFilter { get; set; }
 
         /// <summary>
+        /// Shows the File Size filter (operator button and number box) as in the old Packages filter bar (ledger MW2-141, MW3-001, MWD-377).
+        /// As in the old page it is inert: the button cycles equal, at least, at most, and the number box takes a number, but
+        /// neither changes the rows (the old FilterPackagesFileSize was never assigned, so its size test never ran).
+        /// </summary>
+        public bool SizeFilter { get; set; }
+
+        /// <summary>
         /// Region values like "PAL NTSC" and version values like "1.00/1.01" are split into single entries for the filter lists
         /// and the match (the old Game Saves page did this, ledger MW3-081).
         /// </summary>

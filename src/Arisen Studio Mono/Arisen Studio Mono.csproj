@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;SELFCHECK</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
@@ -140,6 +141,28 @@
     <Compile Include="Forms\Tools\PS3\GameRegions.cs" />
     <Compile Include="Forms\Tools\XBOX\XboxHDKey.cs" />
     <Compile Include="Forms\Dialogs\GameUpdatesFinder.cs" />
+    <Compile Include="Forms\Tools\PS3\New\ToolFormSupport.cs" />
+    <Compile Include="Forms\Tools\PS3\New\ScreenshotFormBase.cs" />
+    <Compile Include="Forms\Tools\PS3\New\Ps3ToolContracts.cs" />
+    <Compile Include="Forms\Tools\PS3\New\BackupFilesManager.cs" />
+    <Compile Include="Forms\Tools\PS3\New\BootPluginsEditor.cs" />
+    <Compile Include="Forms\Tools\PS3\New\ConsoleManager.cs" />
+    <Compile Include="Forms\Tools\PS3\New\GameLauncher.cs" />
+    <Compile Include="Forms\Tools\PS3\New\PackageFilesManager.cs" />
+    <Compile Include="Forms\Tools\PS3\New\TakeScreenshot.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\XboxToolContracts.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\ConsoleManager.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\DashlaunchEditor.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\GameLauncher.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\GameSaveResigner.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\ModuleLoader.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\NeighborhoodEditor.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\TakeScreenshot.cs" />
+    <Compile Include="Forms\Tools\XBOX\New\XuidGameSpoofer.cs" />
+    <Compile Include="Forms\Dialogs\Transfer\TransferContracts.cs" />
+    <Compile Include="Forms\Dialogs\Transfer\TransferConsoleOperationsStub.cs" />
+    <Compile Include="Forms\Dialogs\Transfer\TransferDownloadOperations.cs" />
+    <Compile Include="Forms\Dialogs\Transfer\TransferDialog.cs" />
     <Compile Include="Forms\Pages\PageSupport.cs" />
     <Compile Include="Forms\Pages\ListGrid.cs" />
     <Compile Include="Forms\Pages\TextPromptForm.cs" />
@@ -181,7 +204,54 @@
     <Compile Include="Services\Transfers\TransferLocalPaths.cs" />
     <Compile Include="Services\Transfers\TransferPlaceholders.cs" />
     <Compile Include="Services\Transfers\TransferStatusText.cs" />
+    <Compile Include="Extensions\New\ControlExtensions.cs" />
+    <Compile Include="Services\M7\AdBannerPolicy.cs" />
+    <Compile Include="Services\M7\ApplicationUpdater.cs" />
+    <Compile Include="Services\M7\M7Services.cs" />
+    <Compile Include="Services\M7\WebPageHost.cs" />
+    <Compile Include="Services\M7\XboxConsoleSession.cs" />
+    <Compile Include="Tests\SelfCheck\SelfCheckRunner.cs" />
+    <Compile Include="Tests\SelfCheck\SelfCheckReflect.cs" />
+    <Compile Include="Tests\SelfCheck\ServicesChecks.cs" />
+    <Compile Include="Tests\SelfCheck\GameRegionsXboxHdKeyChecks.cs" />
+    <Compile Include="Tests\SelfCheck\GameSaveDialogChecks.cs" />
+    <Compile Include="Tests\SelfCheck\ShellPageChecks.cs" />
+    <Compile Include="Tests\SelfCheck\TransferDialogChecks.cs" />
+    <Compile Include="Tests\SelfCheck\SelfCheckEntry.cs" />
+    <Compile Include="Extensions\New\ImgurUploader.cs" />
+    <Compile Include="Forms\Shell\Wiring\DialogContext.cs" />
+    <Compile Include="Forms\Shell\Wiring\DialogLauncher.cs" />
+    <Compile Include="Forms\Shell\Wiring\ShellController.cs" />
+    <Compile Include="Forms\Shell\Wiring\ShellServices.cs" />
+    <Compile Include="Localization\AliasedText.cs" />
+    <Compile Include="Localization\EnglishKeyTable.g.cs" />
+    <Compile Include="Localization\KeyAliases.g.cs" />
+    <Compile Include="Localization\MessageTextSanitizer.cs" />
+    <Compile Include="Localization\ResourceText.cs" />
+    <Compile Include="Runtime\AppBootstrapper.cs" />
+    <Compile Include="Runtime\FileErrorLog.cs" />
+    <Compile Include="Services\Adapters\AdapterSupport.cs" />
+    <Compile Include="Services\Adapters\ConsoleFileServices.cs" />
+    <Compile Include="Services\Adapters\DashboardDataSource.cs" />
+    <Compile Include="Services\Adapters\DownloadsDataSource.cs" />
+    <Compile Include="Services\Adapters\HttpScreenshotUploader.cs" />
+    <Compile Include="Services\Adapters\InstalledFilesDataSource.cs" />
+    <Compile Include="Services\Adapters\LibraryDataSource.cs" />
+    <Compile Include="Services\Adapters\Ps3FileTransfer.cs" />
+    <Compile Include="Services\Adapters\Ps3TransferConsoleOperations.cs" />
+    <Compile Include="Services\Adapters\Ps3TransferHooks.cs" />
     <Compile Include="Services\Transfers\TransferXboxPaths.cs" />
+    <Compile Include="Runtime\FullShellIntegration.cs" />
+    <Compile Include="Runtime\Startup\CurrentGamePoller.cs" />
+    <Compile Include="Runtime\Startup\IdleStatusTimer.cs" />
+    <Compile Include="Runtime\Startup\MaintenanceGate.cs" />
+    <Compile Include="Runtime\Startup\SingleInstanceGuard.cs" />
+    <Compile Include="Runtime\Startup\StartupStatusCheck.cs" />
+    <Compile Include="Runtime\Startup\WhatsNewPolicy.cs" />
+    <Compile Include="Forms\Dialogs\WhatsNewDialog.cs" />
+    <Compile Include="Localization\ResxLanguageLoader.cs" />
+    <Compile Include="Forms\Shell\PageCaptureHarness.cs" />
+    <Compile Include="Tests\SelfCheck\IntegrationChecks.cs" />
     <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Fat.png">
       <LogicalName>ArisenStudio.Icons.PlayStation3Fat.png</LogicalName>
     </EmbeddedResource>

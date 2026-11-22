@@ -33,7 +33,7 @@ namespace ArisenStudio.Models.Database
         /// <returns> </returns>
         public string DownloadDataDirectory(TrainerItem trainerData)
         {
-            return $@"{AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData)}\{GetPlatform().Humanize()}\Trainers\{TitleId.RemoveInvalidChars()}\{trainerData.Name.RemoveInvalidChars()}\";
+            return Path.Combine(AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData), GetPlatform().Humanize(), "Trainers", TitleId.RemoveInvalidChars() ?? string.Empty, trainerData.Name.RemoveInvalidChars() ?? string.Empty) + Path.DirectorySeparatorChar;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ArisenStudio.Models.Database
         /// <returns> Archive File Path </returns>
         public string ArchiveZipFile(TrainerItem trainerData)
         {
-            return $@"{AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData)}\{GetPlatform().Humanize()}\Trainers\{TitleId.RemoveInvalidChars()}\{trainerData.Name.RemoveInvalidChars()}.zip";
+            return Path.Combine(AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData), GetPlatform().Humanize(), "Trainers", TitleId.RemoveInvalidChars() ?? string.Empty, $"{trainerData.Name.RemoveInvalidChars()}.zip");
         }
 
         /// <summary>

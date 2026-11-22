@@ -137,8 +137,7 @@ namespace ArisenStudio.Forms.Tools.XBOX
             catch (Exception ex)
             {
                 ToolFormSupport.LogError(ex, "Unable to connect to the console debugger.");
-                ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), "Unable to load modules.\n\nError: " + ex.Message);
-                Close();
+                ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to load modules.\n\nError: " + ex.Message);
             }
         }
 
@@ -167,8 +166,7 @@ namespace ArisenStudio.Forms.Tools.XBOX
             catch (Exception ex)
             {
                 ToolFormSupport.LogError(ex, "Unable to load modules. Error: " + ex.Message);
-                ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), "Unable to load modules.\n\nError: " + ex.Message);
-                Close();
+                ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to load modules.\n\nError: " + ex.Message);
             }
         }
 

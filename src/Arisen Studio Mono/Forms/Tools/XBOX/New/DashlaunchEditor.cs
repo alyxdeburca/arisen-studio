@@ -230,8 +230,7 @@ namespace ArisenStudio.Forms.Tools.XBOX
             catch (Exception ex)
             {
                 ToolFormSupport.LogError(ex, "Unable to load the launch.ini file. Error: " + ex.Message);
-                ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), "Unable to load the launch.ini file. Edit the file path in Settings to your correct file location.\n\nError Message: " + ex.Message);
-                Close();
+                ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to load the launch.ini file. Edit the file path in Settings to your correct file location.\n\nError Message: " + ex.Message);
             }
         }
 

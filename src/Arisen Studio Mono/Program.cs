@@ -12,6 +12,7 @@ using ArisenStudio.Extensions;
 using ArisenStudio.Forms.Dialogs;
 using ArisenStudio.Models.Database;
 using ArisenStudio.Models.Resources;
+using ArisenStudio.Runtime;
 using ArisenStudio.Shell;
 using Newtonsoft.Json;
 
@@ -67,6 +68,24 @@ namespace ArisenStudio
             { "GameRegions", () => new Forms.Tools.PS3.GameRegions() },
             { "XboxHDKey", () => new Forms.Tools.XBOX.XboxHDKey() },
             { "GameUpdatesFinder", () => new Forms.Tools.PS3.GameUpdatesFinder() },
+            // The new PS3 and Xbox tool forms open with their defaults: every console hook is a stub that says "not available", so no console, file or network access.
+            { "Ps3BackupFilesManager", () => new Forms.Tools.PS3.BackupFilesManager() },
+            { "Ps3BootPluginsEditor", () => new Forms.Tools.PS3.BootPluginsEditor() },
+            { "Ps3ConsoleManager", () => new Forms.Tools.PS3.ConsoleManager() },
+            // Sample address from the documentation range (192.0.2.0/24): the stub browser only shows it as text and never opens it.
+            { "Ps3GameLauncher", () => new Forms.Tools.PS3.GameLauncher { ConsoleAddress = "192.0.2.1" } },
+            { "Ps3PackageFilesManager", () => new Forms.Tools.PS3.PackageFilesManager() },
+            { "Ps3TakeScreenshot", () => new Forms.Tools.PS3.TakeScreenshot() },
+            { "XboxConsoleManager", () => new Forms.Tools.XBOX.ConsoleManager() },
+            { "XboxDashlaunchEditor", () => new Forms.Tools.XBOX.DashlaunchEditor() },
+            { "XboxGameLauncher", () => new Forms.Tools.XBOX.GameLauncher() },
+            { "XboxGameSaveResigner", () => new Forms.Tools.XBOX.GameSaveResigner() },
+            { "XboxModuleLoader", () => new Forms.Tools.XBOX.ModuleLoader() },
+            { "XboxNeighborhoodEditor", () => new Forms.Tools.XBOX.NeighborhoodEditor() },
+            { "XboxTakeScreenshot", () => new Forms.Tools.XBOX.TakeScreenshot() },
+            { "XboxXuidGameSpoofer", () => new Forms.Tools.XBOX.XuidGameSpoofer() },
+            // Sample mod and the default console stub: the dialog shows "not available in this build" and never touches a console or the network.
+            { "TransferDialog", () => new TransferDialog { TransferType = TransferType.InstallMods, ModItem = SampleMod() } },
         };
 
         // Sample models for the --form smoke checks. Plain values only: no network, no file access, and the URLs are never opened.
@@ -185,6 +204,8 @@ namespace ArisenStudio
         private static int Main(string[] args)
         {
             _smoke = args.Contains("--smoke");
+            // Smoke mode must not block on a modal MessageBox from a tool form. Set before any form is created or shown.
+            if (_smoke) { ArisenStudio.Forms.Tools.ToolFormSupport.NonBlockingErrors = true; }
             string capture = null;
             int ci = Array.IndexOf(args, "--capture");
             if (ci >= 0)
@@ -213,10 +234,24 @@ namespace ArisenStudio
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            if (args.Contains("--selfcheck"))
+            {
+#if SELFCHECK
+                // Self-check run: an unhandled exception must exit with code 1 instead of opening a message box, so reuse the smoke behaviour of Fatal.
+                _smoke = true;
+                return ArisenStudio.Tests.SelfCheck.SelfCheckRunner.Run(args);
+#else
+                // The self-check files are compiled only when the SELFCHECK symbol is defined.
+                Console.WriteLine("SELFCHECK-UNAVAILABLE this build does not define SELFCHECK");
+                return 2;
+#endif
+            }
+
             if (formName == null)
             {
                 using (ShellForm shell = new ShellForm())
                 {
+                    FullShellIntegration.Attach(shell, _smoke);
                     if (_smoke) { Arm(shell, capture); }
                     Application.Run(shell);
                 }

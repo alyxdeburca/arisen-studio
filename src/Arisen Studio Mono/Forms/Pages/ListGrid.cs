@@ -28,6 +28,15 @@ namespace ArisenStudio.Forms.Pages
         /// <summary>A row was double-clicked (ledger MW1-133, MW1-161, MW2-010).</summary>
         public event EventHandler RowActivated;
 
+        /// <summary>
+        /// A row was single-clicked (the old GridView RowClick, ledger MW2-130). Raised only when <see cref="RaiseRowClicked"/> is true,
+        /// after the click has selected the row. A click on a column header or on empty space does not raise it. Double-click is unchanged.
+        /// </summary>
+        public event EventHandler RowClicked;
+
+        /// <summary>Whether <see cref="RowClicked"/> is raised. Off by default; only the owner of a grid that needs it turns it on.</summary>
+        public bool RaiseRowClicked { get; set; }
+
         /// <summary>The user pulled a row out of the grid with the left button. The owner starts DoDragDrop.</summary>
         public event EventHandler ItemDragged;
 
@@ -53,6 +62,7 @@ namespace ArisenStudio.Forms.Pages
 
             grid.SelectionChanged += Grid_SelectionChanged;
             grid.CellDoubleClick += Grid_CellDoubleClick;
+            grid.CellClick += Grid_CellClick;
             grid.MouseDown += Grid_MouseDown;
             grid.MouseMove += Grid_MouseMove;
             grid.MouseUp += Grid_MouseUp;
@@ -180,6 +190,19 @@ namespace ArisenStudio.Forms.Pages
                 return;
             }
             EventHandler handler = RowActivated;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        private void Grid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!RaiseRowClicked || e.RowIndex < 0)
+            {
+                return;
+            }
+            EventHandler handler = RowClicked;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);

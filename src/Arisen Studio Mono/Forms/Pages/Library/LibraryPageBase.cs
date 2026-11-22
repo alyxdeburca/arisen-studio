@@ -60,6 +60,11 @@ namespace ArisenStudio.Forms.Pages.Library
         private DateTimePicker pickerDate;
         private Label labelDate;
         private CompareMode dateMode = CompareMode.Equal;
+        private Button buttonSizeMode;
+        private NumericUpDown spinSize;
+        private Label labelSize;
+        private CompareMode sizeMode = CompareMode.Equal;
+        private EventHandler<ItemEventArgs<LibraryRowInfo>> rowClicked;
 
         private List<LibraryRowInfo> allRows = new List<LibraryRowInfo>();
         private readonly List<LibraryRowInfo> shownRows = new List<LibraryRowInfo>();
@@ -77,6 +82,25 @@ namespace ArisenStudio.Forms.Pages.Library
 
         /// <summary>Show the details of the row: its details dialog (double-click or the details button; ledger MW2-083, MW2-088, MW3-009, MW3-098, MW3-112).</summary>
         public event EventHandler<ItemEventArgs<LibraryRowInfo>> DetailsRequested;
+
+        /// <summary>
+        /// The row was single-clicked: the shell shows its details (the old Resources GridView RowClick, ledger MW2-130). The grid raises
+        /// the click only while this event has a subscriber, so a page nobody subscribes on behaves as before. A double-click still
+        /// raises <see cref="DetailsRequested"/>; subscribing here as well makes a double-click ask for details more than once, as the old page did.
+        /// </summary>
+        public event EventHandler<ItemEventArgs<LibraryRowInfo>> RowClicked
+        {
+            add
+            {
+                rowClicked += value;
+                grid.RaiseRowClicked = rowClicked != null;
+            }
+            remove
+            {
+                rowClicked -= value;
+                grid.RaiseRowClicked = rowClicked != null;
+            }
+        }
 
         /// <summary>Download the row's last download file through the transfer dialog (ledger MW2-087, MW3-013, MW3-059, MW3-074). Not raised by the pages that have no Download button.</summary>
         public event EventHandler<ItemEventArgs<LibraryRowInfo>> DownloadRequested;
@@ -160,6 +184,7 @@ namespace ArisenStudio.Forms.Pages.Library
             grid.Dock = DockStyle.Fill;
             grid.SelectionChanged += Grid_SelectionChanged;
             grid.RowActivated += Grid_RowActivated;
+            grid.RowClicked += Grid_RowClicked;
 
             // Fill first, edge-docked controls after it (the last control added is laid out first).
             Controls.Add(grid);
@@ -371,6 +396,9 @@ namespace ArisenStudio.Forms.Pages.Library
                 buttonDateMode = null;
                 pickerDate = null;
                 labelDate = null;
+                buttonSizeMode = null;
+                spinSize = null;
+                labelSize = null;
 
                 // The old filter bar order: the drop-downs first, the name box among them. Here the name box comes after the first drop-down.
                 bool textAdded = layout.TextFilterField == null;
@@ -417,6 +445,36 @@ namespace ArisenStudio.Forms.Pages.Library
                     dateBox.Controls.Add(buttonDateMode);
                     dateBox.Controls.Add(pickerDate);
                     AddFilterCell(labelDate, dateBox, 0);
+                }
+
+                // The old file size filter (ledger MW2-141, MW3-001, MWD-377): an operator picture and a whole-number spin box, "#### B".
+                // Inert, as in the old page: nothing below is read by Matches, and the number box has no change handler
+                // (the old ImagePackagesFilterFileSizeType_Click only cycled the operator and did not search).
+                if (layout.SizeFilter)
+                {
+                    labelSize = new Label();
+                    labelSize.Text = T("FILE_SIZE", "File Size");
+                    buttonSizeMode = new Button();
+                    buttonSizeMode.Width = 36;
+                    buttonSizeMode.Text = PageUi.ModeText(sizeMode);
+                    buttonSizeMode.Click += ButtonSizeMode_Click;
+                    spinSize = new NumericUpDown();
+                    spinSize.Minimum = 0;
+                    spinSize.Maximum = int.MaxValue;
+                    spinSize.DecimalPlaces = 0;
+                    spinSize.Value = 0;
+                    spinSize.Width = 100;
+                    Label labelBytes = new Label();
+                    labelBytes.Text = "B";
+                    labelBytes.AutoSize = true;
+                    labelBytes.Margin = new Padding(0, 6, 0, 0);
+                    FlowLayoutPanel sizeBox = new FlowLayoutPanel();
+                    sizeBox.AutoSize = true;
+                    sizeBox.WrapContents = false;
+                    sizeBox.Controls.Add(buttonSizeMode);
+                    sizeBox.Controls.Add(spinSize);
+                    sizeBox.Controls.Add(labelBytes);
+                    AddFilterCell(labelSize, sizeBox, 0);
                 }
                 filterPanel.ResumeLayout(true);
                 ResumeLayout(true);
@@ -553,6 +611,16 @@ namespace ArisenStudio.Forms.Pages.Library
             if (pickerDate != null && pickerDate.Checked)
             {
                 ApplyFilters();
+            }
+        }
+
+        // Cycles equal, at least, at most and shows it. Does not filter and does not reload, as the old picture click did not search.
+        private void ButtonSizeMode_Click(object sender, EventArgs e)
+        {
+            sizeMode = PageUi.NextMode(sizeMode);
+            if (buttonSizeMode != null)
+            {
+                buttonSizeMode.Text = PageUi.ModeText(sizeMode);
             }
         }
 
@@ -733,6 +801,11 @@ namespace ArisenStudio.Forms.Pages.Library
         private void Grid_RowActivated(object sender, EventArgs e)
         {
             RaiseForSelected(DetailsRequested);
+        }
+
+        private void Grid_RowClicked(object sender, EventArgs e)
+        {
+            RaiseForSelected(rowClicked);
         }
 
         private void ButtonFavorites_Click(object sender, EventArgs e)
