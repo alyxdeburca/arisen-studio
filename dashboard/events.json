@@ -308,5 +308,17 @@
       "Verified now 50,830 / 63,901 lines (79.5%), 155 of 162 files (95.6%); layouts 100%",
       "Not counted as verified: MainWindow.cs logic (10,655 lines; the shell is wired only partly and data, console and many handlers are still stubs) and 3 files with no port. Smoke checks prove rendering, not behaviour"
     ]
+  },
+  {
+    "summary": "Run 98 (ELF -98, 228 Compile items): 43 of 43 smoke checks render; self-check 82 of 82 with a source root (75 plain); --page 15 of 15 incl. settings tabs",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-22 15:32:00 UTC",
+    "changes": [
+      "Release build 0 errors, 43 of 43 smoke checks pass, no regression against run 97 (render checks only)",
+      "Self-check: 82 listed, none timed out, nothing skipped. 82 of 82 pass with a source root; 75 of 82 plain, the 7 other checks read source files and cannot find them from a bare run. The three run-97 failures now pass (missing-file import, game-info timeout, catch-source)",
+      "Console managers: every button now sits inside its group (PS3 806x865, Xbox 846x1065). Left: the Xbox icon-colour list is drawn too short",
+      "--page: 15 of 15 pages and 20 captures. Open: every settings tab shows the same Discord group in the capture, so either the tab content does not switch or the capture misses it; not yet resolved",
+      "The tree built also holds one unreviewed news-feed edit; it is flagged for review"
+    ]
   }
 ]

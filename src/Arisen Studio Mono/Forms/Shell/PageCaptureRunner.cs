@@ -18,6 +18,12 @@ namespace ArisenStudio.Shell
     /// Prints <c>PAGE-CAPTURE-OK &lt;key&gt;</c> (exit 0) or <c>PAGE-CAPTURE-FAIL &lt;key&gt; &lt;reason&gt;</c> (exit 1).
     /// A zero-size control does not fail the capture: it prints <c>PAGE-CAPTURE-WARN</c> first, then OK.
     /// </para>
+    /// <para>
+    /// If the page holds a <c>TabControl</c> (PageTabs wraps one, and the page's first one is used), each tab is selected in
+    /// turn and saved: tab 0 as <c>&lt;key&gt;.png</c>, the others as <c>&lt;key&gt;-&lt;tab&gt;.png</c>. Prints one
+    /// <c>PAGE-CAPTURE-OK &lt;key&gt; &lt;tab&gt;</c> per tab, or <c>PAGE-CAPTURE-FAIL &lt;key&gt; &lt;tab&gt; &lt;reason&gt;</c> for a
+    /// tab that fails; the other tabs still run and the exit code is 1 if any tab failed.
+    /// </para>
     /// UI thread only. Nothing here was compiled or run.
     /// </summary>
     internal static class PageCaptureRunner
@@ -136,22 +142,16 @@ namespace ArisenStudio.Shell
                     Console.WriteLine("PAGE-CAPTURE-WARN " + key + " " + emptyControls.Count + " control(s) with no size: " + string.Join("; ", emptyControls));
                 }
 
-                int width = shell.Width;
-                int height = shell.Height;
-                if (width <= 0 || height <= 0)
+                TabControl tabs = FindTabControl(page);
+                if (tabs != null && tabs.TabPages.Count > 0)
                 {
-                    return Fail(key, "the shell has no size (" + width + "x" + height + ")");
+                    return CaptureTabs(shell, key, target, tabs);
                 }
 
-                string file = Path.Combine(target, key + ".png");
-                using (Bitmap bitmap = new Bitmap(width, height))
+                string problem = SaveShell(shell, Path.Combine(target, key + ".png"));
+                if (problem != null)
                 {
-                    shell.DrawToBitmap(bitmap, new Rectangle(0, 0, width, height));
-                    bitmap.Save(file, ImageFormat.Png);
-                }
-                if (new FileInfo(file).Length <= 0)
-                {
-                    return Fail(key, "the PNG is empty: " + file);
+                    return Fail(key, problem);
                 }
 
                 Console.WriteLine("PAGE-CAPTURE-OK " + key);
@@ -167,6 +167,104 @@ namespace ArisenStudio.Shell
         {
             Console.WriteLine("PAGE-CAPTURE-FAIL " + key + " " + reason);
             return 1;
+        }
+
+        // The first TabControl under the control, depth first. The walk does not enter a TabControl.
+        private static TabControl FindTabControl(Control control)
+        {
+            foreach (Control child in control.Controls)
+            {
+                TabControl tabs = child as TabControl;
+                if (tabs != null)
+                {
+                    return tabs;
+                }
+                TabControl inner = FindTabControl(child);
+                if (inner != null)
+                {
+                    return inner;
+                }
+            }
+            return null;
+        }
+
+        // One image per tab. Tab 0 is <key>.png; the others are <key>-<tab>.png. A failing tab does not stop the rest.
+        private static int CaptureTabs(ShellForm shell, string key, string target, TabControl tabs)
+        {
+            int exitCode = 0;
+            HashSet<string> used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < tabs.TabPages.Count; i++)
+            {
+                string baseName = SafeTabName(tabs.TabPages[i].Text, i);
+                string name = baseName;
+                for (int n = 2; !used.Add(name); n++)
+                {
+                    name = baseName + "-" + n;
+                }
+                string fileName = (i == 0 ? key : key + "-" + name) + ".png";
+
+                string problem;
+                try
+                {
+                    tabs.SelectedIndex = i;
+                    shell.PerformLayout();
+                    Pump(shell);
+                    problem = SaveShell(shell, Path.Combine(target, fileName));
+                }
+                catch (Exception ex)
+                {
+                    problem = ex.GetType().Name + ": " + ex.Message;
+                }
+
+                if (problem == null)
+                {
+                    Console.WriteLine("PAGE-CAPTURE-OK " + key + " " + name);
+                }
+                else
+                {
+                    exitCode = 1;
+                    Console.WriteLine("PAGE-CAPTURE-FAIL " + key + " " + name + " " + problem);
+                }
+            }
+            return exitCode;
+        }
+
+        // ASCII letters, digits and dashes only. Any other character becomes a dash; an empty result falls back to the tab number.
+        private static string SafeTabName(string text, int index)
+        {
+            char[] chars = (text ?? string.Empty).ToCharArray();
+            for (int c = 0; c < chars.Length; c++)
+            {
+                bool keep = (chars[c] >= 'a' && chars[c] <= 'z') || (chars[c] >= 'A' && chars[c] <= 'Z') || (chars[c] >= '0' && chars[c] <= '9');
+                if (!keep)
+                {
+                    chars[c] = '-';
+                }
+            }
+            string result = new string(chars).Trim('-');
+            return result.Length == 0 ? "tab" + (index + 1) : result;
+        }
+
+        // Draws the whole shell into a PNG. Returns null on success, otherwise the reason.
+        private static string SaveShell(ShellForm shell, string file)
+        {
+            int width = shell.Width;
+            int height = shell.Height;
+            if (width <= 0 || height <= 0)
+            {
+                return "the shell has no size (" + width + "x" + height + ")";
+            }
+
+            using (Bitmap bitmap = new Bitmap(width, height))
+            {
+                shell.DrawToBitmap(bitmap, new Rectangle(0, 0, width, height));
+                bitmap.Save(file, ImageFormat.Png);
+            }
+            if (new FileInfo(file).Length <= 0)
+            {
+                return "the PNG is empty: " + file;
+            }
+            return null;
         }
 
         // The only child of the page host is the active page (PageHost keeps the others out of Controls).

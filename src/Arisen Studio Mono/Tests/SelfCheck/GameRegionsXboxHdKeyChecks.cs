@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using ArisenStudio.Models.Database;
 using ArisenStudio.Models.Resources;
@@ -306,9 +307,8 @@ namespace ArisenStudio.Tests.SelfCheck
             }
         }
 
-        // Reading the source of ImportXboxHDKey (FileInfo.Length is outside its try block), a missing file is expected to
-        // throw FileNotFoundException instead of returning ErrorFileAccess. This check asserts the stated intent of the
-        // ImportResult.ErrorFileAccess value; it is expected to FAIL until the call is moved inside the try.
+        // A missing file must give a handled result (ErrorFileAccess), not a FileNotFoundException. The FileInfo and Length
+        // reads in ImportXboxHDKey are inside a try block, so the missing file is reported through the normal error path.
         private static void ImportMissingFile()
         {
             string folder = NewTempFolder();
@@ -355,7 +355,9 @@ namespace ArisenStudio.Tests.SelfCheck
             SelfCheckAssert.True(success > leave, "the success message is not after the catch return");
         }
 
-        private static string FindSource(string relative)
+        // Default (no --source-root): walks up from the --source-root value, the executable folder and the working
+        // directory, then falls back to the Mono folder this file was compiled from (CallerFilePath is Tests/SelfCheck/<file>).
+        private static string FindSource(string relative, [CallerFilePath] string callerFile = null)
         {
             List<string> starts = new List<string>();
             if (SelfCheckRunner.SourceRoot != null)
@@ -381,6 +383,19 @@ namespace ArisenStudio.Tests.SelfCheck
                         return nested;
                     }
                     folder = Path.GetDirectoryName(folder);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(callerFile))
+            {
+                string monoFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(callerFile)));
+                if (!string.IsNullOrEmpty(monoFolder))
+                {
+                    string compiled = Path.Combine(monoFolder, relative.Replace('/', Path.DirectorySeparatorChar));
+                    if (File.Exists(compiled))
+                    {
+                        return compiled;
+                    }
                 }
             }
 

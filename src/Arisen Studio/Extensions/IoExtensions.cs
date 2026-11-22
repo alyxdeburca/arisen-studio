@@ -11,7 +11,8 @@ namespace ArisenStudio.Extensions
             return appData
                 .Replace("%APPDATA%", UserFolders.AppData)
                 .Replace("%PLATFORM%", platform)
-                .Replace("%CATEGORY%", category);
+                .Replace("%CATEGORY%", category)
+                .Replace('\\', Path.DirectorySeparatorChar);
         }
 
         /// <summary>
@@ -55,12 +56,14 @@ namespace ArisenStudio.Extensions
 
         public static string GetNextFileName(string fileName)
         {
+            string directory = Path.GetDirectoryName(fileName) ?? string.Empty;
+            string baseName = Path.GetFileNameWithoutExtension(fileName);
             string extension = Path.GetExtension(fileName);
 
             int i = 0;
             while (File.Exists(fileName))
             {
-                fileName = i == 0 ? fileName.Replace(extension, "-" + ++i + extension) : fileName.Replace("-" + i + extension, "-" + ++i + extension);
+                fileName = Path.Combine(directory, baseName + "-" + ++i + extension);
             }
 
             return fileName;

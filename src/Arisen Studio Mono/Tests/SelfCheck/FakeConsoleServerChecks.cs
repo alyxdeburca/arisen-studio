@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using ArisenStudio.Extensions;
 
 namespace ArisenStudio.Tests.SelfCheck
@@ -265,7 +266,7 @@ namespace ArisenStudio.Tests.SelfCheck
             server.Start();
             try
             {
-                string game = WebManExtensions.GetGameAsync(server.Address).GetAwaiter().GetResult();
+                string game = GetGameOffThread(server.Address);
 
                 SelfCheckAssert.Equal("Fake Game Title", game, "GetGameAsync title from the fake");
                 List<string> targets = server.Targets();
@@ -282,7 +283,7 @@ namespace ArisenStudio.Tests.SelfCheck
         {
             string address = ClosedPortAddress();
 
-            string game = WebManExtensions.GetGameAsync(address).GetAwaiter().GetResult();
+            string game = GetGameOffThread(address);
             SelfCheckAssert.Equal(string.Empty, game, "GetGameAsync result on a closed port");
 
             // A void helper must also return normally on a closed port.
@@ -317,6 +318,20 @@ namespace ArisenStudio.Tests.SelfCheck
 
             SelfCheckAssert.True(failedAsExpected, "the simulated failure did not reach the catch");
             SelfCheckAssert.True(IsPortFree(port), "port " + port + " is still held after Stop");
+        }
+
+        // Calls GetGameAsync on the thread pool and waits at most 4 s. The runner thread is a WinForms STA thread with a
+        // SynchronizationContext, and GetGameAsync's await resumes on that context, so a blocking GetResult() there would
+        // deadlock. Task.Run has no context, so the continuation runs on the pool. Same pattern as WebManPs3ConsoleControl.cs:65.
+        private static string GetGameOffThread(string address)
+        {
+            Task<string> call = Task.Run<string>(() => WebManExtensions.GetGameAsync(address));
+            if (!call.Wait(4000))
+            {
+                throw new SelfCheckFailure("GetGameAsync did not return within 4 s (no reply from the fake or a blocked call)");
+            }
+
+            return call.Result;
         }
 
         // Returns "127.0.0.1:port" for a port that was just released, so nothing is listening there.

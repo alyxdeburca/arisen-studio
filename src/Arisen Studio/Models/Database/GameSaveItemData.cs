@@ -60,7 +60,7 @@ namespace ArisenStudio.Models.Database
         /// <returns> </returns>
         public string DownloadDataDirectory(DownloadFiles downloadFiles, CategoryItem category)
         {
-            return $@"{MainWindow.Settings.PathDownloads.GetFullPath(MainWindow.Settings.PathAppData)}\{Platform.Humanize()}\Game Saves\{category.Title}\{Name.RemoveInvalidChars()}\{CreatedBy.RemoveInvalidChars()}\{downloadFiles.Name.RemoveInvalidChars()}-{Version}-{Id}\";
+            return Path.Combine(MainWindow.Settings.PathDownloads.GetFullPath(MainWindow.Settings.PathAppData), Platform.Humanize(), "Game Saves", category.Title, Name.RemoveInvalidChars(), CreatedBy.RemoveInvalidChars(), $"{downloadFiles.Name.RemoveInvalidChars()}-{Version}-{Id}") + Path.DirectorySeparatorChar;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace ArisenStudio.Models.Database
         /// <returns> Mods Archive File Path </returns>
         public string ArchiveZipFile(DownloadFiles downloadFiles, CategoryItem category)
         {
-            return $@"{MainWindow.Settings.PathDownloads.GetFullPath(MainWindow.Settings.PathAppData)}\{Platform.Humanize()}\Game Saves\{category.Title}\{Name.RemoveInvalidChars()}\{CreatedBy.RemoveInvalidChars()}\{downloadFiles.Name.RemoveInvalidChars()}-{Version}-{Id}.zip";
+            return Path.Combine(MainWindow.Settings.PathDownloads.GetFullPath(MainWindow.Settings.PathAppData), Platform.Humanize(), "Game Saves", category.Title, Name.RemoveInvalidChars(), CreatedBy.RemoveInvalidChars(), $"{downloadFiles.Name.RemoveInvalidChars()}-{Version}-{Id}.zip");
         }
 
         /// <summary>

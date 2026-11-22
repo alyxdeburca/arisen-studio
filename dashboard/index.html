@@ -470,20 +470,20 @@
 
   <script id="dashboard-data" type="application/json">{
   "active_threads": {
-    "count": null,
-    "as_of": null,
+    "count": 0,
+    "as_of": "15:30:11 UTC",
     "stale": false
   },
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here. Note (run 92): the MainWindow layout counts as verified on a single shell capture showing the Dashboard page; the other navigation pages were not measured.",
-  "generated_at_utc": "2026-11-22 15:11:30 UTC",
+  "generated_at_utc": "2026-11-22 15:30:14 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
       "label": "Overall Codebase (A + B + C)",
-      "numerator": 50830,
-      "denominator": 63901,
+      "numerator": 50833,
+      "denominator": 63904,
       "percent": 79.5,
       "percent_str": "79.5%",
       "files_ported": 155,
@@ -495,8 +495,8 @@
     "written_overall": {
       "id": "written_overall",
       "label": "Written / In-Progress (incl. pending verification)",
-      "numerator": 63317,
-      "denominator": 63901,
+      "numerator": 63320,
+      "denominator": 63904,
       "percent": 99.0,
       "percent_str": "99.0%",
       "files_ported": 159,
@@ -512,10 +512,10 @@
       {
         "id": "A",
         "label": "Dimension A — UI-free code",
-        "numerator": 3739,
-        "denominator": 4323,
-        "percent": 86.4,
-        "percent_str": "86.4%",
+        "numerator": 3742,
+        "denominator": 4326,
+        "percent": 86.5,
+        "percent_str": "86.5%",
         "files_ported": 39,
         "files_total": 42,
         "formula": "(linked + locally copied and compiled) UI-free lines / all 42 UI-free lines"
@@ -628,7 +628,7 @@
       },
       {
         "path": "Extensions/IoExtensions.cs",
-        "lines": 68
+        "lines": 71
       },
       {
         "path": "Extensions/PS4/PS4Extensions.cs",
@@ -1796,6 +1796,18 @@
   ],
   "recent_events": [
     {
+      "summary": "Run 98 (ELF -98, 228 Compile items): 43 of 43 smoke checks render; self-check 82 of 82 with a source root (75 plain); --page 15 of 15 incl. settings tabs",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-22 15:32:00 UTC",
+      "changes": [
+        "Release build 0 errors, 43 of 43 smoke checks pass, no regression against run 97 (render checks only)",
+        "Self-check: 82 listed, none timed out, nothing skipped. 82 of 82 pass with a source root; 75 of 82 plain, the 7 other checks read source files and cannot find them from a bare run. The three run-97 failures now pass (missing-file import, game-info timeout, catch-source)",
+        "Console managers: every button now sits inside its group (PS3 806x865, Xbox 846x1065). Left: the Xbox icon-colour list is drawn too short",
+        "--page: 15 of 15 pages and 20 captures. Open: every settings tab shows the same Discord group in the capture, so either the tab content does not switch or the capture misses it; not yet resolved",
+        "The tree built also holds one unreviewed news-feed edit; it is flagged for review"
+      ]
+    },
+    {
       "summary": "Verified total corrected: 39 files already compiled and passing smoke were still counted as unwired (62.3% to 79.5% of lines)",
       "source": "build-runner",
       "timestamp_utc": "2026-11-22 15:12:00 UTC",
@@ -1976,15 +1988,6 @@
       "changes": [
         "Removed PageHost/ShellForm zero-size guard (BUILD-REQUEST-28) and combined with GameRegions/XboxHDKey behaviour port (BUILD-REQUEST-25)",
         "Container build OK (0 errors) and 28 of 28 Xvfb ELF checks pass including 1288x827 shell capture (0 regressions; behaviour paths untested)"
-      ]
-    },
-    {
-      "summary": "Rounds 19-27 wired ribbon, AboutPage, and 3 tool dialogs; fixed root empty-panel heights (28/28)",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 23:04:00 UTC",
-      "changes": [
-        "Added RibbonBar, AboutPage, GameRegions, XboxHDKey, and GameUpdatesFinder to csproj and FormFactories (108 Compile items)",
-        "Fixed empty-group/panel 1 px minimums in TilePanel and DashboardPage; 28 of 28 ELF checks pass and no-guard overlay confirmed 28/28"
       ]
     }
   ]

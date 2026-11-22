@@ -303,10 +303,20 @@ namespace ArisenStudio.Forms.Dashboard
         public async Task LoadNewsAsync()
         {
             int ticket = ++newsTicket;
+
+            // The old app cleared the news list before it downloaded (MainWindow.cs:1850). It has no empty-state item
+            // for news, so an empty or failed feed leaves the list empty with no status text.
+            ClearHost(newsHost);
+
             IList<NewsEntry> entries;
             try
             {
                 entries = await dataSource.GetNewsAsync();
+            }
+            catch (InvalidOperationException)
+            {
+                // The feed loader throws for an empty or failed feed. Treat that as an empty list and report nothing.
+                entries = null;
             }
             catch (Exception ex)
             {
@@ -320,7 +330,6 @@ namespace ArisenStudio.Forms.Dashboard
                 return;
             }
 
-            ClearHost(newsHost);
             if (entries == null)
             {
                 return;

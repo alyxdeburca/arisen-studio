@@ -103,7 +103,7 @@ namespace ArisenStudio.Models.Resources
 
         public string PathDownloads { get; set; } = @"%APPDATA%\Downloads\";
 
-        public string PathTemp { get; set; } = @"%APPDATA%\Temp\";
+        public string PathTemp { get; set; } = System.IO.Path.Combine("%APPDATA%", "Temp") + System.IO.Path.DirectorySeparatorChar;
 
         // Cache
 

@@ -176,10 +176,11 @@ namespace ArisenStudio.Forms.Tools.XBOX
             TableLayoutPanel root = ToolFormSupport.NewTable(new ColumnStyle(SizeType.Percent, 100F));
             root.Padding = new Padding(pad);
             root.AutoSize = false;
-            ToolFormSupport.AddFullRow(root, _groupDetails, false);
-            ToolFormSupport.AddFullRow(root, _groupNeighborhood, false);
-            ToolFormSupport.AddFullRow(root, _groupDiscFan, false);
-            ToolFormSupport.AddFullRow(root, _groupLeds, false);
+            // Fixed row heights: group height + bottom margin (pad 10 at the 20 px font). Details 324, Neighborhood 152, Disc and fan 208, LEDs 246.
+            FixRowHeight(root, ToolFormSupport.AddFullRow(root, _groupDetails, false), 334);
+            FixRowHeight(root, ToolFormSupport.AddFullRow(root, _groupNeighborhood, false), 162);
+            FixRowHeight(root, ToolFormSupport.AddFullRow(root, _groupDiscFan, false), 218);
+            FixRowHeight(root, ToolFormSupport.AddFullRow(root, _groupLeds, false), 256);
             // Spare height goes to this filler row, not into a group row (as BackupFilesManager does).
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             root.RowCount = root.RowStyles.Count;
@@ -199,11 +200,8 @@ namespace ArisenStudio.Forms.Tools.XBOX
             ApplyLanguage();
 
             AutoScroll = true;
-            // The root table does not grow with its content (AutoSize is off), so a client area smaller than the content clips the bottom rows.
-            // The nominal size is the floor; the content's preferred size (plus the status bar) is the minimum that shows every button.
-            Size fitRoot = root.PreferredSize;
-            Size fitStatus = _status.Owner.PreferredSize;
-            ClientSize = new Size(Math.Max(h * 42, fitRoot.Width), Math.Max(h * 58, fitRoot.Height + fitStatus.Height));
+            // Fixed client size (no run-time measuring). Height 1040 = root rows 970 + root padding 20 + status bar about 30 (1020) + slack; width 840.
+            ClientSize = new Size(840, 1040);
         }
 
         /// <summary>
@@ -230,18 +228,36 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
         private static GroupBox NewGroup(int pad, Control content)
         {
+            // Fixed height: the group is sized by its root row (Absolute), so it does not measure its content.
             GroupBox group = new GroupBox
             {
                 Dock = DockStyle.Fill,
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                AutoSize = false,
                 Padding = new Padding(pad),
                 Margin = new Padding(0, 0, 0, pad)
             };
-            // Dock Top, not Fill, so the group takes the height of its content (cause inferred from the symptoms; not verified by a build or capture).
-            content.Dock = DockStyle.Top;
+            // The content fills the group. Its rows keep their own heights; a trailing Percent row takes the spare height.
+            content.Dock = DockStyle.Fill;
+            TableLayoutPanel table = content as TableLayoutPanel;
+            if (table != null)
+            {
+                table.AutoSize = false;
+                table.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+                table.RowCount = table.RowStyles.Count;
+            }
             group.Controls.Add(content);
             return group;
+        }
+
+        /// <summary>
+        /// Fix a row to an exact height in pixels.
+        /// </summary>
+        private static int FixRowHeight(TableLayoutPanel table, int row, int height)
+        {
+            RowStyle style = table.RowStyles[row];
+            style.SizeType = SizeType.Absolute;
+            style.Height = height;
+            return row;
         }
 
         private string Text_(string key, string fallback)

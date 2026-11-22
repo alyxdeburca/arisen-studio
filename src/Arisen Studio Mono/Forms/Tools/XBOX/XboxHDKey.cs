@@ -196,7 +196,7 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
                 if (result == ImportResult.ErrorFileAccess)
                 {
-                    _ = MessageBox.Show(this, "Failed to access or read keyvault file.", Lookup("ERROR", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ToolFormSupport.ShowError(this, Lookup("ERROR", "Error"), "Failed to access or read keyvault file.");
                 }
                 else if (result == ImportResult.ErrorFileSize)
                 {
@@ -346,8 +346,18 @@ namespace ArisenStudio.Forms.Tools.XBOX
                 return ImportResult.ErrorFileAccess;
             }
 
-            FileInfo file = new FileInfo(keyvaultFile);
-            int fileSize = (int)file.Length;
+            // A missing or unreadable file throws here (FileNotFoundException); report it as ErrorFileAccess like the old app's read failures.
+            FileInfo file;
+            int fileSize;
+            try
+            {
+                file = new FileInfo(keyvaultFile);
+                fileSize = (int)file.Length;
+            }
+            catch (Exception)
+            {
+                return ImportResult.ErrorFileAccess;
+            }
 
             if (fileSize != KeyvaultSizeA && fileSize != KeyvaultSizeB)
             {
