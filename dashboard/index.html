@@ -470,20 +470,20 @@
 
   <script id="dashboard-data" type="application/json">{
   "active_threads": {
-    "count": null,
-    "as_of": null,
+    "count": 4,
+    "as_of": "13:46:44 UTC",
     "stale": false
   },
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
-  "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-22 00:17:44 UTC",
+  "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here. Note (run 92): the MainWindow layout counts as verified on a single shell capture showing the Dashboard page; the other navigation pages were not measured.",
+  "generated_at_utc": "2026-11-22 13:46:46 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
       "label": "Overall Codebase (A + B + C)",
-      "numerator": 39834,
-      "denominator": 63901,
+      "numerator": 39837,
+      "denominator": 63904,
       "percent": 62.3,
       "percent_str": "62.3%",
       "files_ported": 125,
@@ -495,8 +495,8 @@
     "written_overall": {
       "id": "written_overall",
       "label": "Written / In-Progress (incl. pending verification)",
-      "numerator": 63317,
-      "denominator": 63901,
+      "numerator": 63320,
+      "denominator": 63904,
       "percent": 99.0,
       "percent_str": "99.0%",
       "files_ported": 159,
@@ -512,10 +512,10 @@
       {
         "id": "A",
         "label": "Dimension A — UI-free code",
-        "numerator": 3739,
-        "denominator": 4323,
-        "percent": 86.4,
-        "percent_str": "86.4%",
+        "numerator": 3742,
+        "denominator": 4326,
+        "percent": 86.5,
+        "percent_str": "86.5%",
         "files_ported": 39,
         "files_total": 42,
         "formula": "(linked + locally copied and compiled) UI-free lines / all 42 UI-free lines"
@@ -628,7 +628,7 @@
       },
       {
         "path": "Extensions/IoExtensions.cs",
-        "lines": 68
+        "lines": 71
       },
       {
         "path": "Extensions/PS4/PS4Extensions.cs",
@@ -1539,7 +1539,7 @@
       "status": "fail",
       "value": "NO",
       "source": "computed",
-      "detail": "Found 39 issue(s): Controls/ChangeLogItem.cs:18 string literal backslash path; Controls/Extra/ExtraItemText.cs:15 string literal backslash path; Controls/Extra/ExtraItemText.cs:16 string literal backslash path; Controls/Extra/ExtraItemText.cs:19 string literal backslash path; Controls/NewsItem.cs:16 string literal backslash path; Controls/NewsItem.cs:17 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:18 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:19 string literal backslash path; Forms/Dialogs/Details/GameModDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewXboxDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/ResourceDialog.cs:30 verbatim string backslash path; Forms/Dialogs/GameUpdatesFinder.cs:297 verbatim string backslash path; Forms/Tools/XBOX/New/ModuleLoader.cs:39 string literal backslash path; Models/Configuration/SettingsData.cs:56 verbatim string backslash path; Models/Configuration/SettingsData.cs:82 verbatim string backslash path; Models/Configuration/SettingsData.cs:84 verbatim string backslash path; Models/Configuration/SettingsData.cs:104 verbatim string backslash path; Models/Database/GameSaveItemData.cs:66 verbatim string backslash path; Models/Database/GameSaveItemData.cs:75 verbatim string backslash path; Models/Database/ModItemData.cs:149 verbatim string backslash path; Models/Database/ModItemData.cs:158 verbatim string backslash path; Models/Database/TrainerGameItem.cs:36 verbatim string backslash path; Models/Database/TrainerGameItem.cs:45 verbatim string backslash path; Program.cs:45 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:35 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:44 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:57 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:58 string literal backslash path; Services/GameUpdateParser.cs:119 verbatim string backslash path; Services/ServicesSelfCheck.cs:61 string literal backslash path; Services/ServicesSelfCheckBatch2.cs:134 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:18 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:27 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:37 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:47 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:66 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path"
+      "detail": "Found 45 issue(s): Controls/ChangeLogItem.cs:18 string literal backslash path; Controls/Extra/ExtraItemText.cs:15 string literal backslash path; Controls/Extra/ExtraItemText.cs:16 string literal backslash path; Controls/Extra/ExtraItemText.cs:19 string literal backslash path; Controls/NewsItem.cs:16 string literal backslash path; Controls/NewsItem.cs:17 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:18 string literal backslash path; Forms/Dashboard/AnnouncementItem.cs:19 string literal backslash path; Forms/Dialogs/Details/GameModDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/HomebrewXboxDialog.cs:30 verbatim string backslash path; Forms/Dialogs/Details/ResourceDialog.cs:30 verbatim string backslash path; Forms/Dialogs/GameUpdatesFinder.cs:297 verbatim string backslash path; Forms/Tools/XBOX/New/ModuleLoader.cs:39 string literal backslash path; Localization/MessageTextSanitizer.cs:35 string literal backslash path; Localization/MessageTextSanitizer.cs:38 string literal backslash path; Localization/MessageTextSanitizer.cs:39 string literal backslash path; Localization/MessageTextSanitizer.cs:43 string literal backslash path; Localization/ResourceText.cs:204 string literal backslash path; Localization/ResourceText.cs:207 string literal backslash path; Localization/ResourceText.cs:208 string literal backslash path; Models/Configuration/SettingsData.cs:56 verbatim string backslash path; Models/Configuration/SettingsData.cs:82 verbatim string backslash path; Models/Configuration/SettingsData.cs:84 verbatim string backslash path; Models/Database/ModItemData.cs:149 verbatim string backslash path; Models/Database/ModItemData.cs:158 verbatim string backslash path; Program.cs:46 string literal backslash path; Services/Adapters/ConsoleFileServices.cs:282 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:35 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:44 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:57 string literal backslash path; Services/Extra/ServicesExtraSelfCheck.cs:58 string literal backslash path; Services/GameUpdateParser.cs:119 verbatim string backslash path; Services/ServicesSelfCheck.cs:61 string literal backslash path; Services/ServicesSelfCheckBatch2.cs:134 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:18 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:27 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:37 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:47 verbatim string backslash path; Services/Transfers/TransferXboxPaths.cs:66 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path; Services/Transfers/TransferXboxPaths.cs:75 string literal backslash path; Tests/SelfCheck/IntegrationChecks.cs:133 string literal backslash path; Tests/SelfCheck/IntegrationChecks.cs:526 string literal backslash path; Tests/SelfCheck/IntegrationChecks.cs:530 string literal backslash path"
     },
     {
       "id": "layout_uses_containers",
@@ -1567,6 +1567,16 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "Run 92 (ELF -92, compiled tree at commit d5871d6, pulled 13:13 UTC): 43 of 43 smoke checks render (shell plus 42 forms), every capture at least 80 px. Six forms that timed out in run 34 now pass under a changed check (smoke mode non-blocking).",
+      "source": "launching session",
+      "timestamp_utc": "2026-11-22T13:44:11Z",
+      "changes": [
+        "Removed 14 stale compiled_failing entries from wip_map. Those forms were already in port_map, so the figures are unchanged: 62.3% overall, 77.1% of files.",
+        "Console tools (14) and TransferDialog stay in wip_map as written_unwired: they render but open on not-available stubs (not verified).",
+        "Run 92 looked at the Dashboard page only; the other nav pages still show placeholders, which run 92 did not measure."
+      ]
+    },
     {
       "summary": "Launched Workers M, N, O, P, Q, R on design host (7/7 parallel slots active alongside G)",
       "source": "coordinator",
@@ -1743,15 +1753,6 @@
       "changes": [
         "Wrote Forms/Dashboard/{DashboardModels,IDashboardDataSource,StubDashboardDataSource,AnnouncementItem,DashboardPage}.cs (code-only, not yet wired/compiled)",
         "MainWindow Shell+Nav (S0+S1) and Parallel A+B2 csproj wiring workers still running"
-      ]
-    },
-    {
-      "summary": "Round 8 ListBox height perturbation run (inconclusive: height snapped back)",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 20:01:00 UTC",
-      "changes": [
-        "Tested diag-listbox across 7 failing dialogs + 2 controls (2 PASS, 7 FAIL)",
-        "Dock=Fill ListBox under Absolute:0 RowStyle snapped back to 935x1 (ClientSize 931x-3)"
       ]
     }
   ]

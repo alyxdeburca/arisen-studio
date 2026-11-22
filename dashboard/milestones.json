@@ -1,7 +1,7 @@
 {
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
-  "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
+  "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here. Note (run 92): the MainWindow layout counts as verified on a single shell capture showing the Dashboard page; the other navigation pages were not measured.",
   "port_map": [
     {
       "old": "Forms/Dialogs/ReportIssueDialog.Designer.cs",
@@ -389,76 +389,6 @@
     }
   ],
   "wip_map": [
-    {
-      "old": "Forms/Dialogs/Details/ApplicationDialog.Designer.cs",
-      "new": "Forms/Dialogs/Details/ApplicationDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/ApplicationDialog.cs",
-      "new": "Forms/Dialogs/Details/ApplicationDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/CustomModDialog.Designer.cs",
-      "new": "Forms/Dialogs/Details/CustomModDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/CustomModDialog.cs",
-      "new": "Forms/Dialogs/Details/CustomModDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/GameModDialog.Designer.cs",
-      "new": "Forms/Dialogs/Details/GameModDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/GameModDialog.cs",
-      "new": "Forms/Dialogs/Details/GameModDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/GameSaveDialog.Designer.cs",
-      "new": "Forms/Dialogs/Details/GameSaveDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/GameSaveDialog.cs",
-      "new": "Forms/Dialogs/Details/GameSaveDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/HomebrewDialog.Designer.cs",
-      "new": "Forms/Dialogs/Details/HomebrewDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/HomebrewDialog.cs",
-      "new": "Forms/Dialogs/Details/HomebrewDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/HomebrewXboxDialog.Designer.cs",
-      "new": "Forms/Dialogs/Details/HomebrewXboxDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/HomebrewXboxDialog.cs",
-      "new": "Forms/Dialogs/Details/HomebrewXboxDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/ResourceDialog.Designer.cs",
-      "new": "Forms/Dialogs/Details/ResourceDialog.cs",
-      "stage": "compiled_failing"
-    },
-    {
-      "old": "Forms/Dialogs/Details/ResourceDialog.cs",
-      "new": "Forms/Dialogs/Details/ResourceDialog.cs",
-      "stage": "compiled_failing"
-    },
     {
       "old": "Forms/Dialogs/ConnectionsDialog.Designer.cs",
       "new": "Forms/Dialogs/ConnectionsDialog.cs",
