@@ -257,5 +257,15 @@
       "BUILD-REQUEST-36 wired ToolFormSupport.NonBlockingErrors in --smoke, --selfcheck entrypoint, ControlExtensions, 5 Services/M7 files, and 8 Tests/SelfCheck files (186 Compile items)",
       "Confirmed owner approval for claude-sonnet-5-5 without advisor across all 6 disjoint workers M-R (BUILD-REQUEST-37 path fixes, BUILD-REQUEST-38 208-item csproj, FullShellIntegration, PageCaptureHarness, IntegrationChecks, ResxLanguageLoader) while ELF -91 runs 43-target Xvfb verification"
     ]
+  },
+  {
+    "summary": "Launched Workers M, N, O, P, Q, R on design host (7/7 parallel slots active alongside G)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-22 00:17:00 UTC",
+    "changes": [
+      "Worker Q (BUILD-REQUEST-38): registering 22 files (Adapters, Shell Wiring, Bootstrapper, ImgurUploader, Localization) into csproj (208 Compile items) with DefineConstants DEBUG;TRACE;SELFCHECK",
+      "Worker M (BUILD-REQUEST-37): replacing remaining Windows backslash paths with Path.Combine in IoExtensions, SettingsData, TrainerGameItem, and GameSaveItemData",
+      "Workers N/O/P/R: writing Runtime/FullShellIntegration.cs, Forms/Shell/PageCaptureHarness.cs, Tests/SelfCheck/IntegrationChecks.cs, and Localization/ResxLanguageLoader.cs"
+    ]
   }
 ]

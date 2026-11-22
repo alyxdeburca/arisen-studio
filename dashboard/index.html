@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-22 00:16:17 UTC",
+  "generated_at_utc": "2026-11-22 00:17:44 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1568,6 +1568,16 @@
   ],
   "recent_events": [
     {
+      "summary": "Launched Workers M, N, O, P, Q, R on design host (7/7 parallel slots active alongside G)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-22 00:17:00 UTC",
+      "changes": [
+        "Worker Q (BUILD-REQUEST-38): registering 22 files (Adapters, Shell Wiring, Bootstrapper, ImgurUploader, Localization) into csproj (208 Compile items) with DefineConstants DEBUG;TRACE;SELFCHECK",
+        "Worker M (BUILD-REQUEST-37): replacing remaining Windows backslash paths with Path.Combine in IoExtensions, SettingsData, TrainerGameItem, and GameSaveItemData",
+        "Workers N/O/P/R: writing Runtime/FullShellIntegration.cs, Forms/Shell/PageCaptureHarness.cs, Tests/SelfCheck/IntegrationChecks.cs, and Localization/ResxLanguageLoader.cs"
+      ]
+    },
+    {
       "summary": "Completed Localization Aliases (Worker K) and BUILD-REQUEST-36 (Worker L, 186 Compile items); queued Workers M-R (7/7 slots)",
       "source": "coordinator",
       "timestamp_utc": "2026-11-22 00:15:00 UTC",
@@ -1742,16 +1752,6 @@
       "changes": [
         "Tested diag-listbox across 7 failing dialogs + 2 controls (2 PASS, 7 FAIL)",
         "Dock=Fill ListBox under Absolute:0 RowStyle snapped back to 935x1 (ClientSize 931x-3)"
-      ]
-    },
-    {
-      "summary": "Parallel A finished writing 3 dialogs; BUILD-REQUEST-8 started",
-      "source": "coordinator",
-      "timestamp_utc": "2026-11-21 19:55:00 UTC",
-      "changes": [
-        "Wrote ConnectionsDialog.cs, NewProfileDialog.cs, and NewCustomDialog.cs (code-only, not yet wired/compiled)",
-        "All 6 parallel dialogs (A + B2) now written; awaiting combined csproj wiring + 8 console artwork EmbeddedResources",
-        "BUILD-REQUEST-8 (ListBox ClientSize perturbation) launched"
       ]
     }
   ]
