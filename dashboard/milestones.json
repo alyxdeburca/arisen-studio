@@ -386,49 +386,161 @@
     {
       "old": "Forms/Windows/MainWindow.Designer.cs",
       "new": "Forms/ShellForm.cs"
-    }
-  ],
-  "wip_map": [
+    },
     {
       "old": "Forms/Dialogs/ConnectionsDialog.Designer.cs",
-      "new": "Forms/Dialogs/ConnectionsDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/ConnectionsDialog.cs"
     },
     {
       "old": "Forms/Dialogs/ConnectionsDialog.cs",
-      "new": "Forms/Dialogs/ConnectionsDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/ConnectionsDialog.cs"
     },
     {
       "old": "Forms/Dialogs/NewProfileDialog.Designer.cs",
-      "new": "Forms/Dialogs/NewProfileDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/NewProfileDialog.cs"
     },
     {
       "old": "Forms/Dialogs/NewProfileDialog.cs",
-      "new": "Forms/Dialogs/NewProfileDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/NewProfileDialog.cs"
     },
     {
       "old": "Forms/Dialogs/NewCustomDialog.Designer.cs",
-      "new": "Forms/Dialogs/NewCustomDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/NewCustomDialog.cs"
     },
     {
       "old": "Forms/Dialogs/NewCustomDialog.cs",
-      "new": "Forms/Dialogs/NewCustomDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/NewCustomDialog.cs"
     },
     {
       "old": "Forms/Dialogs/SetupWizardDialog.Designer.cs",
-      "new": "Forms/Dialogs/SetupWizardDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/SetupWizardDialog.cs"
     },
     {
       "old": "Forms/Dialogs/SetupWizardDialog.cs",
-      "new": "Forms/Dialogs/SetupWizardDialog.cs",
-      "stage": "written_unwired"
+      "new": "Forms/Dialogs/SetupWizardDialog.cs"
     },
+    {
+      "old": "Forms/Tools/PS3/BackupFilesManager.Designer.cs",
+      "new": "Forms/Tools/PS3/New/BackupFilesManager.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/BackupFilesManager.cs",
+      "new": "Forms/Tools/PS3/New/BackupFilesManager.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/BootPluginsEditor.Designer.cs",
+      "new": "Forms/Tools/PS3/New/BootPluginsEditor.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/BootPluginsEditor.cs",
+      "new": "Forms/Tools/PS3/New/BootPluginsEditor.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/ConsoleManager.Designer.cs",
+      "new": "Forms/Tools/PS3/New/ConsoleManager.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/ConsoleManager.cs",
+      "new": "Forms/Tools/PS3/New/ConsoleManager.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/GameLauncher.Designer.cs",
+      "new": "Forms/Tools/PS3/New/GameLauncher.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/GameLauncher.cs",
+      "new": "Forms/Tools/PS3/New/GameLauncher.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/PackageFilesManager.Designer.cs",
+      "new": "Forms/Tools/PS3/New/PackageFilesManager.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/PackageFilesManager.cs",
+      "new": "Forms/Tools/PS3/New/PackageFilesManager.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/TakeScreenshot.Designer.cs",
+      "new": "Forms/Tools/PS3/New/TakeScreenshot.cs"
+    },
+    {
+      "old": "Forms/Tools/PS3/TakeScreenshot.cs",
+      "new": "Forms/Tools/PS3/New/TakeScreenshot.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/ConsoleManager.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/ConsoleManager.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/ConsoleManager.cs",
+      "new": "Forms/Tools/XBOX/New/ConsoleManager.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/DashlaunchEditor.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/DashlaunchEditor.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/DashlaunchEditor.cs",
+      "new": "Forms/Tools/XBOX/New/DashlaunchEditor.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/GameLauncher.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/GameLauncher.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/GameLauncher.cs",
+      "new": "Forms/Tools/XBOX/New/GameLauncher.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/GameSaveResigner.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/GameSaveResigner.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/GameSaveResigner.cs",
+      "new": "Forms/Tools/XBOX/New/GameSaveResigner.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/ModuleLoader.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/ModuleLoader.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/ModuleLoader.cs",
+      "new": "Forms/Tools/XBOX/New/ModuleLoader.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/NeighborhoodEditor.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/NeighborhoodEditor.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/NeighborhoodEditor.cs",
+      "new": "Forms/Tools/XBOX/New/NeighborhoodEditor.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/TakeScreenshot.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/TakeScreenshot.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/TakeScreenshot.cs",
+      "new": "Forms/Tools/XBOX/New/TakeScreenshot.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/XuidGameSpoofer.Designer.cs",
+      "new": "Forms/Tools/XBOX/New/XuidGameSpoofer.cs"
+    },
+    {
+      "old": "Forms/Tools/XBOX/XuidGameSpoofer.cs",
+      "new": "Forms/Tools/XBOX/New/XuidGameSpoofer.cs"
+    },
+    {
+      "old": "Forms/Dialogs/TransferDialog.Designer.cs",
+      "new": "Forms/Dialogs/Transfer/TransferDialog.cs"
+    },
+    {
+      "old": "Forms/Dialogs/TransferDialog.cs",
+      "new": "Forms/Dialogs/Transfer/TransferDialog.cs"
+    }
+  ],
+  "wip_map": [
     {
       "old": "Forms/Dialogs/Details/GameCheatsDialog.Designer.cs",
       "new": "Forms/Dialogs/Details/GameCheatsDialog.cs",
@@ -450,156 +562,6 @@
       "stage": "written_unwired"
     },
     {
-      "old": "Forms/Tools/PS3/BackupFilesManager.Designer.cs",
-      "new": "Forms/Tools/PS3/New/BackupFilesManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/BackupFilesManager.cs",
-      "new": "Forms/Tools/PS3/New/BackupFilesManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/BootPluginsEditor.Designer.cs",
-      "new": "Forms/Tools/PS3/New/BootPluginsEditor.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/BootPluginsEditor.cs",
-      "new": "Forms/Tools/PS3/New/BootPluginsEditor.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/ConsoleManager.Designer.cs",
-      "new": "Forms/Tools/PS3/New/ConsoleManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/ConsoleManager.cs",
-      "new": "Forms/Tools/PS3/New/ConsoleManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/GameLauncher.Designer.cs",
-      "new": "Forms/Tools/PS3/New/GameLauncher.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/GameLauncher.cs",
-      "new": "Forms/Tools/PS3/New/GameLauncher.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/PackageFilesManager.Designer.cs",
-      "new": "Forms/Tools/PS3/New/PackageFilesManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/PackageFilesManager.cs",
-      "new": "Forms/Tools/PS3/New/PackageFilesManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/TakeScreenshot.Designer.cs",
-      "new": "Forms/Tools/PS3/New/TakeScreenshot.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/PS3/TakeScreenshot.cs",
-      "new": "Forms/Tools/PS3/New/TakeScreenshot.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/ConsoleManager.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/ConsoleManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/ConsoleManager.cs",
-      "new": "Forms/Tools/XBOX/New/ConsoleManager.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/DashlaunchEditor.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/DashlaunchEditor.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/DashlaunchEditor.cs",
-      "new": "Forms/Tools/XBOX/New/DashlaunchEditor.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/GameLauncher.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/GameLauncher.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/GameLauncher.cs",
-      "new": "Forms/Tools/XBOX/New/GameLauncher.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/GameSaveResigner.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/GameSaveResigner.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/GameSaveResigner.cs",
-      "new": "Forms/Tools/XBOX/New/GameSaveResigner.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/ModuleLoader.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/ModuleLoader.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/ModuleLoader.cs",
-      "new": "Forms/Tools/XBOX/New/ModuleLoader.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/NeighborhoodEditor.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/NeighborhoodEditor.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/NeighborhoodEditor.cs",
-      "new": "Forms/Tools/XBOX/New/NeighborhoodEditor.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/TakeScreenshot.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/TakeScreenshot.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/TakeScreenshot.cs",
-      "new": "Forms/Tools/XBOX/New/TakeScreenshot.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/XuidGameSpoofer.Designer.cs",
-      "new": "Forms/Tools/XBOX/New/XuidGameSpoofer.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Tools/XBOX/XuidGameSpoofer.cs",
-      "new": "Forms/Tools/XBOX/New/XuidGameSpoofer.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Dialogs/TransferDialog.Designer.cs",
-      "new": "Forms/Dialogs/Transfer/TransferDialog.cs",
-      "stage": "written_unwired"
-    },
-    {
-      "old": "Forms/Dialogs/TransferDialog.cs",
-      "new": "Forms/Dialogs/Transfer/TransferDialog.cs",
-      "stage": "written_unwired"
-    },
-    {
       "old": "Extensions/ControlExtensions.cs",
       "new": "Extensions/New/ControlExtensions.cs",
       "stage": "written_unwired"
@@ -610,11 +572,6 @@
       "stage": "written_unwired"
     },
     {
-      "old": "Forms/Windows/MainWindow.cs",
-      "new": "Forms/ShellForm.cs",
-      "stage": "written_unwired"
-    },
-    {
       "old": "Extensions/DialogExtensions.cs",
       "new": "Forms/Shell/Wiring/DialogLauncher.cs",
       "stage": "written_unwired"
@@ -622,6 +579,11 @@
     {
       "old": "Extensions/ImgurUploader.cs",
       "new": "Extensions/New/ImgurUploader.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Forms/Windows/MainWindow.cs",
+      "new": "Forms/ShellForm.cs",
       "stage": "written_unwired"
     }
   ],
@@ -763,7 +725,7 @@
         {
           "label": "Runs on a machine without Mono",
           "state": "partial",
-          "detail": "PARTIAL \u2014 with libMonoPosixHelper and libmono-native embedded in the ELF, all 28 of 28 currently registered forms/shell (arisen-studio-mono-90, 150 Compile items) run and capture cleanly in a Mono-free debian:bookworm-slim container (mono_present=no, ldd missing=0); still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
+          "detail": "PARTIAL — with libMonoPosixHelper and libmono-native embedded in the ELF, all 28 of 28 currently registered forms/shell (arisen-studio-mono-90, 150 Compile items) run and capture cleanly in a Mono-free debian:bookworm-slim container (mono_present=no, ldd missing=0); still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
         },
         {
           "label": "Installer or AppImage",

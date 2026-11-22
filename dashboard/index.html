@@ -470,52 +470,52 @@
 
   <script id="dashboard-data" type="application/json">{
   "active_threads": {
-    "count": 1,
-    "as_of": "15:07:53 UTC",
+    "count": null,
+    "as_of": null,
     "stale": false
   },
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here. Note (run 92): the MainWindow layout counts as verified on a single shell capture showing the Dashboard page; the other navigation pages were not measured.",
-  "generated_at_utc": "2026-11-22 15:07:55 UTC",
+  "generated_at_utc": "2026-11-22 15:11:30 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
       "label": "Overall Codebase (A + B + C)",
-      "numerator": 39837,
-      "denominator": 63904,
-      "percent": 62.3,
-      "percent_str": "62.3%",
-      "files_ported": 125,
+      "numerator": 50830,
+      "denominator": 63901,
+      "percent": 79.5,
+      "percent_str": "79.5%",
+      "files_ported": 155,
       "files_total": 162,
-      "files_percent": 77.1,
-      "files_percent_str": "77.1%",
+      "files_percent": 95.6,
+      "files_percent_str": "95.6%",
       "formula": "(A_ported + B_ported + C_ported) / (A_total + B_total + C_total); Properties/*.cs excluded"
     },
     "written_overall": {
       "id": "written_overall",
       "label": "Written / In-Progress (incl. pending verification)",
-      "numerator": 63320,
-      "denominator": 63904,
+      "numerator": 63317,
+      "denominator": 63901,
       "percent": 99.0,
       "percent_str": "99.0%",
       "files_ported": 159,
       "files_total": 162,
       "files_percent": 98.1,
       "files_percent_str": "98.1%",
-      "verified_files": 125,
+      "verified_files": 155,
       "compiled_failing_files": 0,
-      "written_unwired_files": 34,
+      "written_unwired_files": 4,
       "formula": "(verified + compiled-failing + written-unwired) / total A+B+C"
     },
     "dimensions": [
       {
         "id": "A",
         "label": "Dimension A — UI-free code",
-        "numerator": 3742,
-        "denominator": 4326,
-        "percent": 86.5,
-        "percent_str": "86.5%",
+        "numerator": 3739,
+        "denominator": 4323,
+        "percent": 86.4,
+        "percent_str": "86.4%",
         "files_ported": 39,
         "files_total": 42,
         "formula": "(linked + locally copied and compiled) UI-free lines / all 42 UI-free lines"
@@ -523,22 +523,22 @@
       {
         "id": "B",
         "label": "Dimension B — UI-coupled code-behind & logic",
-        "numerator": 8139,
+        "numerator": 13586,
         "denominator": 26073,
-        "percent": 31.2,
-        "percent_str": "31.2%",
-        "files_ported": 47,
+        "percent": 52.1,
+        "percent_str": "52.1%",
+        "files_ported": 62,
         "files_total": 66,
         "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
       },
       {
         "id": "C",
         "label": "Dimension C — Layout designers",
-        "numerator": 27956,
+        "numerator": 33505,
         "denominator": 33505,
-        "percent": 83.4,
-        "percent_str": "83.4%",
-        "files_ported": 39,
+        "percent": 100.0,
+        "percent_str": "100.0%",
+        "files_ported": 54,
         "files_total": 54,
         "formula": "ported layout designer lines (port_map) / all 54 layout designer lines"
       }
@@ -628,7 +628,7 @@
       },
       {
         "path": "Extensions/IoExtensions.cs",
-        "lines": 71
+        "lines": 68
       },
       {
         "path": "Extensions/PS4/PS4Extensions.cs",
@@ -734,8 +734,8 @@
       }
     ],
     "port_map_summary": {
-      "total_entries": 96,
-      "active_count": 86,
+      "total_entries": 134,
+      "active_count": 124,
       "entries": [
         {
           "old": "Forms/Dialogs/ReportIssueDialog.Designer.cs",
@@ -1312,6 +1312,234 @@
           "new": "Forms/ShellForm.cs",
           "new_exists": true,
           "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/ConnectionsDialog.Designer.cs",
+          "new": "Forms/Dialogs/ConnectionsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/ConnectionsDialog.cs",
+          "new": "Forms/Dialogs/ConnectionsDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/NewProfileDialog.Designer.cs",
+          "new": "Forms/Dialogs/NewProfileDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/NewProfileDialog.cs",
+          "new": "Forms/Dialogs/NewProfileDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/NewCustomDialog.Designer.cs",
+          "new": "Forms/Dialogs/NewCustomDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/NewCustomDialog.cs",
+          "new": "Forms/Dialogs/NewCustomDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/SetupWizardDialog.Designer.cs",
+          "new": "Forms/Dialogs/SetupWizardDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/SetupWizardDialog.cs",
+          "new": "Forms/Dialogs/SetupWizardDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/PS3/BackupFilesManager.Designer.cs",
+          "new": "Forms/Tools/PS3/New/BackupFilesManager.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/PS3/BackupFilesManager.cs",
+          "new": "Forms/Tools/PS3/New/BackupFilesManager.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/PS3/BootPluginsEditor.Designer.cs",
+          "new": "Forms/Tools/PS3/New/BootPluginsEditor.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/PS3/BootPluginsEditor.cs",
+          "new": "Forms/Tools/PS3/New/BootPluginsEditor.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/PS3/ConsoleManager.Designer.cs",
+          "new": "Forms/Tools/PS3/New/ConsoleManager.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/PS3/ConsoleManager.cs",
+          "new": "Forms/Tools/PS3/New/ConsoleManager.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/PS3/GameLauncher.Designer.cs",
+          "new": "Forms/Tools/PS3/New/GameLauncher.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/PS3/GameLauncher.cs",
+          "new": "Forms/Tools/PS3/New/GameLauncher.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/PS3/PackageFilesManager.Designer.cs",
+          "new": "Forms/Tools/PS3/New/PackageFilesManager.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/PS3/PackageFilesManager.cs",
+          "new": "Forms/Tools/PS3/New/PackageFilesManager.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/PS3/TakeScreenshot.Designer.cs",
+          "new": "Forms/Tools/PS3/New/TakeScreenshot.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/PS3/TakeScreenshot.cs",
+          "new": "Forms/Tools/PS3/New/TakeScreenshot.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/ConsoleManager.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/ConsoleManager.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/ConsoleManager.cs",
+          "new": "Forms/Tools/XBOX/New/ConsoleManager.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/DashlaunchEditor.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/DashlaunchEditor.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/DashlaunchEditor.cs",
+          "new": "Forms/Tools/XBOX/New/DashlaunchEditor.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/GameLauncher.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/GameLauncher.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/GameLauncher.cs",
+          "new": "Forms/Tools/XBOX/New/GameLauncher.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/GameSaveResigner.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/GameSaveResigner.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/GameSaveResigner.cs",
+          "new": "Forms/Tools/XBOX/New/GameSaveResigner.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/ModuleLoader.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/ModuleLoader.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/ModuleLoader.cs",
+          "new": "Forms/Tools/XBOX/New/ModuleLoader.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/NeighborhoodEditor.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/NeighborhoodEditor.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/NeighborhoodEditor.cs",
+          "new": "Forms/Tools/XBOX/New/NeighborhoodEditor.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/TakeScreenshot.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/TakeScreenshot.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/TakeScreenshot.cs",
+          "new": "Forms/Tools/XBOX/New/TakeScreenshot.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Tools/XBOX/XuidGameSpoofer.Designer.cs",
+          "new": "Forms/Tools/XBOX/New/XuidGameSpoofer.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Tools/XBOX/XuidGameSpoofer.cs",
+          "new": "Forms/Tools/XBOX/New/XuidGameSpoofer.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
+        },
+        {
+          "old": "Forms/Dialogs/TransferDialog.Designer.cs",
+          "new": "Forms/Dialogs/Transfer/TransferDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "C"
+        },
+        {
+          "old": "Forms/Dialogs/TransferDialog.cs",
+          "new": "Forms/Dialogs/Transfer/TransferDialog.cs",
+          "new_exists": true,
+          "counted_dimension": "B"
         }
       ]
     }
@@ -1391,14 +1619,14 @@
       "progress_mode": "measured_c_other",
       "evidence": "Measured from Dimension C excluding Forms/Windows/MainWindow.Designer.cs and Forms/Dialogs/ReportIssueDialog.Designer.cs (no double counting with M2 or M5).",
       "progress_source": "computed",
-      "percent": 68.2,
-      "percent_str": "68.2%",
+      "percent": 100.0,
+      "percent_str": "100.0%",
       "measurement": {
-        "numerator": 11918,
+        "numerator": 17467,
         "denominator": 17467,
-        "percent": 68.2,
-        "percent_str": "68.2%",
-        "files_ported": 37,
+        "percent": 100.0,
+        "percent_str": "100.0%",
+        "files_ported": 52,
         "files_total": 52,
         "formula": "ported lines in Dimension C excluding MainWindow & ReportIssueDialog / 17,467 lines"
       }
@@ -1434,14 +1662,14 @@
       "progress_mode": "measured_b",
       "evidence": "Measured from Dimension B across all UI-coupled code-behind and logic files.",
       "progress_source": "computed",
-      "percent": 31.2,
-      "percent_str": "31.2%",
+      "percent": 52.1,
+      "percent_str": "52.1%",
       "measurement": {
-        "numerator": 8139,
+        "numerator": 13586,
         "denominator": 26073,
-        "percent": 31.2,
-        "percent_str": "31.2%",
-        "files_ported": 47,
+        "percent": 52.1,
+        "percent_str": "52.1%",
+        "files_ported": 62,
         "files_total": 66,
         "formula": "ported UI-coupled lines (port_map) / all 66 UI-coupled lines"
       }
@@ -1567,6 +1795,26 @@
     }
   ],
   "recent_events": [
+    {
+      "summary": "Verified total corrected: 39 files already compiled and passing smoke were still counted as unwired (62.3% to 79.5% of lines)",
+      "source": "build-runner",
+      "timestamp_utc": "2026-11-22 15:12:00 UTC",
+      "changes": [
+        "Promoted 39 map entries (4 dialogs, 14 PS3/Xbox tool forms, TransferDialog, ConsoleManager and the others) that are in the compiled tree and render in all 43 of 43 smoke checks on ELF -97",
+        "Verified now 50,830 / 63,901 lines (79.5%), 155 of 162 files (95.6%); layouts 100%",
+        "Not counted as verified: MainWindow.cs logic (10,655 lines; the shell is wired only partly and data, console and many handlers are still stubs) and 3 files with no port. Smoke checks prove rendering, not behaviour"
+      ]
+    },
+    {
+      "summary": "Run 97 (ELF -97): 43 of 43 smoke checks render; first --page run (15 of 15 navigation pages capture); first self-check run (80 of 82 pass).",
+      "source": "launching session",
+      "timestamp_utc": "2026-11-22T15:08:01Z",
+      "changes": [
+        "Every navigation page is a real page with its toolbar, filters and grid, but all are empty (no catalogue data). The earlier 'placeholder pages' note is out of date.",
+        "Self-check (SelfCheck configuration, host mono): 2 failures, XboxHDKey.ImportMissingFile (FileNotFoundException) and FakeConsole.GameInfo.ReadsTitleFromFake (30 s timeout). The 11 startup gate checks pass; they inspect source text, not traffic.",
+        "The MainWindow share of the verified percentage still rests on layout rendering, not on pages working with data. No map changes this run."
+      ]
+    },
     {
       "summary": "Run 94 (ELF -94, venus tree after the second overnight batch): 43 of 43 smoke checks render, same count as run 92. Render checks only; no behaviour check has run.",
       "source": "launching session",
@@ -1737,24 +1985,6 @@
       "changes": [
         "Added RibbonBar, AboutPage, GameRegions, XboxHDKey, and GameUpdatesFinder to csproj and FormFactories (108 Compile items)",
         "Fixed empty-group/panel 1 px minimums in TilePanel and DashboardPage; 28 of 28 ELF checks pass and no-guard overlay confirmed 28/28"
-      ]
-    },
-    {
-      "summary": "Rounds 11-18 wired shell, dashboard, parallel dialogs, and fixed all 7 failing detail dialogs (25/25)",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 22:11:00 UTC",
-      "changes": [
-        "Applied 1 px minimum width to empty DetailLayout header labels and 20 px height floor to ListBox download rows",
-        "Wired ShellForm/NavListPanel/PageHost (S0+S1), DashboardPage (S2), and 6 parallel A+B2 dialogs; 25 of 25 ELF checks pass"
-      ]
-    },
-    {
-      "summary": "Round 9 RowStyle diagnostic proved GameModDialog captures at 1006x705",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 20:27:00 UTC",
-      "changes": [
-        "Setting RowStyles[4] Absolute:20 on GameModDialog dropped throws 11->0 and passed CAPTURE-OK (1006x705)",
-        "ListBox held Size=935x20 / ClientSize=931x16; 3 PASS / 6 FAIL (diagnostic copy only)"
       ]
     }
   ]

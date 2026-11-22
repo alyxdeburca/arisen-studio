@@ -298,5 +298,15 @@
       "Self-check (SelfCheck configuration, host mono): 2 failures, XboxHDKey.ImportMissingFile (FileNotFoundException) and FakeConsole.GameInfo.ReadsTitleFromFake (30 s timeout). The 11 startup gate checks pass; they inspect source text, not traffic.",
       "The MainWindow share of the verified percentage still rests on layout rendering, not on pages working with data. No map changes this run."
     ]
+  },
+  {
+    "summary": "Verified total corrected: 39 files already compiled and passing smoke were still counted as unwired (62.3% to 79.5% of lines)",
+    "source": "build-runner",
+    "timestamp_utc": "2026-11-22 15:12:00 UTC",
+    "changes": [
+      "Promoted 39 map entries (4 dialogs, 14 PS3/Xbox tool forms, TransferDialog, ConsoleManager and the others) that are in the compiled tree and render in all 43 of 43 smoke checks on ELF -97",
+      "Verified now 50,830 / 63,901 lines (79.5%), 155 of 162 files (95.6%); layouts 100%",
+      "Not counted as verified: MainWindow.cs logic (10,655 lines; the shell is wired only partly and data, console and many handlers are still stubs) and 3 files with no port. Smoke checks prove rendering, not behaviour"
+    ]
   }
 ]
