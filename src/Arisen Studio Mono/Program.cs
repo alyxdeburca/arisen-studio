@@ -203,7 +203,15 @@ namespace ArisenStudio
         [STAThread]
         private static int Main(string[] args)
         {
-            _smoke = args.Contains("--smoke");
+            // --page <key>: one page captured by PageCaptureRunner. It runs in smoke mode (temp settings, no network, no modal boxes).
+            string pageKey = null;
+            int pgi = Array.IndexOf(args, "--page");
+            if (pgi >= 0)
+            {
+                if (pgi + 1 >= args.Length) { Console.WriteLine("PAGE-CAPTURE-FAIL <missing> missing key argument"); return 1; }
+                pageKey = args[pgi + 1];
+            }
+            _smoke = args.Contains("--smoke") || pageKey != null;
             // Smoke mode must not block on a modal MessageBox from a tool form. Set before any form is created or shown.
             if (_smoke) { ArisenStudio.Forms.Tools.ToolFormSupport.NonBlockingErrors = true; }
             string capture = null;
@@ -245,6 +253,12 @@ namespace ArisenStudio
                 Console.WriteLine("SELFCHECK-UNAVAILABLE this build does not define SELFCHECK");
                 return 2;
 #endif
+            }
+
+            if (pageKey != null)
+            {
+                // --page: one shell, one page, one PNG. PageCaptureRunner prints PAGE-CAPTURE-OK or PAGE-CAPTURE-FAIL.
+                return PageCaptureRunner.Run(pageKey, capture);
             }
 
             if (formName == null)

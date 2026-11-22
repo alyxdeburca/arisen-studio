@@ -266,6 +266,7 @@
     <Compile Include="Forms\Dialogs\WhatsNewDialog.cs" />
     <Compile Include="Localization\ResxLanguageLoader.cs" />
     <Compile Include="Forms\Shell\PageCaptureHarness.cs" />
+    <Compile Include="Forms\Shell\PageCaptureRunner.cs" />
     <Compile Include="Tests\SelfCheck\IntegrationChecks.cs" />
     <Compile Include="Tests\SelfCheck\FakeConsoleServerChecks.cs" />
     <Compile Include="Tests\SelfCheck\StartupGateChecks.cs" />
