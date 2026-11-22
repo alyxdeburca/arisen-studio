@@ -209,5 +209,15 @@
       "PARALLEL-M7 wrote ControlExtensions and Services/M7/ cross-platform contracts/stubs for Windows-only dependencies; 5 other workers (A, B, E, F, G) still running",
       "Verified all 28 targets of arisen-studio-mono-90 (28/28 PASS) inside a clean Mono-free debian:bookworm-slim container (CLEAN-CONTAINER-RESULT-90)"
     ]
+  },
+  {
+    "summary": "Dispatched Workers H (ToolFormSupport non-modal smoke mode), I (ImgurUploader & Linux path audit), and J (AppBootstrapper)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-22 00:06:00 UTC",
+    "changes": [
+      "Worker H (BUILD-REQUEST-35): non-blocking smoke flag on ToolFormSupport for the 5 modal-on-load tool forms",
+      "Worker I (PARALLEL-IO-AUDIT): cross-platform HttpClient ImgurUploader + Path.Combine fix in TransferLocalPaths.cs",
+      "Completed Localization audit/helper (PARALLEL-L10N) and launched Worker J (Runtime/AppBootstrapper.cs for file logging, settings load/save, and shell startup)"
+    ]
   }
 ]

@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-22 00:05:29 UTC",
+  "generated_at_utc": "2026-11-22 00:08:09 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1406,6 +1406,16 @@
   ],
   "recent_events": [
     {
+      "summary": "Dispatched Workers H (ToolFormSupport non-modal smoke mode), I (ImgurUploader & Linux path audit), and J (AppBootstrapper)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-22 00:06:00 UTC",
+      "changes": [
+        "Worker H (BUILD-REQUEST-35): non-blocking smoke flag on ToolFormSupport for the 5 modal-on-load tool forms",
+        "Worker I (PARALLEL-IO-AUDIT): cross-platform HttpClient ImgurUploader + Path.Combine fix in TransferLocalPaths.cs",
+        "Completed Localization audit/helper (PARALLEL-L10N) and launched Worker J (Runtime/AppBootstrapper.cs for file logging, settings load/save, and shell startup)"
+      ]
+    },
+    {
       "summary": "Completed BUILD-REQUEST-34 (172 Compile items, 42 FormFactories) and PARALLEL-M7 (Windows-only boundaries & ControlExtensions)",
       "source": "coordinator",
       "timestamp_utc": "2026-11-22 00:03:00 UTC",
@@ -1578,15 +1588,6 @@
       "changes": [
         "Switched TabControls to downloads/files tab before capture across 9 dialogs",
         "Refuted hidden-tab hypothesis for GameModDialog (depth-10 rows threw while visible)"
-      ]
-    },
-    {
-      "summary": "Parallel clean-container & 9-package NuGet/mkbundle verification",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 19:04:00 UTC",
-      "changes": [
-        "Verified 12/12 passing forms/shell in Mono-free debian:bookworm-slim container",
-        "Proved all 9 remaining managed NuGet packages build, mkbundle, and run Mono-free"
       ]
     }
   ]
