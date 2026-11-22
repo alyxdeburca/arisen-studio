@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-22 00:08:09 UTC",
+  "generated_at_utc": "2026-11-22 00:09:13 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1406,6 +1406,15 @@
   ],
   "recent_events": [
     {
+      "summary": "Completed BUILD-REQUEST-35 (ToolFormSupport.NonBlockingErrors) and PARALLEL-SELFCHECK; dispatched Workers K & L (7/7 active)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-22 00:08:00 UTC",
+      "changes": [
+        "BUILD-REQUEST-35 added ToolFormSupport.NonBlockingErrors so the 5 console-dependent tool forms stay open without modal MessageBox in smoke runs",
+        "PARALLEL-SELFCHECK wrote 8 deterministic self-check files under Tests/SelfCheck/; launched Worker K (Localization key aliases) and Worker L (BUILD-REQUEST-36 csproj/Program.cs wiring for NonBlockingErrors, M7, L10N, and SelfCheck)"
+      ]
+    },
+    {
       "summary": "Dispatched Workers H (ToolFormSupport non-modal smoke mode), I (ImgurUploader & Linux path audit), and J (AppBootstrapper)",
       "source": "coordinator",
       "timestamp_utc": "2026-11-22 00:06:00 UTC",
@@ -1579,15 +1588,6 @@
       "changes": [
         "Audited ShellForm (38 lines) against MainWindow Designer (19 pages, ribbon, status)",
         "Zero project edits; logged ledger discrepancy against MAINWINDOW-DESIGN.md"
-      ]
-    },
-    {
-      "summary": "Round 6 TabWalk diagnostic run (visible tab capture)",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 19:07:00 UTC",
-      "changes": [
-        "Switched TabControls to downloads/files tab before capture across 9 dialogs",
-        "Refuted hidden-tab hypothesis for GameModDialog (depth-10 rows threw while visible)"
       ]
     }
   ]

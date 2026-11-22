@@ -219,5 +219,14 @@
       "Worker I (PARALLEL-IO-AUDIT): cross-platform HttpClient ImgurUploader + Path.Combine fix in TransferLocalPaths.cs",
       "Completed Localization audit/helper (PARALLEL-L10N) and launched Worker J (Runtime/AppBootstrapper.cs for file logging, settings load/save, and shell startup)"
     ]
+  },
+  {
+    "summary": "Completed BUILD-REQUEST-35 (ToolFormSupport.NonBlockingErrors) and PARALLEL-SELFCHECK; dispatched Workers K & L (7/7 active)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-22 00:08:00 UTC",
+    "changes": [
+      "BUILD-REQUEST-35 added ToolFormSupport.NonBlockingErrors so the 5 console-dependent tool forms stay open without modal MessageBox in smoke runs",
+      "PARALLEL-SELFCHECK wrote 8 deterministic self-check files under Tests/SelfCheck/; launched Worker K (Localization key aliases) and Worker L (BUILD-REQUEST-36 csproj/Program.cs wiring for NonBlockingErrors, M7, L10N, and SelfCheck)"
+    ]
   }
 ]
