@@ -587,7 +587,7 @@ namespace ArisenStudio.Shell.Wiring
             }
         }
 
-        /// <summary>Ribbon Launch Game (webMAN). No old DialogExtensions method; the form exists in Tools/PS3/New.</summary>
+        /// <summary>Ribbon Launcher (GUI) (webMAN). No old DialogExtensions method; the form exists in Tools/PS3/New.</summary>
         public static void ShowPs3GameLauncher(Form owner, DialogContext ctx)
         {
             using (Ps3.GameLauncher form = new Ps3.GameLauncher())
@@ -839,7 +839,7 @@ namespace ArisenStudio.Shell.Wiring
                 case RibbonCommandIds.ToolsPsGameRegions: ShowPs3GameRegions(owner, ctx); return true;
                 case RibbonCommandIds.ToolsPsBootPluginsEditor: ShowPs3BootPluginsEditor(owner, ctx); return true;
                 case RibbonCommandIds.ToolsPsScreenshot: ShowPs3TakeScreenshot(owner, ctx); return true;
-                case RibbonCommandIds.ToolsPsGamesLaunchGame: ShowPs3GameLauncher(owner, ctx); return true;
+                case RibbonCommandIds.ToolsPsGamesOpenGui: ShowPs3GameLauncher(owner, ctx); return true;
                 case RibbonCommandIds.ToolsXboxGameSaveResigner: ShowXboxGameSaveResigner(owner, ctx); return true;
                 case RibbonCommandIds.ToolsXboxHdKey: ShowXboxHdKey(owner, ctx); return true;
                 case RibbonCommandIds.ToolsXboxGamesLauncher: ShowXboxGameLauncher(owner, ctx); return true;

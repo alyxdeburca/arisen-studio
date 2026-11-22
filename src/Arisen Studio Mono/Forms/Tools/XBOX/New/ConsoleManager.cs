@@ -150,17 +150,26 @@ namespace ArisenStudio.Forms.Tools.XBOX
             _labelTopRight = ToolFormSupport.NewLabel(string.Empty);
             _labelBottomLeft = ToolFormSupport.NewLabel(string.Empty);
             _labelBottomRight = ToolFormSupport.NewLabel(string.Empty);
-            _radioTopLeft = new RadioGroupPanel(colors, 0);
-            _radioTopRight = new RadioGroupPanel(colors, 0);
-            _radioBottomLeft = new RadioGroupPanel(colors, 0);
-            _radioBottomRight = new RadioGroupPanel(colors, 0);
+            // One row of four columns (Top Left, Top Right, Bottom Left, Bottom Right), each header above a vertical colour list, as the old designer lays it out.
+            _radioTopLeft = new RadioGroupPanel(colors, 0) { FlowDirection = FlowDirection.TopDown, WrapContents = false };
+            _radioTopRight = new RadioGroupPanel(colors, 0) { FlowDirection = FlowDirection.TopDown, WrapContents = false };
+            _radioBottomLeft = new RadioGroupPanel(colors, 0) { FlowDirection = FlowDirection.TopDown, WrapContents = false };
+            _radioBottomRight = new RadioGroupPanel(colors, 0) { FlowDirection = FlowDirection.TopDown, WrapContents = false };
             _buttonSetLeds = ToolFormSupport.NewButton(this, 8);
+            _buttonSetLeds.Dock = DockStyle.Fill; // spans the four columns, as the old full-width button does
 
-            TableLayoutPanel leds = ToolFormSupport.NewTable(new ColumnStyle(SizeType.AutoSize), new ColumnStyle(SizeType.Percent, 100F));
-            ToolFormSupport.AddRow(leds, _labelTopLeft, _radioTopLeft);
-            ToolFormSupport.AddRow(leds, _labelTopRight, _radioTopRight);
-            ToolFormSupport.AddRow(leds, _labelBottomLeft, _radioBottomLeft);
-            ToolFormSupport.AddRow(leds, _labelBottomRight, _radioBottomRight);
+            TableLayoutPanel leds = ToolFormSupport.NewTable(new ColumnStyle(SizeType.Percent, 25F), new ColumnStyle(SizeType.Percent, 25F), new ColumnStyle(SizeType.Percent, 25F), new ColumnStyle(SizeType.Percent, 25F));
+            leds.RowCount = 2;
+            leds.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            leds.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            leds.Controls.Add(_labelTopLeft, 0, 0);
+            leds.Controls.Add(_labelTopRight, 1, 0);
+            leds.Controls.Add(_labelBottomLeft, 2, 0);
+            leds.Controls.Add(_labelBottomRight, 3, 0);
+            leds.Controls.Add(_radioTopLeft, 0, 1);
+            leds.Controls.Add(_radioTopRight, 1, 1);
+            leds.Controls.Add(_radioBottomLeft, 2, 1);
+            leds.Controls.Add(_radioBottomRight, 3, 1);
             ToolFormSupport.AddFullRow(leds, _buttonSetLeds, false);
             _groupLeds = NewGroup(pad, leds);
 
@@ -171,6 +180,9 @@ namespace ArisenStudio.Forms.Tools.XBOX
             ToolFormSupport.AddFullRow(root, _groupNeighborhood, false);
             ToolFormSupport.AddFullRow(root, _groupDiscFan, false);
             ToolFormSupport.AddFullRow(root, _groupLeds, false);
+            // Spare height goes to this filler row, not into a group row (as BackupFilesManager does).
+            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            root.RowCount = root.RowStyles.Count;
 
             Controls.Add(root);
             _status = ToolFormSupport.AddStatusBar(this);
@@ -222,6 +234,8 @@ namespace ArisenStudio.Forms.Tools.XBOX
                 Padding = new Padding(pad),
                 Margin = new Padding(0, 0, 0, pad)
             };
+            // Dock Top, not Fill, so the group takes the height of its content (cause inferred from the symptoms; not verified by a build or capture).
+            content.Dock = DockStyle.Top;
             group.Controls.Add(content);
             return group;
         }

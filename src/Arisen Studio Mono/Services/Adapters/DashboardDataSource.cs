@@ -201,7 +201,7 @@ namespace ArisenStudio.Services.Adapters
             if (loader == null)
             {
                 return Task.FromException<IList<NewsEntry>>(new NotSupportedException(
-                    "The news feed is not available: no feed loader is connected. The host must set DashboardFeeds.NewsLoader."));
+                    "News is not available right now."));
             }
 
             return loader();

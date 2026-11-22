@@ -58,7 +58,7 @@ namespace ArisenStudio.Tests.SelfCheck
             {
                 SelfCheckAssert.NotNull(dialog.Settings, "Settings default");
                 SelfCheckAssert.NotNull(dialog.ConsoleOperations, "ConsoleOperations default");
-                SelfCheckAssert.True(dialog.ConsoleOperations is TransferConsoleOperationsStub, "ConsoleOperations should default to the stub");
+                SelfCheckAssert.True(dialog.ConsoleOperations is TransferNotConnectedOperations, "ConsoleOperations should default to TransferNotConnectedOperations (reports \"Connect to a console first\")");
                 SelfCheckAssert.True(dialog.Language == null, "Language should default to null");
                 SelfCheckAssert.True(dialog.ConsoleProfile == null, "ConsoleProfile should default to null");
                 SelfCheckAssert.True(!dialog.IsSuccessful, "IsSuccessful should start false");

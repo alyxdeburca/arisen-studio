@@ -84,7 +84,7 @@ namespace ArisenStudio
             { "XboxNeighborhoodEditor", () => new Forms.Tools.XBOX.NeighborhoodEditor() },
             { "XboxTakeScreenshot", () => new Forms.Tools.XBOX.TakeScreenshot() },
             { "XboxXuidGameSpoofer", () => new Forms.Tools.XBOX.XuidGameSpoofer() },
-            // Sample mod and the default console stub: the dialog shows "not available in this build" and never touches a console or the network.
+            // Sample mod and the default not-connected console operations: an install or uninstall reports "Connect to a console first" and never touches a console or the network.
             { "TransferDialog", () => new TransferDialog { TransferType = TransferType.InstallMods, ModItem = SampleMod() } },
         };
 

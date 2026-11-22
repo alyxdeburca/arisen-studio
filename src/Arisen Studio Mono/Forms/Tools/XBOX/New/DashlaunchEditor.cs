@@ -65,6 +65,8 @@ namespace ArisenStudio.Forms.Tools.XBOX
                 MultiSelect = false,
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                BackgroundColor = SystemColors.Window,
+                ColumnHeadersVisible = true,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 Margin = new Padding(0, 0, 0, pad)
             };
@@ -202,6 +204,11 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
         private async Task LoadLaunchFileAsync()
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             try
             {
                 SetStatus("Loading launch.ini...");
@@ -229,6 +236,7 @@ namespace ArisenStudio.Forms.Tools.XBOX
             }
             catch (Exception ex)
             {
+                SetStatus("Unable to load launch.ini: " + ex.Message);
                 ToolFormSupport.LogError(ex, "Unable to load the launch.ini file. Error: " + ex.Message);
                 ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to load the launch.ini file. Edit the file path in Settings to your correct file location.\n\nError Message: " + ex.Message);
             }
@@ -343,6 +351,11 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
         private async void ButtonRestoreDefault_Click(object sender, EventArgs e)
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(DefaultLaunchIni))
             {
                 ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), "No default launch.ini is bundled with this build.");
@@ -372,6 +385,11 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
         private async void ButtonRestoreBackup_Click(object sender, EventArgs e)
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             if (!File.Exists(LocalBackupFilePath))
             {
                 MessageBox.Show(this, Text_("CREATE_BACKUP_FILE", "There is no backup file yet. Open the editor with a console connected to create one."), Text_("NO_BACKUP_FILE", "No Backup File"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -398,6 +416,11 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
         private async void ButtonSaveUpdate_Click(object sender, EventArgs e)
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             if (_launchFile == null)
             {
                 return;
@@ -433,6 +456,21 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
                 ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), message);
             }
+        }
+
+        /// <summary>
+        /// Smoke runs set ToolFormSupport.NonBlockingErrors (Program.cs, --smoke only). The default folders are the real user
+        /// folder, so a smoke run makes no console call and reads or writes no local file. Returns true when it stops the action.
+        /// </summary>
+        private bool SmokeBlocksFileAccess()
+        {
+            if (!ToolFormSupport.NonBlockingErrors)
+            {
+                return false;
+            }
+
+            SetStatus("Smoke run: no console or local file access.");
+            return true;
         }
 
         private void ReportFailure(string message, Exception ex)

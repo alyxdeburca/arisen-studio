@@ -233,13 +233,16 @@
     <Compile Include="Services\Adapters\AdapterSupport.cs" />
     <Compile Include="Services\Adapters\ConsoleFileServices.cs" />
     <Compile Include="Services\Adapters\DashboardDataSource.cs" />
+    <Compile Include="Services\Adapters\DatabaseClientCatalogueAdapter.cs" />
     <Compile Include="Services\Adapters\DownloadsDataSource.cs" />
     <Compile Include="Services\Adapters\HttpScreenshotUploader.cs" />
     <Compile Include="Services\Adapters\InstalledFilesDataSource.cs" />
     <Compile Include="Services\Adapters\LibraryDataSource.cs" />
+    <Compile Include="Services\Adapters\NewsFeedLoader.cs" />
     <Compile Include="Services\Adapters\Ps3FileTransfer.cs" />
     <Compile Include="Services\Adapters\Ps3TransferConsoleOperations.cs" />
     <Compile Include="Services\Adapters\Ps3TransferHooks.cs" />
+    <Compile Include="Services\Adapters\WebManConsoleConnection.cs" />
     <Compile Include="Services\Transfers\TransferXboxPaths.cs" />
     <Compile Include="Runtime\FullShellIntegration.cs" />
     <Compile Include="Runtime\Startup\CurrentGamePoller.cs" />
@@ -252,6 +255,7 @@
     <Compile Include="Localization\ResxLanguageLoader.cs" />
     <Compile Include="Forms\Shell\PageCaptureHarness.cs" />
     <Compile Include="Tests\SelfCheck\IntegrationChecks.cs" />
+    <Compile Include="Tests\SelfCheck\FakeConsoleServerChecks.cs" />
     <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Fat.png">
       <LogicalName>ArisenStudio.Icons.PlayStation3Fat.png</LogicalName>
     </EmbeddedResource>

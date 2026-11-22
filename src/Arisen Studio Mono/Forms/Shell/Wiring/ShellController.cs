@@ -782,6 +782,18 @@ namespace ArisenStudio.Shell.Wiring
                 case RibbonCommandIds.DownloadsFolder:
                     OpenDownloadsFolder();
                     return;
+
+                case RibbonCommandIds.ToolsPsGamesMountBd:
+                    await MountGameAsync(e, "BD", new string[] { ArisenStudio.Services.ConsolePaths.GamesBd, ArisenStudio.Services.ConsolePaths.GamesBdAlt }, true);
+                    return;
+
+                case RibbonCommandIds.ToolsPsGamesMountIso:
+                    await MountGameAsync(e, "ISO", new string[] { ArisenStudio.Services.ConsolePaths.GamesIso }, false);
+                    return;
+
+                case RibbonCommandIds.ToolsPsGamesMountPsn:
+                    await MountGameAsync(e, "PSN", new string[] { ArisenStudio.Services.ConsolePaths.GamesPsn }, true);
+                    return;
             }
 
             if (DialogLauncher.TryShowTool(_form, _dialogs, id))
@@ -805,10 +817,84 @@ namespace ArisenStudio.Shell.Wiring
                 }
                 bool ok = await _connection.RunCommandAsync(id, argument);
                 _form.SetStatusText(ok ? e.Caption + ": done." : e.Caption + ": not available.");
+                // The old power handlers called DisconnectConsole() after the command. Only on success.
+                if (ok && IsPowerCommand(id))
+                {
+                    _connection.Disconnect();
+                }
                 return;
             }
 
             _form.SetStatusText(e.Caption + ": not available yet.");
+        }
+
+        // Old ButtonToolsPsGamesMountBD/ISO/PSN_ItemClick: list the games on the console, pick one, then mount it through
+        // the connection. Lists through IConsoleFileService, which has no FTP client; with no connection it reports
+        // "not available" and makes no call.
+        private async Task MountGameAsync(RibbonCommandEventArgs e, string kind, string[] libraries, bool wantFolders)
+        {
+            IConsoleFileService service = _connection.FileService;
+            if (!_connection.IsConnected || service == null)
+            {
+                _form.SetStatusText(e.Caption + ": not available.");
+                return;
+            }
+
+            _form.SetStatusText("Fetching games (" + kind + ") list...");
+
+            List<ListItem> games = new List<ListItem>();
+            foreach (string root in ArisenStudio.Services.ConsolePaths.DeviceRoots(AppHost.Settings.ShowGamesFromExternalDevices))
+            {
+                foreach (string folder in libraries)
+                {
+                    string library = ArisenStudio.Services.ConsolePaths.Library(root, folder);
+                    if (!await service.ExistsAsync(library.TrimEnd('/'), true))
+                    {
+                        continue;
+                    }
+
+                    foreach (FileManagerEntry entry in await service.ListAsync(library))
+                    {
+                        if (entry.IsDirectory == wantFolders)
+                        {
+                            games.Add(new ListItem { Name = entry.Name, Value = library + entry.Name });
+                        }
+                    }
+                }
+            }
+
+            if (games.Count == 0)
+            {
+                _form.SetStatusText("webMAN Commands - No Games (" + kind + ") Found.");
+                MessageBox.Show(_form, "No games (" + kind + ") can be found on your console. If you have them on external devices then enable this option in your settings.", "No Games Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            ListItem selected = ArisenStudio.Forms.Tools.ToolFormSupport.PickFromList(_form, "Games List (" + kind + ")", games);
+            if (selected == null)
+            {
+                _form.SetStatusText("webMAN Commands - Mount Game (" + kind + ") Cancelled.");
+                return;
+            }
+
+            _form.SetStatusText("webMAN Commands - Mounting Game (" + kind + "): " + selected.Name);
+            bool ok = await _connection.RunCommandAsync(e.CommandId, selected.Value);
+            _form.SetStatusText(ok ? "webMAN Commands - Successfully Mounted Game (" + kind + "): " + selected.Name : e.Caption + ": not available.");
+        }
+
+        private static bool IsPowerCommand(string id)
+        {
+            switch (id)
+            {
+                case RibbonCommandIds.ToolsPsPowerShutdown:
+                case RibbonCommandIds.ToolsPsPowerRestart:
+                case RibbonCommandIds.ToolsPsPowerSoftReboot:
+                case RibbonCommandIds.ToolsPsPowerHardReboot:
+                case RibbonCommandIds.ToolsPsPowerQuickReboot:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private static bool IsConsoleCommand(string id)
@@ -825,6 +911,7 @@ namespace ArisenStudio.Shell.Wiring
                 case RibbonCommandIds.ToolsPsGamesMountIso:
                 case RibbonCommandIds.ToolsPsGamesMountPsn:
                 case RibbonCommandIds.ToolsPsGamesUnmount:
+                case RibbonCommandIds.ToolsPsGamesLaunchGame:
                 case RibbonCommandIds.ToolsPsNotifyMessage:
                 case RibbonCommandIds.ToolsPsVirtualController:
                 case RibbonCommandIds.ToolsXboxPowerShutdown:

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ArisenStudio.Forms.Dashboard;
 using ArisenStudio.Forms.Dialogs;
 using ArisenStudio.Io;
 using ArisenStudio.Localization;
@@ -225,11 +226,12 @@ namespace ArisenStudio.Runtime
 
                 AdapterContext adapters = BuildAdapterContext(settingsPath);
                 DialogContext dialogs = BuildDialogContext(adapters, smokeMode);
+                DashboardFeeds feeds = BuildDashboardFeeds(smokeMode);
 
                 ShellServices services = new ShellServices
                 {
                     // Pages. Each adapter reads the catalog and the settings through the shared context.
-                    Dashboard = new DashboardDataSource(adapters, new DashboardFeeds()),
+                    Dashboard = new DashboardDataSource(adapters, feeds),
                     Downloads = new DownloadsDataSource(adapters),
                     InstalledFiles = new InstalledFilesDataSource(adapters),
                     Library = new LibraryDataSource(adapters),
@@ -246,6 +248,13 @@ namespace ArisenStudio.Runtime
                     // StartupAsync stays null: the database load and the release check are network work and are not wired here.
                     // SwitchLanguage stays null: the controller only stores Settings.Language and saves.
                 };
+
+                // Normal mode only: the online database load. ShellController awaits StartupAsync after the shell is shown,
+                // then reloads the dashboard and the visible page. Smoke mode leaves StartupAsync null: no load, no network.
+                if (!smokeMode)
+                {
+                    services.StartupAsync = delegate { return LoadDatabaseAsync(adapters, dialogs); };
+                }
 
                 controller.Attach(shell, services);
 
@@ -458,6 +467,25 @@ namespace ArisenStudio.Runtime
         private static GitHubReleaseData FirstRelease(IList<GitHubReleaseData> releases)
         {
             return releases != null && releases.Count > 0 ? releases[0] : null;
+        }
+
+        // Normal mode only (see Attach). Runs on the UI thread from ShellController.OnFormShown and awaits the download.
+        // On success it fills DialogContext.Database and AdapterContext.Catalog. On failure both stay empty and the
+        // error is logged and shown in the status strip. The controller then sets its own "Idling..." status.
+        private static async Task LoadDatabaseAsync(AdapterContext adapters, DialogContext dialogs)
+        {
+            try
+            {
+                ArisenStudio.Database.DatabaseClient client = await ArisenStudio.Database.DatabaseClient.InitializeAsync();
+                dialogs.Database = client;
+                adapters.Catalog = DatabaseClientCatalogueAdapter.ToCatalog(client);
+            }
+            catch (Exception ex)
+            {
+                string text = ResourceText.Get("UNABLE_LOAD_DATABASE", "Unable to load the database");
+                AppBootstrapper.LogError(ex, text);
+                AppHost.SetStatus(text + ": " + ex.Message, ex);
+            }
         }
 
         private static void StartIdleTimer(ShellForm shell)
@@ -676,6 +704,42 @@ namespace ArisenStudio.Runtime
         }
 
         // ====================================================================================================
+
+        // News is the only feed wired here. Normal mode only: smoke mode leaves NewsLoader null, so the dashboard shows
+        // "News is not available right now." and makes no request. The loader is created here, not in a constructor of
+        // a page or adapter, and its network call runs only when the dashboard asks for the news.
+        private static DashboardFeeds BuildDashboardFeeds(bool smokeMode)
+        {
+            DashboardFeeds feeds = new DashboardFeeds();
+
+            if (!smokeMode)
+            {
+                NewsFeedLoader newsLoader = new NewsFeedLoader();
+                feeds.NewsLoader = async delegate
+                {
+                    IList<NewsEntry> entries = await newsLoader.LoadAsync();
+                    if (newsLoader.StatusMessage != null)
+                    {
+                        AppBootstrapper.LogError(newsLoader.LastError, newsLoader.StatusMessage);
+
+                        // LoadAsync returns an empty list on failure. Throw so DashboardPage shows the status
+                        // instead of leaving the news area silent.
+                        if (newsLoader.LastError != null)
+                        {
+                            throw new InvalidOperationException("News is not available right now.", newsLoader.LastError);
+                        }
+
+                        if (entries.Count == 0)
+                        {
+                            throw new InvalidOperationException(newsLoader.StatusMessage);
+                        }
+                    }
+                    return entries;
+                };
+            }
+
+            return feeds;
+        }
 
         private static AdapterContext BuildAdapterContext(string settingsPath)
         {

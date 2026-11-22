@@ -23,8 +23,9 @@ namespace ArisenStudio.Forms.Dialogs
     /// starts when the dialog loads.
     /// <para>
     /// The five download transfers are real (<see cref="TransferDownloadOperations"/>). The install and uninstall
-    /// transfers need console and FTP code that is not ported, so they go through
-    /// <see cref="ConsoleOperations"/>, which is <see cref="TransferConsoleOperationsStub"/> until the host sets a real one.
+    /// transfers go through <see cref="ConsoleOperations"/>, which the host sets to the real PS3 operations
+    /// (Ps3TransferConsoleOperations). Unset, it is a not-connected fallback that says "Connect to a console first"
+    /// and changes nothing.
     /// </para>
     /// </summary>
     public class TransferDialog : Form, ITransferHost
@@ -93,9 +94,11 @@ namespace ArisenStudio.Forms.Dialogs
         public Func<string, string> TitleIdToTitle { get; set; }
 
         /// <summary>
-        /// The install and uninstall code. Replace it before ShowDialog when the console transfer code is ported.
+        /// The install and uninstall code. The host sets the real one before ShowDialog (DialogLauncher copies
+        /// DialogContext.TransferOperations, built in FullShellIntegration). Left unset, it reports "Connect to a
+        /// console first" and changes nothing. Construction never opens a connection.
         /// </summary>
-        public ITransferConsoleOperations ConsoleOperations { get; set; } = new TransferConsoleOperationsStub();
+        public ITransferConsoleOperations ConsoleOperations { get; set; } = new TransferNotConnectedOperations();
 
         /// <summary>
         /// The folder Open Folder opens.
@@ -337,7 +340,7 @@ namespace ArisenStudio.Forms.Dialogs
 
         private Task RunTransfer(TransferRequest request)
         {
-            ITransferConsoleOperations console = ConsoleOperations ?? new TransferConsoleOperationsStub();
+            ITransferConsoleOperations console = ConsoleOperations ?? new TransferNotConnectedOperations();
 
             switch (request.TransferType)
             {
@@ -518,6 +521,72 @@ namespace ArisenStudio.Forms.Dialogs
             }
 
             return builder.ToString();
+        }
+    }
+
+    /// <summary>
+    /// The operations TransferDialog uses when the host has not set a console. Every install and uninstall reports
+    /// "Connect to a console first" and changes nothing. It never touches a console, the network or an FTP client, so
+    /// it is safe in smoke mode. It is kept in this file because the project lists its sources explicitly.
+    /// </summary>
+    internal sealed class TransferNotConnectedOperations : ITransferConsoleOperations
+    {
+        public Task InstallCustom(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task UninstallCustom(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task InstallMods(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task UninstallMods(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task InstallPackage(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task UninstallPackage(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task InstallApplication(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task UninstallApplication(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task InstallGameSave(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        public Task InstallTrainer(TransferRequest request, ITransferHost host)
+        {
+            return NotConnected(host);
+        }
+
+        private static Task NotConnected(ITransferHost host)
+        {
+            host.Progress.Report(0);
+            host.IsSuccessful = false;
+            host.UpdateStatus(host.GetText("TRANSFER_NO_CONSOLE_CONNECTED", "Connect to a console first; nothing was changed."));
+            return Task.FromResult(0);
         }
     }
 }

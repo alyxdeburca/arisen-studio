@@ -100,12 +100,13 @@ namespace ArisenStudio.Forms.Tools.PS3
             // IDPS and PSID
             _labelIdps = ToolFormSupport.NewLabel(string.Empty);
             _labelPsid = ToolFormSupport.NewLabel(string.Empty);
-            _textBoxIdps = new TextBox { Dock = DockStyle.Fill, MaxLength = 32, Margin = new Padding(0, 0, pad, pad / 2) };
-            _textBoxPsid = new TextBox { Dock = DockStyle.Fill, MaxLength = 32, Margin = new Padding(0, 0, pad, pad / 2) };
+            // Text boxes stretch across their cell and keep their own height; labels and Set buttons centre on the same row, as the old designer's PSID label sits level with its box.
+            _textBoxIdps = new TextBox { Anchor = AnchorStyles.Left | AnchorStyles.Right, MaxLength = 32, Margin = new Padding(0, pad / 4, pad, pad / 4) };
+            _textBoxPsid = new TextBox { Anchor = AnchorStyles.Left | AnchorStyles.Right, MaxLength = 32, Margin = new Padding(0, pad / 4, pad, pad / 4) };
             _buttonSetIdps = ToolFormSupport.NewButton(this, 6);
             _buttonSetPsid = ToolFormSupport.NewButton(this, 6);
-            _buttonSetIdps.Margin = new Padding(0, 0, 0, pad / 2);
-            _buttonSetPsid.Margin = new Padding(0, 0, 0, pad / 2);
+            _buttonSetIdps.Margin = new Padding(0, pad / 4, 0, pad / 4);
+            _buttonSetPsid.Margin = new Padding(0, pad / 4, 0, pad / 4);
 
             TableLayoutPanel ids = ToolFormSupport.NewTable(new ColumnStyle(SizeType.AutoSize), new ColumnStyle(SizeType.Percent, 100F), new ColumnStyle(SizeType.AutoSize));
             int row = ToolFormSupport.AddRow(ids, _labelIdps, _textBoxIdps);
@@ -120,6 +121,9 @@ namespace ArisenStudio.Forms.Tools.PS3
             ToolFormSupport.AddFullRow(root, _groupDetails, false);
             ToolFormSupport.AddFullRow(root, _groupLeds, false);
             ToolFormSupport.AddFullRow(root, _groupIds, false);
+            // Spare height goes to this filler row, not into a group row (as BackupFilesManager does).
+            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            root.RowCount = root.RowStyles.Count;
 
             Controls.Add(root);
             _status = ToolFormSupport.AddStatusBar(this);
@@ -173,6 +177,8 @@ namespace ArisenStudio.Forms.Tools.PS3
                 Padding = new Padding(pad),
                 Margin = new Padding(0, 0, 0, pad)
             };
+            // Dock Top, not Fill, so the group takes the height of its content (cause inferred from the symptoms; not verified by a build or capture).
+            content.Dock = DockStyle.Top;
             group.Controls.Add(content);
             return group;
         }

@@ -115,6 +115,7 @@ namespace ArisenStudio.Tests.SelfCheck
             ShellPageChecks.AddTo(cases);
             TransferDialogChecks.AddTo(cases);
             IntegrationChecks.AddTo(cases);
+            FakeConsoleServerChecks.AddTo(cases);
 
             if (listOnly)
             {

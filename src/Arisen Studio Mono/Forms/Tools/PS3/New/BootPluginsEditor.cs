@@ -45,6 +45,8 @@ namespace ArisenStudio.Forms.Tools.PS3
                 MultiSelect = false,
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                BackgroundColor = SystemColors.Window,
+                ColumnHeadersVisible = true,
                 SelectionMode = DataGridViewSelectionMode.CellSelect,
                 Margin = new Padding(0, 0, 0, pad)
             };
@@ -142,12 +144,18 @@ namespace ArisenStudio.Forms.Tools.PS3
 
         private async Task LoadBootPluginsAsync()
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             try
             {
                 SetStatus("Loading boot_plugins.txt...");
 
                 if (!await FileTransfer.FileExistsAsync(ConsoleFilePath))
                 {
+                    SetStatus("Unable to find boot_plugins.txt on the console.");
                     ToolFormSupport.LogError(new FileNotFoundException("boot_plugins.txt does not exist on the console: " + ConsoleFilePath), "Unable to load the boot_plugins.txt file. It doesn't exist on the console.");
                     ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to find the boot_plugins.txt file on your console.");
                     return;
@@ -175,6 +183,7 @@ namespace ArisenStudio.Forms.Tools.PS3
             }
             catch (Exception ex)
             {
+                SetStatus("Unable to load boot_plugins.txt: " + ex.Message);
                 ToolFormSupport.LogError(ex, "Unable to load the boot_plugins.txt file. Error: " + ex.Message);
                 ToolFormSupport.ShowErrorAndClose(this, Text_("ERROR", "Error"), "Unable to load the boot_plugins.txt file. Edit the file path in Settings to your correct file location.\n\nError Message: " + ex.Message);
             }
@@ -201,6 +210,11 @@ namespace ArisenStudio.Forms.Tools.PS3
 
         private async void ButtonRestoreDefault_Click(object sender, EventArgs e)
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             if (!ToolFormSupport.Confirm(this, Text_("CONFIRM", "Confirm"), Text_("RESTORE_DEFAULT_FILE", "Do you want to restore the default file? This will replace the file on your console with an empty one.")))
             {
                 return;
@@ -221,6 +235,11 @@ namespace ArisenStudio.Forms.Tools.PS3
 
         private async void ButtonRestoreBackup_Click(object sender, EventArgs e)
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             if (!File.Exists(BackupFilePath))
             {
                 MessageBox.Show(this, Text_("CREATE_BACKUP_FILE", "There is no backup file yet. Open the editor with a console connected to create one."), Text_("NO_BACKUP_FILE", "No Backup File"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -246,6 +265,11 @@ namespace ArisenStudio.Forms.Tools.PS3
 
         private async void ButtonSaveUpdate_Click(object sender, EventArgs e)
         {
+            if (SmokeBlocksFileAccess())
+            {
+                return;
+            }
+
             try
             {
                 BootPluginsFile.WriteFile(WorkingFilePath, GridLines());
@@ -272,6 +296,21 @@ namespace ArisenStudio.Forms.Tools.PS3
 
                 ToolFormSupport.ShowError(this, Text_("ERROR", "Error"), message);
             }
+        }
+
+        /// <summary>
+        /// Smoke runs set ToolFormSupport.NonBlockingErrors (Program.cs, --smoke only). The default folders are the real user
+        /// folder, so a smoke run makes no console call and reads or writes no local file. Returns true when it stops the action.
+        /// </summary>
+        private bool SmokeBlocksFileAccess()
+        {
+            if (!ToolFormSupport.NonBlockingErrors)
+            {
+                return false;
+            }
+
+            SetStatus("Smoke run: no console or local file access.");
+            return true;
         }
 
         private void SetStatus(string text)

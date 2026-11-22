@@ -24,6 +24,8 @@ namespace ArisenStudio.Shell.Wiring
     /// (HeaderDonate, SendFeedback, HowToGuides, SetupWizard, RequestMods, AdvancedSettings, About, OpenLogFile,
     /// OpenLogFolder) are handled by ShellForm.OnRibbonCommand today and never reach ShellController.
     /// Gap ids (Mount BD/ISO/PSN, Xbox power and notify) are not here. Deviations are listed in BUILD-REQUEST-45r.md.
+    /// Request ribbonwire removed the 9 webMAN-side ids from this switch. ShellController owns them through
+    /// IsConsoleCommand and IConsoleConnection.RunCommandAsync. RunWebMan, NotifyPs3 and ConnectedProfile are kept but unreferenced.
     /// </summary>
     internal static class RibbonGapHandlers
     {
@@ -90,51 +92,6 @@ namespace ArisenStudio.Shell.Wiring
                 case RibbonCommandIds.OpenLogFolder:
                     OpenLogFolder(form);
                     return true;
-
-                case RibbonCommandIds.ToolsPsVirtualController:
-                    form.SetStatusText("webMAN Commands - Virtual Controller: Opening in Web Browser");
-                    if (OpenExternal(form, VirtualControllerUrl))
-                    {
-                        form.SetStatusText("webMAN Commands - Virtual Controller: Opened in Web Browser");
-                    }
-                    return true;
-
-                case RibbonCommandIds.ToolsPsGamesOpenGui:
-                    if (dialogs == null)
-                    {
-                        return false;
-                    }
-                    form.SetStatusText("webMAN Commands - Opening Game Launcher...");
-                    DialogLauncher.ShowPs3GameLauncher(form, dialogs);
-                    form.SetStatusText("webMAN Commands - Successfully Opened Game Launcher.");
-                    return true;
-
-                case RibbonCommandIds.ToolsPsPowerShutdown:
-                    return RunWebMan(form, dialogs, "Shutting Down Console...", "Successfully Shutdown Console.",
-                        ip => WebManExtensions.Power(ip, WebManExtensions.PowerFlags.Shutdown), disconnect);
-
-                case RibbonCommandIds.ToolsPsPowerRestart:
-                    return RunWebMan(form, dialogs, "Restarting Console...", "Successfully Restarted Console.",
-                        ip => WebManExtensions.Power(ip, WebManExtensions.PowerFlags.Restart), disconnect);
-
-                case RibbonCommandIds.ToolsPsPowerSoftReboot:
-                    return RunWebMan(form, dialogs, "Soft Rebooting Console...", "Successfully Soft Rebooted Console.",
-                        ip => WebManExtensions.Power(ip, WebManExtensions.PowerFlags.SoftReboot), disconnect);
-
-                case RibbonCommandIds.ToolsPsPowerHardReboot:
-                    return RunWebMan(form, dialogs, "Hard Rebooting Console...", "Successfully Hard Rebooted Console.",
-                        ip => WebManExtensions.Power(ip, WebManExtensions.PowerFlags.HardReboot), disconnect);
-
-                case RibbonCommandIds.ToolsPsPowerQuickReboot:
-                    return RunWebMan(form, dialogs, "Quick Rebooting Console...", "Successfully Quick Rebooted Console.",
-                        ip => WebManExtensions.Power(ip, WebManExtensions.PowerFlags.QuickReboot), disconnect);
-
-                case RibbonCommandIds.ToolsPsGamesUnmount:
-                    return RunWebMan(form, dialogs, "Unmounting Game...", "Successfully Unmounted Game",
-                        WebManExtensions.Unmount, null);
-
-                case RibbonCommandIds.ToolsPsNotifyMessage:
-                    return NotifyPs3(form, dialogs);
 
                 default:
                     return false;

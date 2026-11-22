@@ -167,6 +167,19 @@ namespace ArisenStudio.Services.Adapters
                     case RibbonCommandIds.ToolsPsGamesUnmount:
                         send = () => WebManExtensions.Unmount(address);
                         break;
+                    case RibbonCommandIds.ToolsPsGamesLaunchGame:
+                        send = () => WebManExtensions.LaunchGame(address);
+                        break;
+                    case RibbonCommandIds.ToolsPsGamesMountBd:
+                    case RibbonCommandIds.ToolsPsGamesMountIso:
+                    case RibbonCommandIds.ToolsPsGamesMountPsn:
+                        // The argument is the game path chosen by the caller (ShellController.MountGameAsync).
+                        if (string.IsNullOrEmpty(argument))
+                        {
+                            return false;
+                        }
+                        send = () => WebManExtensions.MountGameFromPath(address, argument);
+                        break;
                     case RibbonCommandIds.ToolsPsNotifyMessage:
                         if (string.IsNullOrEmpty(argument))
                         {
@@ -175,7 +188,7 @@ namespace ArisenStudio.Services.Adapters
                         send = () => WebManExtensions.NotifyPopup(address, argument);
                         break;
                     default:
-                        // Not a webMAN helper: Mount BD/ISO/PSN, OpenGUI, VirtualController, Xbox ids.
+                        // Not a webMAN helper here: OpenGUI, VirtualController, Xbox ids.
                         return false;
                 }
 
