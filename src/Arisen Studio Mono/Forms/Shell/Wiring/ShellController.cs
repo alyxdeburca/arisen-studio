@@ -51,6 +51,10 @@ namespace ArisenStudio.Shell.Wiring
         private string _settingsPath;
         private bool _attached;
 
+        // Old MainWindow.Platform was set by SetPlatform/SetStatusConsole and never reset on disconnect. True once a console
+        // is connected or a profile is picked with Change Profile. Gates PS4 Game Mods (old :10269, hidden at launch :489).
+        private bool _consoleEngaged;
+
         private DashboardPage _dashboard;
         private DownloadsPage _downloadsPage;
         private InstalledFilesPage _installedPage;
@@ -392,25 +396,28 @@ namespace ArisenStudio.Shell.Wiring
         // ====================================================================================================
 
         /// <summary>
-        /// Value of ShellForm.ResolvePageKey (old platform choice for Game Mods and Homebrew, MW1-087 and MW1-088). One page
-        /// class serves every platform, so the key is returned as is; the page's Platform is set first and the page reloads
-        /// when the host shows it (OnPageShown).
+        /// Value of ShellForm.ResolvePageKey (old platform choice for Game Mods and Homebrew, MW1-087 and MW1-088). On PS4 the
+        /// Game Mods leaf shows the Homebrew page (old MainWindow Game Mods click, PS4 branch). Every other leaf is returned
+        /// as is. The page's Platform is set first and the page reloads when the host shows it (OnPageShown).
         /// </summary>
         private string ResolvePageKey(string leafKey)
         {
+            string pageKey = leafKey == ShellPageKeys.GameMods && CurrentPlatform() == Platform.PS4 ? ShellPageKeys.Homebrew : leafKey;
             LibraryPageBase page;
-            if (leafKey != null && _library.TryGetValue(leafKey, out page))
+            if (pageKey != null && _library.TryGetValue(pageKey, out page))
             {
                 page.Platform = CurrentLibraryPlatform();
             }
-            return leafKey;
+            return pageKey;
         }
 
         /// <summary>
         /// Shows only the nav leaves of the platform (old EnableConsoleActions and the start-up block of MainWindow_Load).
-        /// PS3: Game Mods, Homebrew, Resources, Packages, Game Cheats. PS4: Homebrew, Games. Xbox 360: Game Mods, Homebrew,
-        /// Trainers. Unknown platform (no profile): everything. Custom Mods, Game Saves and the General group stay visible
-        /// (the old code hid Custom Mods; the Mono shell has no other way in).
+        /// PS3: Game Mods, Homebrew, Resources, Packages, Game Cheats. PS4: Homebrew, Games, and Game Mods only once a PS4
+        /// is connected or its profile is selected (old MainWindow.cs 489 hides it at launch, 10269 shows it after connect).
+        /// Xbox 360: Game Mods, Homebrew, Trainers. Unknown platform (no profile): everything except Custom Mods. PS4 Game
+        /// Mods routes to Homebrew (see ResolvePageKey). Custom Mods is always hidden (old EnableConsoleActions,
+        /// MainWindow.cs 10268, inside #if !DEBUG). Game Saves and the General group stay visible.
         /// </summary>
         private void ApplyNavigationForPlatform(Platform? platform)
         {
@@ -419,7 +426,8 @@ namespace ArisenStudio.Shell.Wiring
             bool ps4 = platform == Platform.PS4;
             bool xbox = platform == Platform.XBOX360;
 
-            SetLeafVisible(ShellPageKeys.GameMods, all || ps3 || xbox);
+            SetLeafVisible(ShellPageKeys.CustomMods, false);
+            SetLeafVisible(ShellPageKeys.GameMods, !ps4 || _consoleEngaged);
             SetLeafVisible(ShellPageKeys.Homebrew, true);
             SetLeafVisible(ShellPageKeys.Trainers, all || xbox);
             SetLeafVisible(ShellPageKeys.Resources, all || ps3);
@@ -429,21 +437,25 @@ namespace ArisenStudio.Shell.Wiring
 
             // If the visible page just became hidden, go home.
             string active = _form.Pages.ActiveKey;
-            if (active != null && _form.Navigation.HasLeaf(active) && IsHiddenLeaf(active, all, ps3, ps4, xbox))
+            if (active != null && _form.Navigation.HasLeaf(active) && IsHiddenLeaf(active, all, ps3, ps4, xbox, _consoleEngaged))
             {
                 _form.ShowPage(ShellPageKeys.Dashboard);
             }
         }
 
-        private static bool IsHiddenLeaf(string key, bool all, bool ps3, bool ps4, bool xbox)
+        private static bool IsHiddenLeaf(string key, bool all, bool ps3, bool ps4, bool xbox, bool consoleEngaged)
         {
+            if (key == ShellPageKeys.CustomMods)
+            {
+                return true;
+            }
             if (all)
             {
                 return false;
             }
             switch (key)
             {
-                case ShellPageKeys.GameMods: return !(ps3 || xbox);
+                case ShellPageKeys.GameMods: return ps4 && !consoleEngaged;
                 case ShellPageKeys.Trainers: return !xbox;
                 case ShellPageKeys.Resources: return !ps3;
                 case ShellPageKeys.PkgStore: return !ps3;
@@ -526,6 +538,10 @@ namespace ArisenStudio.Shell.Wiring
         {
             bool connected = _connection.IsConnected;
             Platform? platform = CurrentPlatform();
+            if (connected)
+            {
+                _consoleEngaged = true;
+            }
 
             _form.SetConsoleState(platform ?? Platform.PS3, connected, connected && _connection.WebManInstalled);
             _form.SetCurrentGame(_connection.CurrentGameName);
@@ -996,6 +1012,16 @@ namespace ArisenStudio.Shell.Wiring
             ApplyConnectionState(false);
         }
 
+        /// <summary>
+        /// Test seam for the --page-platform run (PageCaptureRunner only). Sets the same flag ChangeProfile and a connect set,
+        /// then re-applies the navigation. It does not save settings and does not connect. UI thread only.
+        /// </summary>
+        internal void EngageConsoleForCapture()
+        {
+            _consoleEngaged = true;
+            ApplyConnectionState(false);
+        }
+
         private void ChangeProfile()
         {
             // Assumption: the old Change Profile picked the default profile (ConnectionsDialog without connecting).
@@ -1009,6 +1035,7 @@ namespace ArisenStudio.Shell.Wiring
                 other.IsDefault = ReferenceEquals(other, chosen);
             }
             SaveSettings();
+            _consoleEngaged = true;
             ApplyConnectionState(false);
             _form.SetStatusText("Profile: " + chosen.Name + ".");
         }

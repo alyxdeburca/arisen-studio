@@ -109,7 +109,8 @@ namespace ArisenStudio.Forms.Tools.XBOX
             _textBoxName = new TextBox { Dock = DockStyle.Fill, Margin = new Padding(0, 0, pad, pad / 2) };
             _buttonSetName = ToolFormSupport.NewButton(this, 6);
             _buttonSetName.Margin = new Padding(0, 0, 0, pad / 2);
-            _comboIcon = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Margin = new Padding(0, 0, 0, pad / 2) };
+            // Explicit height: the combo's implicit (preferred) height is 20 px here, and its drawn box needs about 28 px (old 24 px at a 16 px line plus 8).
+            _comboIcon = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Margin = new Padding(0, 0, 0, pad / 2), Height = h + 8 };
             _comboIcon.Items.AddRange(new object[] { "Black", "Blue", "BlueGray", "White" });
 
             TableLayoutPanel neighborhood = ToolFormSupport.NewTable(new ColumnStyle(SizeType.AutoSize), new ColumnStyle(SizeType.Percent, 100F), new ColumnStyle(SizeType.AutoSize));

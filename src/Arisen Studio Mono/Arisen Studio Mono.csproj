@@ -223,6 +223,7 @@
     <Compile Include="Tests\SelfCheck\SelfCheckRunner.cs" />
     <Compile Include="Tests\SelfCheck\SelfCheckReflect.cs" />
     <Compile Include="Tests\SelfCheck\ServicesChecks.cs" />
+    <Compile Include="Tests\SelfCheck\AnnouncementsTextChecks.cs" />
     <Compile Include="Tests\SelfCheck\GameRegionsXboxHdKeyChecks.cs" />
     <Compile Include="Tests\SelfCheck\GameSaveDialogChecks.cs" />
     <Compile Include="Tests\SelfCheck\ShellPageChecks.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Runtime\AppBootstrapper.cs" />
     <Compile Include="Runtime\FileErrorLog.cs" />
     <Compile Include="Services\Adapters\AdapterSupport.cs" />
+    <Compile Include="Services\Adapters\AnnouncementsText.cs" />
     <Compile Include="Services\Adapters\ConsoleFileServices.cs" />
     <Compile Include="Services\Adapters\DashboardDataSource.cs" />
     <Compile Include="Services\Adapters\DatabaseClientCatalogueAdapter.cs" />
@@ -271,6 +273,7 @@
     <Compile Include="Tests\SelfCheck\FakeConsoleServerChecks.cs" />
     <Compile Include="Tests\SelfCheck\StartupGateChecks.cs" />
     <Compile Include="Tests\SelfCheck\FakeServerPs3ControlChecks.cs" />
+    <Compile Include="Tests\SelfCheck\BlankNameArchiveChecks.cs" />
     <EmbeddedResource Include="..\Arisen Studio\Resources\Icons\PlayStation3Fat.png">
       <LogicalName>ArisenStudio.Icons.PlayStation3Fat.png</LogicalName>
     </EmbeddedResource>

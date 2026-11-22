@@ -96,6 +96,15 @@ namespace ArisenStudio.Shell
         }
 
         /// <summary>
+        /// True if the leaf was added and its Visible flag is set (SetLeafVisible). False for an unknown or hidden leaf.
+        /// </summary>
+        public bool IsLeafVisible(string leafKey)
+        {
+            NavEntry entry = FindEntry(leafKey, false);
+            return entry != null && entry.Visible;
+        }
+
+        /// <summary>
         /// Selects a visible leaf and raises LeafSelected once. Returns false for a null, unknown or hidden leaf.
         /// </summary>
         public bool SelectLeaf(string leafKey)

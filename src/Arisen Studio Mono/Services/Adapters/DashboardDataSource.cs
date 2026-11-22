@@ -225,16 +225,19 @@ namespace ArisenStudio.Services.Adapters
             ps3.Lines.Add(new StatLine(CountByType(catalog.HomebrewPs3, CategoryType.Homebrew), "Homebrew"));
             ps3.Lines.Add(new StatLine(CountByType(catalog.ResourcesPs3, CategoryType.Resource), "Resources"));
             ps3.Lines.Add(new StatLine(catalog.PackagesPs3 != null ? catalog.PackagesPs3.Count : 0, "Packages"));
+            ps3.Lines.Add(new StatLine(CountGameSaves(Platform.PS3), "Game Saves"));
             stats.Groups.Add(ps3);
 
             StatGroup ps4 = new StatGroup("PlayStation 4");
-            int apps = catalog.AppsPs4 != null && catalog.AppsPs4.Library != null ? catalog.AppsPs4.Library.Count : 0;
-            ps4.Lines.Add(new StatLine(apps, "Homebrew"));
+            ps4.Lines.Add(new StatLine(CountAppsByType(catalog.AppsPs4, CategoryType.Homebrew), "Homebrew"));
+            ps4.Lines.Add(new StatLine(CountAppsByType(catalog.AppsPs4, CategoryType.Game), "Games"));
             stats.Groups.Add(ps4);
 
             StatGroup xbox = new StatGroup("Xbox 360");
             xbox.Lines.Add(new StatLine(CountByType(catalog.GameModsXbox, CategoryType.Game), "Game Mods"));
             xbox.Lines.Add(new StatLine(CountByType(catalog.HomebrewXbox, CategoryType.Homebrew), "Homebrew"));
+            xbox.Lines.Add(new StatLine(CountTrainers(catalog.TrainersXbox), "Trainers"));
+            xbox.Lines.Add(new StatLine(CountGameSaves(Platform.XBOX360), "Game Saves"));
             stats.Groups.Add(xbox);
 
             return stats;
@@ -305,6 +308,69 @@ namespace ArisenStudio.Services.Adapters
                 if (mod != null && _context.Catalog.CategoryTypeOf(mod.CategoryId) == type)
                 {
                     count++;
+                }
+            }
+
+            return count;
+        }
+
+        // Statistics helpers (b107): count the PS4 apps of one category type, the game saves of one platform,
+        // and the trainer entries (one per trainer, as the old TrainersCount does).
+        private int CountAppsByType(AppsData apps, CategoryType type)
+        {
+            if (apps == null || apps.Library == null)
+            {
+                return 0;
+            }
+
+            int count = 0;
+
+            foreach (AppItemData app in apps.Library)
+            {
+                if (app != null && _context.Catalog.CategoryTypeOf(app.CategoryId) == type)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private int CountGameSaves(Platform platform)
+        {
+            IList<GameSaveItemData> saves = _context.Catalog.GameSaves;
+            if (saves == null)
+            {
+                return 0;
+            }
+
+            int count = 0;
+
+            foreach (GameSaveItemData save in saves)
+            {
+                if (save != null && save.GetPlatform() == platform)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static int CountTrainers(IList<TrainerGameItem> games)
+        {
+            if (games == null)
+            {
+                return 0;
+            }
+
+            int count = 0;
+
+            foreach (TrainerGameItem game in games)
+            {
+                if (game != null && game.Trainers != null)
+                {
+                    count += game.Trainers.Count;
                 }
             }
 

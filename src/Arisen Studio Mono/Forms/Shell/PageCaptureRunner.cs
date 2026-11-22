@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 using ArisenStudio.Io;
+using ArisenStudio.Models.Resources;
 using ArisenStudio.Runtime;
 
 namespace ArisenStudio.Shell
@@ -15,7 +16,8 @@ namespace ArisenStudio.Shell
     /// <c>&lt;capture folder&gt;/&lt;key&gt;.png</c>. Same checks as <see cref="PageCaptureHarness" /> for one page: the
     /// page must be registered, must not be a <see cref="PlaceholderPage" />, and is reported with its zero-size controls.
     /// <para>
-    /// Prints <c>PAGE-CAPTURE-OK &lt;key&gt;</c> (exit 0) or <c>PAGE-CAPTURE-FAIL &lt;key&gt; &lt;reason&gt;</c> (exit 1).
+    /// Prints <c>PAGE-CAPTURE-OK &lt;key&gt;</c> (exit 0) or <c>PAGE-CAPTURE-FAIL &lt;key&gt; &lt;reason&gt;</c> (exit 1). When the
+    /// navigation redirected the key to another page (PS4 Game Mods to Homebrew), the OK line ends with <c>resolved=&lt;page key&gt;</c>.
     /// A zero-size control does not fail the capture: it prints <c>PAGE-CAPTURE-WARN</c> first, then OK.
     /// </para>
     /// <para>
@@ -34,7 +36,8 @@ namespace ArisenStudio.Shell
         /// <summary>Captures one page and returns the process exit code: 0 on success, 1 on failure.</summary>
         /// <param name="key">A ShellPageKeys value. Anything else is rejected before the shell is created.</param>
         /// <param name="captureDirectory">The <c>--capture</c> folder. Created if missing. Must not be under UserFolders.AppData.</param>
-        public static int Run(string key, string captureDirectory)
+        /// <param name="pagePlatform">The <c>--page-platform</c> value (ps3, ps4, xbox360), or null for no console profile.</param>
+        public static int Run(string key, string captureDirectory, string pagePlatform = null)
         {
             if (!PageCaptureHarness.PageKeys().Contains(key))
             {
@@ -43,6 +46,15 @@ namespace ArisenStudio.Shell
             if (string.IsNullOrEmpty(captureDirectory))
             {
                 return Fail(key, "missing --capture folder");
+            }
+            Platform? seeded = null;
+            if (pagePlatform != null)
+            {
+                seeded = ParsePagePlatform(pagePlatform);
+                if (seeded == null)
+                {
+                    return Fail(key, "unknown --page-platform '" + pagePlatform + "' (use ps3, ps4 or xbox360)");
+                }
             }
 
             string target;
@@ -72,8 +84,28 @@ namespace ArisenStudio.Shell
             bool ran = false;
             try
             {
+                // The seeded profile goes in before Attach: Attach applies the platform navigation (ShellController.ApplyConnectionState
+                // -> ApplyNavigationForPlatform), so a profile added after Attach would not change the leaves. AppBootstrapper.Initialize
+                // is idempotent for the same mode, so calling it here does not change what Attach does.
+                ConsoleProfile profile = null;
+                AppBootstrapper.Initialize(true);
+                if (seeded.HasValue)
+                {
+                    profile = AppHost.Settings.CreateDefaultProfile(seeded.Value);
+                    AppHost.Settings.ConsoleProfiles.Add(profile);
+                    Console.WriteLine("PAGE-PLATFORM " + pagePlatform.ToLowerInvariant() + " profile seeded in memory");
+                }
                 using (ShellForm shell = new ShellForm())
                 {
+                    if (profile != null)
+                    {
+                        // Subscribed before Attach, so it runs before the save on close (FullShellIntegration and ShellController).
+                        // The smoke settings file written at close then does not keep the seeded profile.
+                        shell.FormClosing += (s, e) =>
+                        {
+                            _ = AppHost.Settings.ConsoleProfiles.Remove(profile);
+                        };
+                    }
                     // Smoke attach: settings go to a temp folder, nothing is downloaded, no single-instance guard.
                     _ = FullShellIntegration.Attach(shell, true);
                     shell.Shown += (s, e) =>
@@ -83,6 +115,11 @@ namespace ArisenStudio.Shell
                         {
                             t.Stop();
                             ran = true;
+                            if (seeded.HasValue)
+                            {
+                                // Seam: a seeded profile alone does not engage the console (ChangeProfile and a connect do).
+                                FullShellIntegration.Controller.EngageConsoleForCapture();
+                            }
                             exitCode = CaptureOne(shell, key, target);
                             shell.Close();
                         };
@@ -103,6 +140,18 @@ namespace ArisenStudio.Shell
             return exitCode;
         }
 
+        // The --page-platform value. Null for anything other than ps3, ps4 or xbox360 (case-insensitive).
+        private static Platform? ParsePagePlatform(string value)
+        {
+            switch (value.ToLowerInvariant())
+            {
+                case "ps3": return Platform.PS3;
+                case "ps4": return Platform.PS4;
+                case "xbox360": return Platform.XBOX360;
+                default: return null;
+            }
+        }
+
         private static int CaptureOne(ShellForm shell, string key, string target)
         {
             try
@@ -112,14 +161,20 @@ namespace ArisenStudio.Shell
                     return Fail(key, "no page is registered under this key");
                 }
 
+                // The nav leaf state, read before ShowPage. A hidden leaf makes ShowPage fall back to the page, so the exit
+                // code alone cannot show that the leaf is hidden.
+                Console.WriteLine("NAV-LEAF " + key + " has-leaf=" + shell.Navigation.HasLeaf(key) + " visible=" + shell.Navigation.IsLeafVisible(key));
+
                 shell.ClientSize = new Size(CaptureWidth, CaptureHeight);
                 if (!shell.ShowPage(key))
                 {
                     return Fail(key, "ShellForm.ShowPage returned false");
                 }
-                if (shell.Pages.ActiveKey != key)
+                string resolved;
+                string keyProblem = PageCaptureHarness.CheckActiveKey(shell, key, out resolved);
+                if (keyProblem != null)
                 {
-                    return Fail(key, "the active page key is '" + shell.Pages.ActiveKey + "' after ShowPage");
+                    return Fail(key, keyProblem);
                 }
 
                 shell.PerformLayout();
@@ -145,7 +200,7 @@ namespace ArisenStudio.Shell
                 TabControl tabs = FindTabControl(page);
                 if (tabs != null && tabs.TabPages.Count > 0)
                 {
-                    return CaptureTabs(shell, key, target, tabs);
+                    return CaptureTabs(shell, key, target, tabs, resolved);
                 }
 
                 string problem = SaveShell(shell, Path.Combine(target, key + ".png"));
@@ -154,7 +209,7 @@ namespace ArisenStudio.Shell
                     return Fail(key, problem);
                 }
 
-                Console.WriteLine("PAGE-CAPTURE-OK " + key);
+                Console.WriteLine("PAGE-CAPTURE-OK " + key + ResolvedSuffix(key, resolved));
                 return 0;
             }
             catch (Exception ex)
@@ -167,6 +222,12 @@ namespace ArisenStudio.Shell
         {
             Console.WriteLine("PAGE-CAPTURE-FAIL " + key + " " + reason);
             return 1;
+        }
+
+        // " resolved=<key>" when the navigation showed another page than the one asked for (PS4 Game Mods shows Homebrew); empty otherwise.
+        private static string ResolvedSuffix(string key, string resolved)
+        {
+            return string.IsNullOrEmpty(resolved) || resolved == key ? string.Empty : " resolved=" + resolved;
         }
 
         // The first TabControl under the control, depth first. The walk does not enter a TabControl.
@@ -189,7 +250,7 @@ namespace ArisenStudio.Shell
         }
 
         // One image per tab. Tab 0 is <key>.png; the others are <key>-<tab>.png. A failing tab does not stop the rest.
-        private static int CaptureTabs(ShellForm shell, string key, string target, TabControl tabs)
+        private static int CaptureTabs(ShellForm shell, string key, string target, TabControl tabs, string resolved)
         {
             int exitCode = 0;
             HashSet<string> used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -222,7 +283,7 @@ namespace ArisenStudio.Shell
 
                 if (problem == null)
                 {
-                    Console.WriteLine("PAGE-CAPTURE-OK " + key + " " + name);
+                    Console.WriteLine("PAGE-CAPTURE-OK " + key + " " + name + ResolvedSuffix(key, resolved));
                 }
                 else
                 {

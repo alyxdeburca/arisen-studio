@@ -77,7 +77,7 @@ namespace ArisenStudio.Forms.Tools.PS3
                 _browser.Navigated += Browser_Navigated;
                 _browser.Navigate(Url("games.ps3?"));
 
-                SetStatus("Successfully loaded games.");
+                SetStatus("Games list address is set. Use the button to open it in the default browser.");
             }
             catch (Exception ex)
             {

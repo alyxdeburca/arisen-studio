@@ -95,8 +95,8 @@ namespace ArisenStudio.Forms.Pages
         public event EventHandler<ItemEventArgs<string>> LinkRequested;
 
         /// <summary>
-        /// "Clear &amp; Restart" was confirmed (ledger MW2-063). The shell deletes the cache folder and restarts the
-        /// application. Application.Restart on Mono is UNVERIFIED.
+        /// "Clear &amp; Restart" was clicked. There is no Yes/No prompt, as in the old handler (MainWindow.cs 5444).
+        /// The shell deletes the cache folder and restarts the application. Application.Restart on Mono is UNVERIFIED.
         /// </summary>
         public event EventHandler ClearCacheRequested;
 
@@ -583,6 +583,8 @@ namespace ArisenStudio.Forms.Pages
                 () => settings.PathDownloads, v => settings.PathDownloads = v, FolderPath, true);
             AddPath(locations, "Temp Folder", "PathTemp",
                 () => settings.PathTemp, v => settings.PathTemp = v, FolderPath, true);
+            // Old note, Designer.cs 7777-7779 (LabelSettingsReferToBaseDirectory), text kept as written.
+            InnerOf(locations).Controls.Add(NewNote("Use %APPDATA% to refer to the Base Directory.\r\nUse %PLATFORM% to refer to the Platform.\r\nUse %CATEGORY% to refer to the Category Name.\r\n\r\nAll directories must be writable."));
 
             panel.Controls.Add(stack);
             return panel;
@@ -594,7 +596,8 @@ namespace ArisenStudio.Forms.Pages
             Panel panel = NewTabPanel();
             FlowLayoutPanel stack = NewStack();
 
-            GroupBox cache = NewGroup(stack, "Cache");
+            // Old header, Designer.cs 7895 (LabelSettingsLocalCache).
+            GroupBox cache = NewGroup(stack, "Local Cache");
             AddToggle(cache, "Clear the local cache on close", "ClearCacheOnClose",
                 () => settings.ClearCacheOnClose, v => settings.ClearCacheOnClose = v);
             buttonClearCache.Text = "Clear & Restart";
@@ -613,7 +616,8 @@ namespace ArisenStudio.Forms.Pages
             Panel panel = NewTabPanel();
             FlowLayoutPanel stack = NewStack();
 
-            GroupBox discord = NewGroup(stack, "Discord");
+            // Old header, Designer.cs 7823 (LabelSettingsRichPresence).
+            GroupBox discord = NewGroup(stack, "Rich Presence");
             togglePresence = AddToggle(discord, "Always show presence for Arisen Studio", "AlwaysShowPresence",
                 () => settings.AlwaysShowPresence, v => settings.AlwaysShowPresence = v);
             toggleShowGame = AddToggle(discord, "Show the current game playing", "ShowCurrentGamePlaying",
@@ -715,14 +719,9 @@ namespace ArisenStudio.Forms.Pages
             }
         }
 
+        // No prompt: the old ButtonSettingsClearCache_Click (MainWindow.cs 5444-5459) deletes and restarts directly.
         private void ButtonClearCache_Click(object sender, EventArgs e)
         {
-            DialogResult answer = MessageBox.Show(this,
-                "Clear the local cache and restart Arisen Studio?", "Clear & Restart", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (answer != DialogResult.Yes)
-            {
-                return;
-            }
             EventHandler handler = ClearCacheRequested;
             if (handler != null)
             {

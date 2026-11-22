@@ -33,7 +33,19 @@ namespace ArisenStudio.Models.Database
         /// <returns> </returns>
         public string DownloadDataDirectory(TrainerItem trainerData)
         {
-            return Path.Combine(AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData), GetPlatform().Humanize(), "Trainers", TitleId.RemoveInvalidChars() ?? string.Empty, trainerData.Name.RemoveInvalidChars() ?? string.Empty) + Path.DirectorySeparatorChar;
+            string titleId = TitleId.RemoveInvalidChars();
+            if (string.IsNullOrWhiteSpace(titleId))
+            {
+                throw new ArgumentNullException("TitleId", "Title ID is null, empty or whitespace after removing invalid characters.");
+            }
+
+            string trainerName = trainerData.Name.RemoveInvalidChars();
+            if (string.IsNullOrWhiteSpace(trainerName))
+            {
+                throw new ArgumentNullException("trainerData.Name", "Trainer name is null, empty or whitespace after removing invalid characters.");
+            }
+
+            return Path.Combine(AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData), GetPlatform().Humanize(), "Trainers", titleId, trainerName) + Path.DirectorySeparatorChar;
         }
 
         /// <summary>
@@ -42,7 +54,19 @@ namespace ArisenStudio.Models.Database
         /// <returns> Archive File Path </returns>
         public string ArchiveZipFile(TrainerItem trainerData)
         {
-            return Path.Combine(AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData), GetPlatform().Humanize(), "Trainers", TitleId.RemoveInvalidChars() ?? string.Empty, $"{trainerData.Name.RemoveInvalidChars()}.zip");
+            string titleId = TitleId.RemoveInvalidChars();
+            if (string.IsNullOrWhiteSpace(titleId))
+            {
+                throw new ArgumentNullException("TitleId", "Title ID is null, empty or whitespace after removing invalid characters.");
+            }
+
+            string trainerName = trainerData.Name.RemoveInvalidChars();
+            if (string.IsNullOrWhiteSpace(trainerName))
+            {
+                throw new ArgumentNullException("trainerData.Name", "Trainer name is null, empty or whitespace after removing invalid characters.");
+            }
+
+            return Path.Combine(AppHost.Settings.PathDownloads.GetFullPath(AppHost.Settings.PathAppData), GetPlatform().Humanize(), "Trainers", titleId, $"{trainerName}.zip");
         }
 
         /// <summary>

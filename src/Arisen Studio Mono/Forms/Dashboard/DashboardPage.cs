@@ -412,6 +412,11 @@ namespace ArisenStudio.Forms.Dashboard
             {
                 loaded = dataSource.GetReleases();
             }
+            catch (NotSupportedException)
+            {
+                // No release list (smoke mode, offline, or the fetch failed). The card stays silent, as in the old app.
+                loaded = null;
+            }
             catch (Exception ex)
             {
                 ReportStatus("Could not load the change log: " + ex.Message, ex);

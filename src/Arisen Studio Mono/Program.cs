@@ -211,6 +211,15 @@ namespace ArisenStudio
                 if (pgi + 1 >= args.Length) { Console.WriteLine("PAGE-CAPTURE-FAIL <missing> missing key argument"); return 1; }
                 pageKey = args[pgi + 1];
             }
+            // --page-platform <ps3|ps4|xbox360>: with --page only. Seeds an in-memory default console profile (no file, no network).
+            string pagePlatform = null;
+            int ppi = Array.IndexOf(args, "--page-platform");
+            if (ppi >= 0)
+            {
+                if (pageKey == null) { Console.WriteLine("PAGE-CAPTURE-FAIL <missing> --page-platform needs --page"); return 1; }
+                if (ppi + 1 >= args.Length) { Console.WriteLine("PAGE-CAPTURE-FAIL " + pageKey + " missing platform argument"); return 1; }
+                pagePlatform = args[ppi + 1];
+            }
             _smoke = args.Contains("--smoke") || pageKey != null;
             // Smoke mode must not block on a modal MessageBox from a tool form. Set before any form is created or shown.
             if (_smoke) { ArisenStudio.Forms.Tools.ToolFormSupport.NonBlockingErrors = true; }
@@ -258,7 +267,7 @@ namespace ArisenStudio
             if (pageKey != null)
             {
                 // --page: one shell, one page, one PNG. PageCaptureRunner prints PAGE-CAPTURE-OK or PAGE-CAPTURE-FAIL.
-                return PageCaptureRunner.Run(pageKey, capture);
+                return PageCaptureRunner.Run(pageKey, capture, pagePlatform);
             }
 
             if (formName == null)

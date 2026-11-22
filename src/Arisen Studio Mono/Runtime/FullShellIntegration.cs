@@ -257,11 +257,12 @@ namespace ArisenStudio.Runtime
                     // SwitchLanguage stays null: the controller only stores Settings.Language and saves.
                 };
 
-                // Normal mode only: the online database load. ShellController awaits StartupAsync after the shell is shown,
-                // then reloads the dashboard and the visible page. Smoke mode leaves StartupAsync null: no load, no network.
+                // Normal mode only: the release list (change log) and the online database load. ShellController awaits
+                // StartupAsync after the shell is shown, then reloads the dashboard and the visible page. Smoke mode leaves
+                // StartupAsync null: no load, no network.
                 if (!smokeMode)
                 {
-                    services.StartupAsync = delegate { return LoadDatabaseAsync(adapters, dialogs); };
+                    services.StartupAsync = delegate { return LoadStartupDataAsync(adapters, dialogs, feeds); };
                 }
 
                 // Old rule (MainWindow.cs:203, 227): the database load runs only when the internet check passes.
@@ -468,8 +469,9 @@ namespace ArisenStudio.Runtime
             GitHubReleaseData release = FirstRelease(ArisenStudio.Extensions.UpdateExtensions.AllReleases);
             if (release == null)
             {
-                // Mono never assigns UpdateExtensions.AllReleases, so fetch the list here, off the UI thread (one extra
-                // network request, normal mode only). Not stored back: the flag logic below needs only the newest release.
+                // Normal mode: LoadStartupDataAsync normally fills UpdateExtensions.AllReleases first. This fetch is the fallback
+                // for when it did not, off the UI thread (one extra network request, normal mode only). Not stored back: the
+                // flag logic below needs only the newest release.
                 try
                 {
                     IList<GitHubReleaseData> fetched = await Task.Run(
@@ -513,10 +515,11 @@ namespace ArisenStudio.Runtime
         }
 
         // Normal mode only (see Attach). Awaited by ShellController.OnFormShown after the shell is shown. The download and
-        // the cache file I/O run on a thread-pool task. On success it fills DialogContext.Database and AdapterContext.Catalog.
-        // On failure both stay as they were (empty), the error is logged, and it is rethrown: ShellController then shows
+        // the cache file I/O run on a thread-pool task. On success it fills DialogContext.Database, AdapterContext.Catalog and
+        // the favourites and announcements in DashboardFeeds. On failure all stay as they were (empty), the error is logged,
+        // and it is rethrown: ShellController then shows
         // "Start-up failed: ..." in the status strip and skips its reload and its "Idling..." status write.
-        private static async Task LoadDatabaseAsync(AdapterContext adapters, DialogContext dialogs)
+        private static async Task LoadDatabaseAsync(AdapterContext adapters, DialogContext dialogs, DashboardFeeds feeds)
         {
             ArisenStudio.Database.DatabaseClient client;
             try
@@ -533,6 +536,96 @@ namespace ArisenStudio.Runtime
             // Back on the UI thread (the await captured the shell's context). Assigned only on success.
             dialogs.Database = client;
             adapters.Catalog = DatabaseClientCatalogueAdapter.ToCatalog(client);
+            FillDashboardFeeds(feeds, client);
+        }
+
+        // Favourites and announcements (old MainWindow.LoadOurFavoriteGames, LoadOurFavoriteMods, LoadAnnouncements). The old app
+        // reads the same lists that DatabaseClient.InitializeAsync already fetched (DatabaseClient.cs:334-336), so this makes no
+        // request. A list that failed to load is null on the client and becomes an empty list here.
+        private static void FillDashboardFeeds(DashboardFeeds feeds, ArisenStudio.Database.DatabaseClient client)
+        {
+            List<DashboardFavoriteGameEntry> games = new List<DashboardFavoriteGameEntry>();
+            if (client.FavoriteGames != null && client.FavoriteGames.Favorites != null)
+            {
+                foreach (ArisenStudio.Models.Dashboard.FavoriteGamesData.Favorite game in client.FavoriteGames.Favorites)
+                {
+                    if (game != null)
+                    {
+                        games.Add(new DashboardFavoriteGameEntry
+                        {
+                            Platform = ToDashboardPlatform(game.GetPlatform()),
+                            CategoryId = game.CategoryId,
+                            ImageUrl = game.ImageUrl
+                        });
+                    }
+                }
+            }
+            feeds.FavoriteGames = games;
+
+            List<DashboardFavoriteModEntry> mods = new List<DashboardFavoriteModEntry>();
+            if (client.FavoriteMods != null && client.FavoriteMods.Favorites != null)
+            {
+                foreach (ArisenStudio.Models.Dashboard.FavoriteModsData.Favorite mod in client.FavoriteMods.Favorites)
+                {
+                    if (mod != null)
+                    {
+                        mods.Add(new DashboardFavoriteModEntry
+                        {
+                            Platform = ToDashboardPlatform(mod.GetPlatform()),
+                            CategoryId = mod.CategoryId,
+                            ModId = mod.ModId,
+                            ModName = mod.Name
+                        });
+                    }
+                }
+            }
+            feeds.FavoriteMods = mods;
+
+            List<AnnouncementInfo> announcements = new List<AnnouncementInfo>();
+            if (client.Announcements != null && client.Announcements.Announcements != null)
+            {
+                foreach (ArisenStudio.Models.Dashboard.AnnouncementsData.Announcement announcement in client.Announcements.Announcements)
+                {
+                    if (announcement != null)
+                    {
+                        announcements.Add(new AnnouncementInfo
+                        {
+                            Id = announcement.Id,
+                            Title = announcement.Title,
+                            Message = announcement.Message,
+                            DateStart = announcement.DateStart,
+                            DateEnd = announcement.DateEnd
+                        });
+                    }
+                }
+            }
+            feeds.Announcements = announcements;
+        }
+
+        private static DashboardPlatform ToDashboardPlatform(ArisenStudio.Platform platform)
+        {
+            switch (platform)
+            {
+                case ArisenStudio.Platform.PS4: return DashboardPlatform.PS4;
+                case ArisenStudio.Platform.XBOX360: return DashboardPlatform.Xbox360;
+                default: return DashboardPlatform.PS3;
+            }
+        }
+
+        // Normal mode only (StartupAsync). The release list first. A failed fetch is logged and leaves the change log silent;
+        // it does not stop the database load.
+        private static async Task LoadStartupDataAsync(AdapterContext adapters, DialogContext dialogs, DashboardFeeds feeds)
+        {
+            try
+            {
+                await ArisenStudio.Extensions.UpdateExtensions.LoadAllReleasesAsync();
+            }
+            catch (Exception ex)
+            {
+                AppBootstrapper.LogError(ex, "Unable to load the release list for the change log.");
+            }
+
+            await LoadDatabaseAsync(adapters, dialogs, feeds);
         }
 
         private static void StartIdleTimer(ShellForm shell)
@@ -829,9 +922,11 @@ namespace ArisenStudio.Runtime
 
         // ====================================================================================================
 
-        // News is the only feed wired here. Normal mode only: smoke mode leaves NewsLoader null, so the dashboard shows
-        // "News is not available right now." and makes no request. The loader is created here, not in a constructor of
-        // a page or adapter, and its network call runs only when the dashboard asks for the news.
+        // News and the change log are wired here. Normal mode only: smoke mode leaves NewsLoader and ReleasesProvider null,
+        // so the dashboard makes no request (news shows "News is not available right now."; the change log stays silent).
+        // Favourites and announcements are filled by LoadDatabaseAsync after the database load (normal mode only).
+        // The loaders are created here, not in a constructor of a page or adapter, and their network calls run only when
+        // the dashboard asks.
         private static DashboardFeeds BuildDashboardFeeds(bool smokeMode)
         {
             DashboardFeeds feeds = new DashboardFeeds();
@@ -860,9 +955,50 @@ namespace ArisenStudio.Runtime
                     }
                     return entries;
                 };
+                feeds.ReleasesProvider = ChangeLogReleases;
+
+                // Favourite covers (old MainWindow.FavoriteModItem, MainWindow.cs:1642-1649): the same GetImageFromUrl call,
+                // then the same 0.30 brightness. It runs on a thread-pool task so the UI thread does not wait. A cover that
+                // fails gives null, so the tile keeps the placeholder it has with no cover. No cache, as in the old app.
+                feeds.ImageLoader = delegate (string url)
+                {
+                    return Task.Run<System.Drawing.Image>(delegate ()
+                    {
+                        try
+                        {
+                            using (System.Drawing.Image raw = ArisenStudio.Extensions.HttpExtensions.GetImageFromUrl(url))
+                            {
+                                return ArisenStudio.Extensions.ImageExtensions.AdjustBrightness(raw, 0.30F);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AppBootstrapper.LogError(ex, "Could not load a favourite cover: " + url);
+                            return null;
+                        }
+                    });
+                };
             }
 
             return feeds;
+        }
+
+        // Reads UpdateExtensions.AllReleases, which LoadStartupDataAsync fills at startup. Until it is filled, or when the
+        // fetch failed, this throws NotSupportedException, and DashboardPage shows the card with no status text.
+        private static IList<ReleaseInfo> ChangeLogReleases()
+        {
+            List<GitHubReleaseData> all = ArisenStudio.Extensions.UpdateExtensions.AllReleases;
+            if (all == null)
+            {
+                throw new NotSupportedException("The release list is not loaded.");
+            }
+
+            List<ReleaseInfo> releases = new List<ReleaseInfo>(all.Count);
+            foreach (GitHubReleaseData release in all)
+            {
+                releases.Add(new ReleaseInfo { Name = release.Name, Body = release.Body, PublishedAt = release.PublishedAt.DateTime });
+            }
+            return releases;
         }
 
         private static AdapterContext BuildAdapterContext(string settingsPath)

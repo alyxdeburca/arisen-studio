@@ -29,10 +29,13 @@ namespace ArisenStudio.Forms.Tools.XBOX
 
             _labelName = ToolFormSupport.NewLabel(string.Empty);
             _labelIcon = ToolFormSupport.NewLabel(string.Empty);
+            // Top-align the label with its combo: the Icon row is stretched by the root table (AutoSize false), and the label centred there sat about 20 px below its combo.
+            _labelIcon.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             _textBoxName = new TextBox { Dock = DockStyle.Fill, Margin = new Padding(0, 0, pad, pad / 2) };
             _buttonSetName = ToolFormSupport.NewButton(this, 6);
             _buttonSetName.Margin = new Padding(0, 0, 0, pad / 2);
-            _comboIcon = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Margin = new Padding(0, 0, 0, pad / 2) };
+            // Explicit height: the combo's implicit height here is about 20 px and its drawn box needs about 28 px (same cut as ConsoleManager, measured).
+            _comboIcon = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Margin = new Padding(0, 0, 0, pad / 2), Height = h + 8 };
             _comboIcon.Items.AddRange(new object[] { "Black", "Blue", "BlueGray", "White" });
 
             TableLayoutPanel root = ToolFormSupport.NewTable(new ColumnStyle(SizeType.AutoSize), new ColumnStyle(SizeType.Percent, 100F), new ColumnStyle(SizeType.AutoSize));

@@ -120,6 +120,7 @@ namespace ArisenStudio.Tests.SelfCheck
 
             List<SelfCheckCase> cases = new List<SelfCheckCase>();
             ServicesChecks.AddTo(cases);
+            AnnouncementsTextChecks.AddTo(cases);
             GameRegionsXboxHdKeyChecks.AddTo(cases);
             GameSaveDialogChecks.AddTo(cases);
             ShellPageChecks.AddTo(cases);
@@ -128,6 +129,7 @@ namespace ArisenStudio.Tests.SelfCheck
             FakeConsoleServerChecks.AddTo(cases);
             StartupGateChecks.AddTo(cases);
             FakeServerPs3ControlChecks.AddTo(cases);
+            BlankNameArchiveChecks.AddTo(cases);
 
             if (listOnly)
             {

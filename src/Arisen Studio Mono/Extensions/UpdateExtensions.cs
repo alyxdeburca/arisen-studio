@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ArisenStudio.Extensions
 {
@@ -47,6 +48,20 @@ namespace ArisenStudio.Extensions
             {
                 return JsonConvert.DeserializeObject<List<GitHubReleaseData>>(streamReader.ReadToEnd());
             }
+        }
+
+        /// <summary>
+        /// Fills <see cref="AllReleases"/> from GitHub, off the calling thread. Does nothing when it is already filled.
+        /// On failure it throws and leaves <see cref="AllReleases"/> null.
+        /// </summary>
+        public static async Task LoadAllReleasesAsync()
+        {
+            if (AllReleases != null)
+            {
+                return;
+            }
+
+            AllReleases = await Task.Run(() => GetAllReleasesData(HttpExtensions.GetStream));
         }
 
         /// <summary>

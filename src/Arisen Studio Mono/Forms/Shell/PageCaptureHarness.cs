@@ -37,6 +37,9 @@ namespace ArisenStudio.Shell
         /// <summary>Why the page could not be captured (not registered, ShowPage false, an exception). Null when captured.</summary>
         public string Error { get; internal set; }
 
+        /// <summary>The key the shell showed after ShowPage. Differs from Key when the navigation redirected it (PS4 Game Mods shows Homebrew). Null when not reached.</summary>
+        public string ResolvedKey { get; internal set; }
+
         /// <summary>Visible descendant controls of the page with a width or height of zero or less, as "path (WxH)".</summary>
         public IList<string> EmptyControls
         {
@@ -138,6 +141,10 @@ namespace ArisenStudio.Shell
                     passed++;
                 }
                 text.Append(state).Append(' ').Append(r.Key);
+                if (r.ResolvedKey != null && r.ResolvedKey != r.Key)
+                {
+                    text.Append(" resolved=").Append(r.ResolvedKey);
+                }
                 if (r.Error != null)
                 {
                     text.Append(": ").Append(r.Error);
@@ -185,11 +192,14 @@ namespace ArisenStudio.Shell
                     result.Error = "ShellForm.ShowPage returned false";
                     return result;
                 }
-                if (shell.Pages.ActiveKey != key)
+                string resolved;
+                string keyProblem = CheckActiveKey(shell, key, out resolved);
+                if (keyProblem != null)
                 {
-                    result.Error = "the active page key is '" + shell.Pages.ActiveKey + "' after ShowPage";
+                    result.Error = keyProblem;
                     return result;
                 }
+                result.ResolvedKey = resolved;
 
                 shell.ClientSize = new Size(CaptureWidth, CaptureHeight);
                 shell.PerformLayout();
@@ -229,6 +239,29 @@ namespace ArisenStudio.Shell
                 result.Error = ex.GetType().Name + ": " + ex.Message;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Accepts the page the navigation showed after ShowPage(key): the requested key, or the key that
+        /// <see cref="ShellForm.ResolvePageKey" /> maps it to (PS4 Game Mods shows Homebrew). Any other active key fails.
+        /// Returns null when accepted (resolvedKey is then the active key), otherwise the reason.
+        /// </summary>
+        internal static string CheckActiveKey(ShellForm shell, string key, out string resolvedKey)
+        {
+            string active = shell.Pages.ActiveKey;
+            resolvedKey = active;
+            if (active == key)
+            {
+                return null;
+            }
+
+            string expected = shell.ResolvePageKey == null ? key : shell.ResolvePageKey(key);
+            if (expected != null && active == expected && shell.Pages.HasPage(expected))
+            {
+                return null;
+            }
+            return "the active page key is '" + active + "' after ShowPage (expected '" + key + "'"
+                + (expected != null && expected != key ? " or its redirect '" + expected + "'" : string.Empty) + ")";
         }
 
         // The only child of the page host is the active page (PageHost keeps the others out of Controls).

@@ -308,32 +308,7 @@ namespace ArisenStudio.Forms.Tools.XBOX
         /// </summary>
         private static string MakeXboxHDKey(string consoleSerial, string motherboardSerial)
         {
-            if (!string.IsNullOrEmpty(consoleSerial) && consoleSerial.Length == 12 && IsNumeric(consoleSerial))
-            {
-                if (!string.IsNullOrEmpty(motherboardSerial) && motherboardSerial.Length == 16 && IsHexadecimal(motherboardSerial))
-                {
-                    byte[] key = new byte[0x10];
-                    byte[] consoleSerialBuffer = new byte[12];
-                    byte[] motherboardSerialBuffer = new byte[16 / 2];
-
-                    for (int i = 0; i < 12; i++)
-                    {
-                        consoleSerialBuffer[i] = (byte)consoleSerial[i];
-                    }
-
-                    for (int i = 0; i < 16; i += 2)
-                    {
-                        motherboardSerialBuffer[i / 2] = Convert.ToByte(motherboardSerial.Substring(i, 2), 16);
-                    }
-
-                    Array.Copy(motherboardSerialBuffer, 0, key, 4, 8);
-                    Array.Copy(consoleSerialBuffer, 0, key, 12, 4);
-
-                    return BitConverter.ToString(key, 0).Replace("-", "");
-                }
-            }
-
-            return "";
+            return ArisenStudio.Services.Extra.XboxHdKeyCalculator.MakeKey(consoleSerial, motherboardSerial);
         }
 
         private static ImportResult ImportXboxHDKey(string keyvaultFile, out string consoleSerial, out string motherboardSerial)

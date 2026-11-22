@@ -8,6 +8,7 @@ using ArisenStudio.Models.Database;
 using ArisenStudio.Models.Resources;
 using GameRegionsForm = ArisenStudio.Forms.Tools.PS3.GameRegions;
 using XboxHDKeyForm = ArisenStudio.Forms.Tools.XBOX.XboxHDKey;
+using HdKeyCalculator = ArisenStudio.Services.Extra.XboxHdKeyCalculator;
 
 namespace ArisenStudio.Tests.SelfCheck
 {
@@ -31,6 +32,7 @@ namespace ArisenStudio.Tests.SelfCheck
             cases.Add(new SelfCheckCase("XboxHDKey.ImportRejects", ImportRejects));
             cases.Add(new SelfCheckCase("XboxHDKey.ImportMissingFile", ImportMissingFile));
             cases.Add(new SelfCheckCase("XboxHDKey.WriteCatchSource", WriteCatchSource));
+            cases.Add(new SelfCheckCase("XboxHdKeyEquality.FormMatchesCalculator", FormMatchesCalculator));
         }
 
         // ---- GameRegions ----
@@ -189,6 +191,53 @@ namespace ArisenStudio.Tests.SelfCheck
             SelfCheckAssert.Equal(string.Empty, Key(null, "0102030405060708"), "null console serial");
             SelfCheckAssert.Equal(string.Empty, Key("123456789012", null), "null motherboard serial");
             SelfCheckAssert.Equal(string.Empty, Key("", ""), "empty serials");
+        }
+
+        // The form's private MakeXboxHDKey (reached by reflection, as in MakeKey above) and XboxHdKeyCalculator.MakeKey are two
+        // copies of one rule. Each vector goes through both: they must agree, and the calculator must give the string worked
+        // out by hand from the old tool's MakeXboxHDKey (src/Arisen Studio/Forms/Tools/XBOX/XboxHDKey.cs:143-171). Old lines:
+        // :145 and :147 (length and character checks), :155 (first four console characters), :160 (motherboard byte pairs),
+        // :163 and :164 (placement at key offsets 4 and 12), :166 (upper case hex output), :170 (empty string on failure).
+        private static void FormMatchesCalculator()
+        {
+            // Console serial, motherboard serial, expected key: 4 zero bytes, 8 motherboard bytes, 4 console ASCII bytes.
+            string[][] valid = new string[][]
+            {
+                new string[] { "123456789012", "0102030405060708", "00000000010203040506070831323334" },
+                new string[] { "123456789012", "0a0b0c0d0e0f1011", "000000000A0B0C0D0E0F101131323334" },
+                new string[] { "000099998888", "FFFFFFFFFFFFFFFF", "00000000FFFFFFFFFFFFFFFF30303030" },
+                new string[] { "987654321098", "DEADBEEF00C0FFEE", "00000000DEADBEEF00C0FFEE39383736" }
+            };
+
+            foreach (string[] v in valid)
+            {
+                string label = "console " + v[0] + " motherboard " + v[1];
+                string fromForm = Key(v[0], v[1]);
+                string fromCalculator = HdKeyCalculator.MakeKey(v[0], v[1]);
+                SelfCheckAssert.Equal(fromCalculator, fromForm, "form and calculator differ for " + label);
+                SelfCheckAssert.Equal(v[2], fromCalculator, "calculator key for " + label);
+                SelfCheckAssert.Equal(32, fromForm.Length, "key length for " + label);
+            }
+
+            // Invalid input: both must give an empty string.
+            string[][] invalid = new string[][]
+            {
+                new string[] { "12345678901", "0102030405060708" },
+                new string[] { "1234567890123", "0102030405060708" },
+                new string[] { "12345678901\u0661", "0102030405060708" },
+                new string[] { "123456789012", "010203040506070" },
+                new string[] { "123456789012", "010203040506070G" },
+                new string[] { null, "0102030405060708" },
+                new string[] { "123456789012", null },
+                new string[] { "", "" }
+            };
+
+            foreach (string[] v in invalid)
+            {
+                string label = "console " + (v[0] ?? "null") + " motherboard " + (v[1] ?? "null");
+                SelfCheckAssert.Equal(string.Empty, Key(v[0], v[1]), "form key for invalid " + label);
+                SelfCheckAssert.Equal(string.Empty, HdKeyCalculator.MakeKey(v[0], v[1]), "calculator key for invalid " + label);
+            }
         }
 
         private static bool Is(string method, string value)
