@@ -621,8 +621,9 @@ namespace ArisenStudio.Shell.Wiring
         {
             try
             {
-                // Old first run: the setup wizard when there is no profile yet.
-                if (_services.RunSetupWizardOnFirstUse && AppHost.Settings.FirstTimeUse && AppHost.Settings.ConsoleProfiles.Count == 0)
+                // Old first run: the setup wizard when there is no profile yet. The old app showed it only after the online load
+                // (MainWindow.cs:228, 387-426), so an offline start (box, then exit) never reaches it (Q-117).
+                if (_services.RunSetupWizardOnFirstUse && InternetCheckPassed && AppHost.Settings.FirstTimeUse && AppHost.Settings.ConsoleProfiles.Count == 0)
                 {
                     DialogLauncher.ShowSetupWizard(_form, _dialogs, null);
                     AppHost.Settings.FirstTimeUse = false;
