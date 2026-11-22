@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-22 00:12:49 UTC",
+  "generated_at_utc": "2026-11-22 00:16:17 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -1568,6 +1568,16 @@
   ],
   "recent_events": [
     {
+      "summary": "Completed Localization Aliases (Worker K) and BUILD-REQUEST-36 (Worker L, 186 Compile items); queued Workers M-R (7/7 slots)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-22 00:15:00 UTC",
+      "changes": [
+        "PARALLEL-L10N-ALIASES generated KeyAliases.g.cs (29 verified aliases across all 6 .resx languages), AliasedText.cs, and MessageTextSanitizer.cs",
+        "BUILD-REQUEST-36 wired ToolFormSupport.NonBlockingErrors in --smoke, --selfcheck entrypoint, ControlExtensions, 5 Services/M7 files, and 8 Tests/SelfCheck files (186 Compile items)",
+        "Confirmed owner approval for claude-sonnet-5-5 without advisor across all 6 disjoint workers M-R (BUILD-REQUEST-37 path fixes, BUILD-REQUEST-38 208-item csproj, FullShellIntegration, PageCaptureHarness, IntegrationChecks, ResxLanguageLoader) while ELF -91 runs 43-target Xvfb verification"
+      ]
+    },
+    {
       "summary": "Completed Adapters (Worker A) and AppBootstrapper (Worker J); launched Workers M, N, O, P to keep 7/7 slots full",
       "source": "coordinator",
       "timestamp_utc": "2026-11-22 00:12:00 UTC",
@@ -1742,15 +1752,6 @@
         "Wrote ConnectionsDialog.cs, NewProfileDialog.cs, and NewCustomDialog.cs (code-only, not yet wired/compiled)",
         "All 6 parallel dialogs (A + B2) now written; awaiting combined csproj wiring + 8 console artwork EmbeddedResources",
         "BUILD-REQUEST-8 (ListBox ClientSize perturbation) launched"
-      ]
-    },
-    {
-      "summary": "Round 7 DiagRows probe on GameModDialog depth-10 download rows",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 19:43:00 UTC",
-      "changes": [
-        "All 6 children in both 955x148 and 955x149 rows drew via Control.Size",
-        "Both rowdraw targets threw InvalidParameter at stage=draw; ListBox child 4 ClientSize=931x-3"
       ]
     }
   ]
