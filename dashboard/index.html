@@ -477,7 +477,7 @@
   "project": "Arisen Studio (Linux / Mono Migration)",
   "completion_definition": "A working, extensible Linux build of Arisen Studio on Mono using only stock System.Windows.Forms (no DevExpress).",
   "proposal_notice": "Goal set by the user on 2026-11-21: \"A complete, with full feature-parity linux executable\". The user delegated design decisions to the assistant's advisor, so the completion definition and the milestone list beyond M1b are decided under that delegation. The percentages on this page measure source files and layout lines that exist in the new project and compile, not features that work. Feature parity is tracked in four parity ledgers (old MainWindow in three parts, everything else in one) that no session with a working advisor has proof-read yet; no ledger row is marked verified, so parity itself is not measured here.",
-  "generated_at_utc": "2026-11-21 23:59:32 UTC",
+  "generated_at_utc": "2026-11-22 00:05:29 UTC",
   "measurements": {
     "overall": {
       "id": "overall",
@@ -495,17 +495,17 @@
     "written_overall": {
       "id": "written_overall",
       "label": "Written / In-Progress (incl. pending verification)",
-      "numerator": 31378,
+      "numerator": 32333,
       "denominator": 63901,
-      "percent": 49.1,
-      "percent_str": "49.1%",
-      "files_ported": 130,
+      "percent": 50.5,
+      "percent_str": "50.5%",
+      "files_ported": 132,
       "files_total": 162,
-      "files_percent": 80.2,
-      "files_percent_str": "80.2%",
+      "files_percent": 81.4,
+      "files_percent_str": "81.4%",
       "verified_files": 100,
       "compiled_failing_files": 0,
-      "written_unwired_files": 30,
+      "written_unwired_files": 32,
       "formula": "(verified + compiled-failing + written-unwired) / total A+B+C"
     },
     "dimensions": [
@@ -1349,7 +1349,7 @@
         {
           "label": "Runs on a machine without Mono",
           "state": "partial",
-          "detail": "PARTIAL — with libMonoPosixHelper and libmono-native embedded in the ELF, 12 of 12 currently passing forms/shell run cleanly in a Mono-free debian:bookworm-slim container; still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
+          "detail": "PARTIAL — with libMonoPosixHelper and libmono-native embedded in the ELF, all 28 of 28 currently registered forms/shell (arisen-studio-mono-90, 150 Compile items) run and capture cleanly in a Mono-free debian:bookworm-slim container (mono_present=no, ldd missing=0); still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
         },
         {
           "label": "Installer or AppImage",
@@ -1399,12 +1399,22 @@
       "id": "self_contained_elf",
       "label": "Self-contained ELF without installed Mono",
       "status": "unknown",
-      "value": "PARTIAL (12/12 passing forms verified)",
+      "value": "PARTIAL (28/28 passing forms verified)",
       "source": "manual",
-      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, all 12 currently passing targets (shell plus 11 dialogs) run cleanly under Xvfb in a Mono-free debian:bookworm-slim container, and all 9 remaining managed NuGet packages pass build, mkbundle, and clean-container execution. Still needs system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
+      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, all 28 currently registered targets (shell plus 27 dialogs/tools on ELF -90, including FluentFTP and System.Data) run and capture cleanly under Xvfb in a Mono-free debian:bookworm-slim container, and all 9 remaining managed NuGet packages pass build, mkbundle, and clean-container execution. Still needs system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
     }
   ],
   "recent_events": [
+    {
+      "summary": "Completed BUILD-REQUEST-34 (172 Compile items, 42 FormFactories) and PARALLEL-M7 (Windows-only boundaries & ControlExtensions)",
+      "source": "coordinator",
+      "timestamp_utc": "2026-11-22 00:03:00 UTC",
+      "changes": [
+        "BUILD-REQUEST-34 wired 18 PS3/Xbox T1 tool files and 4 TransferDialog files into csproj (172 Compile items) plus 15 new FormFactories entries in Program.cs",
+        "PARALLEL-M7 wrote ControlExtensions and Services/M7/ cross-platform contracts/stubs for Windows-only dependencies; 5 other workers (A, B, E, F, G) still running",
+        "Verified all 28 targets of arisen-studio-mono-90 (28/28 PASS) inside a clean Mono-free debian:bookworm-slim container (CLEAN-CONTAINER-RESULT-90)"
+      ]
+    },
     {
       "summary": "Launched Tracks D-G to fill all 7 parallel worker slots (T1+TD csproj/smoke wiring, SelfCheck, Localization, Parity Audit)",
       "source": "coordinator",
@@ -1577,15 +1587,6 @@
       "changes": [
         "Verified 12/12 passing forms/shell in Mono-free debian:bookworm-slim container",
         "Proved all 9 remaining managed NuGet packages build, mkbundle, and run Mono-free"
-      ]
-    },
-    {
-      "summary": "Round 5 diagnostic re-measurement on round-4 tree",
-      "source": "build-runner",
-      "timestamp_utc": "2026-11-21 18:52:00 UTC",
-      "changes": [
-        "Confirmed 0 non-positive Size controls remain in GameModDialog (935x0 became 935x1)",
-        "Hidden tab subtrees in CustomModDialog and GameSaveDialog stopped throwing"
       ]
     }
   ]

@@ -199,5 +199,15 @@
       "Track D (BUILD-REQUEST-34): registering 18 T1 tool files + 4 TransferDialog files in csproj (172 Compile items) and 15 Program.cs FormFactories entries",
       "Tracks E/F/G: deterministic Tests/SelfCheck/ runner, Localization/ .resx audit & helper, and read-only parity ledger proofread running alongside Tracks A/B/C"
     ]
+  },
+  {
+    "summary": "Completed BUILD-REQUEST-34 (172 Compile items, 42 FormFactories) and PARALLEL-M7 (Windows-only boundaries & ControlExtensions)",
+    "source": "coordinator",
+    "timestamp_utc": "2026-11-22 00:03:00 UTC",
+    "changes": [
+      "BUILD-REQUEST-34 wired 18 PS3/Xbox T1 tool files and 4 TransferDialog files into csproj (172 Compile items) plus 15 new FormFactories entries in Program.cs",
+      "PARALLEL-M7 wrote ControlExtensions and Services/M7/ cross-platform contracts/stubs for Windows-only dependencies; 5 other workers (A, B, E, F, G) still running",
+      "Verified all 28 targets of arisen-studio-mono-90 (28/28 PASS) inside a clean Mono-free debian:bookworm-slim container (CLEAN-CONTAINER-RESULT-90)"
+    ]
   }
 ]

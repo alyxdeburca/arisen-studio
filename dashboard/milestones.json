@@ -560,6 +560,16 @@
       "old": "Forms/Dialogs/TransferDialog.cs",
       "new": "Forms/Dialogs/Transfer/TransferDialog.cs",
       "stage": "written_unwired"
+    },
+    {
+      "old": "Extensions/ControlExtensions.cs",
+      "new": "Extensions/New/ControlExtensions.cs",
+      "stage": "written_unwired"
+    },
+    {
+      "old": "Extensions/XBOX/XboxExtensions.cs",
+      "new": "Services/M7/XboxConsoleSession.cs",
+      "stage": "written_unwired"
     }
   ],
   "milestones": [
@@ -700,7 +710,7 @@
         {
           "label": "Runs on a machine without Mono",
           "state": "partial",
-          "detail": "PARTIAL \u2014 with libMonoPosixHelper and libmono-native embedded in the ELF, 12 of 12 currently passing forms/shell run cleanly in a Mono-free debian:bookworm-slim container; still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
+          "detail": "PARTIAL \u2014 with libMonoPosixHelper and libmono-native embedded in the ELF, all 28 of 28 currently registered forms/shell (arisen-studio-mono-90, 150 Compile items) run and capture cleanly in a Mono-free debian:bookworm-slim container (mono_present=no, ldd missing=0); still requires system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
         },
         {
           "label": "Installer or AppImage",
@@ -726,8 +736,8 @@
     "self_contained_elf": {
       "label": "Self-contained ELF without installed Mono",
       "status": "unknown",
-      "value": "PARTIAL (12/12 passing forms verified)",
-      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, all 12 currently passing targets (shell plus 11 dialogs) run cleanly under Xvfb in a Mono-free debian:bookworm-slim container, and all 9 remaining managed NuGet packages pass build, mkbundle, and clean-container execution. Still needs system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
+      "value": "PARTIAL (28/28 passing forms verified)",
+      "detail": "With libMonoPosixHelper and libmono-native embedded and the dllmap config rewritten, all 28 currently registered targets (shell plus 27 dialogs/tools on ELF -90, including FluentFTP and System.Data) run and capture cleanly under Xvfb in a Mono-free debian:bookworm-slim container, and all 9 remaining managed NuGet packages pass build, mkbundle, and clean-container execution. Still needs system libx11, libgdiplus, fontconfig, libgssapi_krb5, and fonts."
     }
   }
 }
